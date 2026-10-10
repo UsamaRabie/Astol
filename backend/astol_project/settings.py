@@ -1,15 +1,12 @@
 import os
 from pathlib import Path
 from datetime import timedelta
-import pymysql
-
-# PyMySQL setup for MySQL compatibility
-try:
-    pymysql.install_as_MySQLdb()
-except Exception:
-    pass
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from .env file if it exists
+load_dotenv(BASE_DIR / '.env')
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-astol-production-fleet-secret-key-2026-secure-auth')
 
@@ -74,25 +71,41 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'astol_project.wsgi.application'
 
-# Database Configuration: MySQL with seamless SQLite fallback/dev option
-USE_MYSQL = os.environ.get('USE_MYSQL', 'False').lower() in ('true', '1', 'yes')
+# Database Configuration: PostgreSQL (Primary Enterprise Database)
+USE_POSTGRESQL = os.environ.get('USE_POSTGRESQL', os.environ.get('USE_POSTGRES', 'True')).lower() in ('true', '1', 'yes')
 
-if USE_MYSQL:
+DB_NAME = os.environ.get('DB_NAME', 'astol_fleet_db')
+DB_USER = os.environ.get('DB_USER', 'postgres')
+DB_PASSWORD = os.environ.get('DB_PASSWORD', 'postgres')
+DB_HOST = os.environ.get('DB_HOST', '127.0.0.1')
+DB_PORT = os.environ.get('DB_PORT', '5432')
+
+def _is_postgres_available(host, port):
+    import socket
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(0.5)
+        s.connect((host, int(port)))
+        s.close()
+        return True
+    except Exception:
+        return False
+
+if USE_POSTGRESQL and _is_postgres_available(DB_HOST, DB_PORT):
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ.get('DB_NAME', 'astol_fleet_db'),
-            'USER': os.environ.get('DB_USER', 'root'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-            'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
-            'PORT': os.environ.get('DB_PORT', '3306'),
-            'OPTIONS': {
-                'charset': 'utf8mb4',
-                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            }
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': DB_NAME,
+            'USER': DB_USER,
+            'PASSWORD': DB_PASSWORD,
+            'HOST': DB_HOST,
+            'PORT': DB_PORT,
+            'CONN_MAX_AGE': 60,
         }
     }
 else:
+    if USE_POSTGRESQL:
+        print(f"[Astol DB Notification] PostgreSQL service at {DB_HOST}:{DB_PORT} is not currently listening. Operating in seamless local dev mode (db.sqlite3). To connect to active PostgreSQL, start the service and run 'python init_postgres.py'.")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

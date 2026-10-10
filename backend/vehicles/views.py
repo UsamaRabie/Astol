@@ -2,28 +2,54 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.core.exceptions import ValidationError
-from accounts.permissions import IsOperatorOrAdmin
+from accounts.permissions import IsOperatorOrAdmin, IsAdminOrReadOnly, IsAdminUserRole
 from audit.utils import log_action
 from audit.models import AuditLog
 from maintenance.services import MaintenanceRuleEngine
-from .models import Vehicle, VehicleType, OdometerReading, VehicleDocument
+from .models import (
+    Vehicle, VehicleType, OdometerReading, VehicleDocument,
+    VehicleModel, VehicleColor, Department
+)
 from .serializers import (
     VehicleListSerializer, VehicleDetailSerializer,
     VehicleCreateUpdateSerializer, VehicleTypeSerializer,
     OdometerReadingSerializer, VehicleDocumentSerializer,
-    UpdateOdometerSerializer
+    UpdateOdometerSerializer, VehicleModelSerializer,
+    VehicleColorSerializer, DepartmentSerializer
 )
 
 
 class VehicleTypeViewSet(viewsets.ModelViewSet):
     queryset = VehicleType.objects.all()
     serializer_class = VehicleTypeSerializer
-    permission_classes = [IsOperatorOrAdmin]
+    permission_classes = [IsAdminOrReadOnly]
+
+
+class VehicleModelViewSet(viewsets.ModelViewSet):
+    queryset = VehicleModel.objects.all()
+    serializer_class = VehicleModelSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
+class VehicleColorViewSet(viewsets.ModelViewSet):
+    queryset = VehicleColor.objects.all()
+    serializer_class = VehicleColorSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
+class DepartmentViewSet(viewsets.ModelViewSet):
+    queryset = Department.objects.all()
+    serializer_class = DepartmentSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class VehicleViewSet(viewsets.ModelViewSet):
     queryset = Vehicle.objects.filter(is_deleted=False).select_related('vehicle_type', 'assigned_driver')
-    permission_classes = [IsOperatorOrAdmin]
+
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            return [IsAdminUserRole()]
+        return [IsOperatorOrAdmin()]
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -101,6 +127,11 @@ class VehicleViewSet(viewsets.ModelViewSet):
             request=self.request
         )
 
+    @action(detail=False, methods=['get'], url_path='next-fleet-number')
+    def next_fleet_number(self, request):
+        next_num = Vehicle.generate_next_fleet_number()
+        return Response({'next_fleet_number': next_num})
+
     @action(detail=True, methods=['get', 'post'], url_path='odometer')
     def odometer(self, request, pk=None):
         vehicle = self.get_object()
@@ -152,6 +183,19 @@ class VehicleViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'], url_path='parts')
     def parts(self, request, pk=None):
         vehicle = self.get_object()
+        from parts.models import PartCatalog, VehiclePart
+        existing_cat_ids = set(vehicle.parts.values_list('part_id', flat=True))
+        all_cats = PartCatalog.objects.all()
+        for cat in all_cats:
+            if cat.id not in existing_cat_ids:
+                VehiclePart.objects.create(
+                    vehicle=vehicle,
+                    part=cat,
+                    part_number=f"PN-{vehicle.internal_fleet_number}-{cat.id}",
+                    installation_odometer=vehicle.current_odometer,
+                    interval_km=cat.default_interval_km,
+                    interval_days=cat.default_interval_days
+                )
         from parts.serializers import VehiclePartSerializer
         parts = vehicle.parts.select_related('part').all()
         return Response(VehiclePartSerializer(parts, many=True).data)

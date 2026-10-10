@@ -14,6 +14,7 @@ import { ReportsComponent } from './pages/reports/reports.component';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
 import { AuditComponent } from './pages/audit/audit.component';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { LookupsComponent } from './pages/lookups/lookups.component';
 
 export const routes: Routes = [
   {
@@ -37,7 +38,8 @@ export const routes: Routes = [
       { path: 'reports', component: ReportsComponent },
       { path: 'notifications', component: NotificationsComponent },
       { path: 'audit-logs', component: AuditComponent, canActivate: [adminGuard] },
-      { path: 'settings', component: SettingsComponent, canActivate: [adminGuard] }
+      { path: 'settings', component: SettingsComponent, canActivate: [adminGuard] },
+      { path: 'lookups', component: LookupsComponent, canActivate: [adminGuard] }
     ]
   },
   {

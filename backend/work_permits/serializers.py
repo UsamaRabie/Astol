@@ -17,7 +17,7 @@ class WorkPermitListSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'permit_number', 'vehicle', 'vehicle_plate', 'fleet_number',
             'driver', 'driver_name', 'driver_phone', 'requesting_department',
-            'destination', 'purpose', 'departure_date', 'departure_time',
+            'departure_location', 'destination', 'purpose', 'departure_date', 'departure_time',
             'return_date', 'return_time', 'starting_odometer', 'ending_odometer',
             'distance_traveled', 'status', 'status_display', 'created_by_name',
             'created_at'
@@ -39,7 +39,7 @@ class WorkPermitDetailSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'permit_number', 'vehicle', 'vehicle_plate', 'fleet_number',
             'vehicle_details', 'driver', 'driver_name', 'driver_details',
-            'requesting_department', 'destination', 'purpose', 'description',
+            'requesting_department', 'departure_location', 'destination', 'purpose', 'description',
             'departure_date', 'departure_time', 'return_date', 'return_time',
             'starting_odometer', 'ending_odometer', 'distance_traveled',
             'status', 'status_display', 'created_by', 'created_by_name',
@@ -54,7 +54,7 @@ class WorkPermitCreateUpdateSerializer(serializers.ModelSerializer):
         model = WorkPermit
         fields = [
             'id', 'permit_number', 'vehicle', 'driver', 'requesting_department',
-            'destination', 'purpose', 'description', 'departure_date', 'status', 'notes'
+            'departure_location', 'destination', 'purpose', 'description', 'departure_date', 'status', 'notes'
         ]
 
     def create(self, validated_data):

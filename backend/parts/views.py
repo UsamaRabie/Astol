@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from accounts.permissions import IsOperatorOrAdmin
+from accounts.permissions import IsOperatorOrAdmin, IsAdminOrReadOnly
 from audit.utils import log_action
 from audit.models import AuditLog
 from maintenance.services import MaintenanceRuleEngine
@@ -15,7 +15,7 @@ from .serializers import (
 class PartCatalogViewSet(viewsets.ModelViewSet):
     queryset = PartCatalog.objects.all()
     serializer_class = PartCatalogSerializer
-    permission_classes = [IsOperatorOrAdmin]
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
         qs = super().get_queryset()

@@ -6,7 +6,7 @@ import { FleetService } from '../../core/services/fleet.service';
 import { DriverService } from '../../core/services/driver.service';
 import { ToastService } from '../../core/services/toast.service';
 import { AuthService } from '../../core/services/auth.service';
-import { FuelRecord, Vehicle, Driver } from '../../core/models/models';
+import { FuelRecord, FuelType, Vehicle, Driver } from '../../core/models/models';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 
 @Component({
@@ -22,7 +22,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
             سجلات واستهلاك الوقود
           </h1>
           <p style="color: #64748b; font-size: 0.875rem; margin: 0;">
-            توثيق عمليات التزود بالوقود، تدقيق المحطات والأسعار، وتحليل كفاءة الاستهلاك
+            توثيق عمليات التزود بالوقود، تطبيق الأسعار المعتمدة تلقائياً، والتحكم الكامل في السجلات
           </p>
         </div>
 
@@ -69,7 +69,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
             </div>
           </div>
           <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #f1f5f9; font-size: 12px; color: #64748b;">
-            ديزل وبنزين
+            حسب أنواع الوقود المسجلة
           </div>
         </div>
 
@@ -86,7 +86,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
             </div>
           </div>
           <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #f1f5f9; font-size: 12px; color: #64748b;">
-            ريال / لتر حسب الفواتير
+            ريال / لتر حسب الأسعار
           </div>
         </div>
 
@@ -127,10 +127,8 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
           <div>
             <label class="form-label">نوع الوقود</label>
             <select [(ngModel)]="selectedFuelType" (change)="loadRecords()" class="form-select">
-              <option value="">جميع الأنواع</option>
-              <option value="DIESEL">ديزل</option>
-              <option value="GASOLINE_91">بنزين 91</option>
-              <option value="GASOLINE_95">بنزين 95</option>
+              <option value="">جميع أنواع الوقود</option>
+              <option *ngFor="let f of fuelTypes" [value]="f.name">{{ f.name }}</option>
             </select>
           </div>
 
@@ -166,16 +164,17 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
               <th>العداد (كم)</th>
               <th>نوع الوقود</th>
               <th>الكمية (لتر)</th>
-              <th>سعر اللتر (ر.س)</th>
+              <th>سعر اللتر المعتمد</th>
               <th>التكلفة الإجمالية</th>
               <th>المحطة</th>
               <th>السائق</th>
               <th>المسؤول</th>
+              <th *ngIf="isAdmin" style="text-align: center; width: 140px;">الإجراءات</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngIf="loading">
-              <td colspan="10" style="text-align: center; padding: 3rem; color: #64748b;">
+              <td [attr.colspan]="isAdmin ? 11 : 10" style="text-align: center; padding: 3rem; color: #64748b;">
                 <div style="display: inline-flex; align-items: center; gap: 8px;">
                   <app-icon name="refresh" [size]="18" className="spin"></app-icon>
                   <span>جاري تحميل سجلات الوقود...</span>
@@ -183,7 +182,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
               </td>
             </tr>
             <tr *ngIf="!loading && records.length === 0">
-              <td colspan="10" style="text-align: center; padding: 3rem; color: #94a3b8;">
+              <td [attr.colspan]="isAdmin ? 11 : 10" style="text-align: center; padding: 3rem; color: #94a3b8;">
                 <app-icon name="fuel" [size]="32" style="color: #cbd5e1; margin-bottom: 8px;"></app-icon>
                 <div style="font-weight: 600; color: #475569;">لا توجد حركات تعبئة مسجلة</div>
               </td>
@@ -196,14 +195,35 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
               <td>{{ r.date }}</td>
               <td style="font-weight: 600; color: #334155;">{{ r.odometer | number }} كم</td>
               <td>
-                <span style="font-size: 12px; color: #475569;">{{ r.fuel_type_display }}</span>
+                <span style="background: #f0f9ff; color: #0284c7; padding: 3px 8px; border-radius: 6px; font-weight: 700; font-size: 12px;">
+                  {{ r.fuel_type_display || r.fuel_type }}
+                </span>
               </td>
               <td style="font-weight: 700;">{{ r.quantity | number:'1.1-1' }} لتر</td>
-              <td>{{ r.price_per_unit | number:'1.2-2' }}</td>
+              <td>{{ r.price_per_unit | number:'1.2-2' }} ر.س</td>
               <td style="font-weight: 800; color: #ea580c;">{{ r.total_cost | number:'1.2-2' }} ر.س</td>
               <td style="color: #475569;">{{ r.station || '-' }}</td>
               <td style="font-weight: 500;">{{ r.driver_name || '-' }}</td>
               <td style="font-size: 12px; color: #64748b;">{{ r.created_by_name || 'النظام المركزي' }}</td>
+
+              <!-- Admin Full CRUD: Edit and Delete -->
+              <td *ngIf="isAdmin" style="text-align: center;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+                  <button (click)="openEditModal(r)"
+                          class="btn btn-sm"
+                          style="background: #f1f5f9; border: 1px solid #cbd5e1; color: #0284c7; padding: 4px 8px; font-size: 11.5px; border-radius: 6px;"
+                          title="تعديل سجل الوقود">
+                    <app-icon name="edit" [size]="13"></app-icon>
+                    <span>تعديل</span>
+                  </button>
+                  <button (click)="confirmDeleteRecord(r)"
+                          class="btn btn-sm"
+                          style="background: #fef2f2; border: 1px solid #fee2e2; color: #ef4444; padding: 4px 8px; font-size: 11.5px; border-radius: 6px;"
+                          title="حذف السجل">
+                    <app-icon name="trash" [size]="13"></app-icon>
+                  </button>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -280,23 +300,29 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
                   <input type="number" [(ngModel)]="newRecord.odometer" name="odo" required min="0" class="form-control" />
                 </div>
 
+                <!-- DROPDOWN FUEL TYPE: Auto-fills price -->
                 <div class="form-group">
-                  <label class="form-label">نوع الوقود *</label>
-                  <select [(ngModel)]="newRecord.fuel_type" name="f_type" required class="form-select">
-                    <option value="DIESEL">ديزل</option>
-                    <option value="GASOLINE_91">بنزين 91</option>
-                    <option value="GASOLINE_95">بنزين 95</option>
+                  <label class="form-label">نوع الوقود (قائمة منسدلة) *</label>
+                  <select [(ngModel)]="newRecord.fuel_type" (change)="onFuelTypeSelected($event)" name="f_type" required class="form-select">
+                    <option *ngFor="let f of fuelTypes" [value]="f.name">
+                      {{ f.name }} ({{ f.price_per_liter }} {{ f.currency }}/لتر)
+                    </option>
                   </select>
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">الكمية (لتر) *</label>
+                  <label class="form-label">الكمية المزودة (لتر) *</label>
                   <input type="number" step="0.01" [(ngModel)]="newRecord.quantity" (input)="calcTotal()" name="qty" required min="1" class="form-control" />
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">سعر اللتر (ر.س) *</label>
-                  <input type="number" step="0.01" [(ngModel)]="newRecord.price_per_unit" (input)="calcTotal()" name="price" required min="0.1" class="form-control" />
+                  <label class="form-label">سعر اللتر المعتمد (ر.س) *</label>
+                  <div style="position: relative;">
+                    <input type="number" step="0.01" [(ngModel)]="newRecord.price_per_unit" (input)="calcTotal()" name="price" required min="0.1" class="form-control" style="background: #f8fafc; font-weight: 700; color: #0284c7;" />
+                    <span style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 10px; background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; font-weight: 700;">
+                      تلقائي
+                    </span>
+                  </div>
                 </div>
 
                 <div class="form-group">
@@ -328,6 +354,119 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
           </form>
         </div>
       </div>
+
+      <!-- Modal: EDIT Fuel Record (Admin Full CRUD) -->
+      <div *ngIf="showEditModal" class="modal-overlay">
+        <div class="modal-box">
+          <div class="modal-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <app-icon name="edit" [size]="20" style="color: #0284c7;"></app-icon>
+              <h3 style="font-weight: 700; font-size: 1.15rem; color: #0f172a; margin: 0;">
+                تعديل سجل تعبئة الوقود
+              </h3>
+            </div>
+            <button (click)="showEditModal = false" class="btn btn-outline btn-sm" style="padding: 4px 8px; border-radius: 6px;">
+              <app-icon name="x" [size]="16"></app-icon>
+            </button>
+          </div>
+
+          <form (ngSubmit)="saveEditRecord()">
+            <div class="modal-body">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">المركبة *</label>
+                  <select [(ngModel)]="editingRecord.vehicle" name="edit_v_id" required class="form-select">
+                    <option *ngFor="let v of vehicles" [value]="v.id">
+                      {{ v.internal_fleet_number }} - {{ v.plate_number }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">السائق</label>
+                  <select [(ngModel)]="editingRecord.driver" name="edit_d_id" class="form-select">
+                    <option [ngValue]="null">غير محدد</option>
+                    <option *ngFor="let d of drivers" [value]="d.id">{{ d.full_name }}</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">تاريخ التعبئة *</label>
+                  <input type="date" [(ngModel)]="editingRecord.date" name="edit_f_date" required class="form-control" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">قراءة العداد (كم) *</label>
+                  <input type="number" [(ngModel)]="editingRecord.odometer" name="edit_odo" required min="0" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">نوع الوقود *</label>
+                  <select [(ngModel)]="editingRecord.fuel_type" (change)="onEditFuelTypeSelected($event)" name="edit_f_type" required class="form-select">
+                    <option *ngFor="let f of fuelTypes" [value]="f.name">
+                      {{ f.name }} ({{ f.price_per_liter }} {{ f.currency }}/لتر)
+                    </option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">الكمية (لتر) *</label>
+                  <input type="number" step="0.01" [(ngModel)]="editingRecord.quantity" (input)="calcEditTotal()" name="edit_qty" required min="1" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">سعر اللتر (ر.س) *</label>
+                  <input type="number" step="0.01" [(ngModel)]="editingRecord.price_per_unit" (input)="calcEditTotal()" name="edit_price" required min="0.1" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">التكلفة الإجمالية</label>
+                  <div class="form-control" style="background: #fff7ed; border-color: #fed7aa; color: #ea580c; font-weight: 800; display: flex; align-items: center;">
+                    {{ editPreviewTotal | number:'1.2-2' }} ريال
+                  </div>
+                </div>
+
+                <div class="form-group" style="grid-column: span 2;">
+                  <label class="form-label">محطة الوقود</label>
+                  <input type="text" [(ngModel)]="editingRecord.station" name="edit_station" class="form-control" />
+                </div>
+
+                <div class="form-group" style="grid-column: span 2;">
+                  <label class="form-label">ملاحظات</label>
+                  <textarea [(ngModel)]="editingRecord.notes" name="edit_notes" rows="2" class="form-control"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" (click)="showEditModal = false" class="btn btn-secondary">إلغاء</button>
+              <button type="submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px;">
+                <app-icon name="check" [size]="16"></app-icon>
+                <span>حفظ التعديلات</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Modal: Delete Confirmation -->
+      <div *ngIf="showDeleteModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 420px; text-align: center; padding: 1.5rem;">
+          <div style="width: 52px; height: 52px; border-radius: 50%; background: #fef2f2; color: #ef4444; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto;">
+            <app-icon name="alert-triangle" [size]="28"></app-icon>
+          </div>
+          <h3 style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0 0 8px 0;">تأكيد حذف سجل الوقود</h3>
+          <p style="font-size: 0.9rem; color: #64748b; margin: 0 0 1.5rem 0; line-height: 1.5;">
+            هل أنت متأكد من رغبتك في حذف هذا السجل للمركبة <b>{{ recordToDelete?.fleet_number }}</b> بتاريخ {{ recordToDelete?.date }}؟
+          </p>
+          <div style="display: flex; gap: 10px; justify-content: center;">
+            <button (click)="showDeleteModal = false" class="btn btn-secondary">إلغاء</button>
+            <button (click)="executeDeleteRecord()" class="btn btn-danger" style="background: #ef4444; color: #fff; border: none; padding: 8px 20px; border-radius: 6px; font-weight: 700; cursor: pointer;">
+              تأكيد الحذف
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   `,
   styles: [`
@@ -351,6 +490,7 @@ export class FuelComponent implements OnInit {
   records: FuelRecord[] = [];
   vehicles: Vehicle[] = [];
   drivers: Driver[] = [];
+  fuelTypes: FuelType[] = [];
   loading = true;
 
   summary = {
@@ -368,11 +508,17 @@ export class FuelComponent implements OnInit {
   totalCount = 0;
 
   showCreateModal = false;
+  showEditModal = false;
+  showDeleteModal = false;
+
   previewTotal = 0;
+  editPreviewTotal = 0;
+  recordToDelete: FuelRecord | null = null;
+  editingRecord: any = {};
 
   newRecord: any = {
     date: new Date().toISOString().slice(0, 10),
-    fuel_type: 'DIESEL',
+    fuel_type: 'ديزل',
     quantity: 50,
     price_per_unit: 1.15
   };
@@ -381,10 +527,29 @@ export class FuelComponent implements OnInit {
     return this.authService.canWrite();
   }
 
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
   ngOnInit(): void {
+    this.loadFuelTypes();
     this.loadVehicles();
     this.loadDrivers();
     this.loadRecords();
+  }
+
+  loadFuelTypes(): void {
+    this.fuelService.getFuelTypes().subscribe({
+      next: (res) => {
+        this.fuelTypes = res.results || (res as any);
+        if (this.fuelTypes.length > 0 && !this.newRecord.fuel_type) {
+          this.newRecord.fuel_type = this.fuelTypes[0].name;
+          this.newRecord.price_per_unit = Number(this.fuelTypes[0].price_per_liter);
+          this.calcTotal();
+        }
+        this.cdr.markForCheck();
+      }
+    });
   }
 
   loadVehicles(): void {
@@ -415,11 +580,33 @@ export class FuelComponent implements OnInit {
     const v = this.vehicles.find(item => item.id === Number(this.newRecord.vehicle));
     if (v) {
       this.newRecord.odometer = v.current_odometer;
-      this.newRecord.fuel_type = v.fuel_type;
       this.newRecord.driver = v.assigned_driver;
-      this.newRecord.price_per_unit = v.fuel_type === 'DIESEL' ? 1.15 : 2.18;
+      // Match vehicle fuel type with our fuelTypes
+      const match = this.fuelTypes.find(f => f.name.toLowerCase() === (v.fuel_type || '').toLowerCase());
+      if (match) {
+        this.newRecord.fuel_type = match.name;
+        this.newRecord.price_per_unit = Number(match.price_per_liter);
+      }
       this.calcTotal();
       this.cdr.markForCheck();
+    }
+  }
+
+  onFuelTypeSelected(event: any): void {
+    const selectedName = event.target.value;
+    const found = this.fuelTypes.find(f => f.name === selectedName);
+    if (found) {
+      this.newRecord.price_per_unit = Number(found.price_per_liter);
+      this.calcTotal();
+    }
+  }
+
+  onEditFuelTypeSelected(event: any): void {
+    const selectedName = event.target.value;
+    const found = this.fuelTypes.find(f => f.name === selectedName);
+    if (found) {
+      this.editingRecord.price_per_unit = Number(found.price_per_liter);
+      this.calcEditTotal();
     }
   }
 
@@ -427,6 +614,12 @@ export class FuelComponent implements OnInit {
     const q = Number(this.newRecord.quantity) || 0;
     const p = Number(this.newRecord.price_per_unit) || 0;
     this.previewTotal = Math.round(q * p * 100) / 100;
+  }
+
+  calcEditTotal(): void {
+    const q = Number(this.editingRecord.quantity) || 0;
+    const p = Number(this.editingRecord.price_per_unit) || 0;
+    this.editPreviewTotal = Math.round(q * p * 100) / 100;
   }
 
   loadRecords(): void {
@@ -478,14 +671,15 @@ export class FuelComponent implements OnInit {
 
   openCreateModal(): void {
     const def = this.vehicles[0];
+    const defaultFuel = this.fuelTypes[0];
     this.newRecord = {
       vehicle: def?.id,
       driver: def?.assigned_driver,
       date: new Date().toISOString().slice(0, 10),
       odometer: def?.current_odometer || 0,
-      fuel_type: def?.fuel_type || 'DIESEL',
+      fuel_type: defaultFuel?.name || 'ديزل',
       quantity: 50,
-      price_per_unit: def?.fuel_type === 'DIESEL' ? 1.15 : 2.18
+      price_per_unit: defaultFuel ? Number(defaultFuel.price_per_liter) : 1.15
     };
     this.calcTotal();
     this.showCreateModal = true;
@@ -500,6 +694,46 @@ export class FuelComponent implements OnInit {
       },
       error: (err) => {
         this.toastService.error(err.error?.detail || 'فشل حفظ سجل الوقود');
+      }
+    });
+  }
+
+  openEditModal(r: FuelRecord): void {
+    this.editingRecord = { ...r };
+    this.calcEditTotal();
+    this.showEditModal = true;
+  }
+
+  saveEditRecord(): void {
+    if (!this.editingRecord.id) return;
+    this.fuelService.updateRecord(this.editingRecord.id, this.editingRecord).subscribe({
+      next: () => {
+        this.toastService.success('تم تحديث سجل الوقود بنجاح');
+        this.showEditModal = false;
+        this.loadRecords();
+      },
+      error: (err) => {
+        this.toastService.error(err.error?.detail || 'فشل تعديل سجل الوقود');
+      }
+    });
+  }
+
+  confirmDeleteRecord(r: FuelRecord): void {
+    this.recordToDelete = r;
+    this.showDeleteModal = true;
+  }
+
+  executeDeleteRecord(): void {
+    if (!this.recordToDelete) return;
+    this.fuelService.deleteRecord(this.recordToDelete.id).subscribe({
+      next: () => {
+        this.toastService.success('تم حذف سجل الوقود بنجاح');
+        this.showDeleteModal = false;
+        this.recordToDelete = null;
+        this.loadRecords();
+      },
+      error: (err) => {
+        this.toastService.error(err.error?.detail || 'فشل حذف سجل الوقود');
       }
     });
   }

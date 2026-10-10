@@ -1,0 +1,4255 @@
+[
+{
+  "model": "core.systemsetting",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-19T22:46:43.125Z",
+    "updated_at": "2026-10-10T18:19:36.456Z",
+    "key": "MAINTENANCE_DUE_SOON_KM",
+    "value": "1000",
+    "description": "حد الكيلومترات للتنبيه بالصيانة المستحقة قريباً"
+  }
+},
+{
+  "model": "core.systemsetting",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-19T22:46:43.216Z",
+    "updated_at": "2026-10-10T18:19:36.623Z",
+    "key": "MAINTENANCE_DUE_SOON_DAYS",
+    "value": "14",
+    "description": "حد الأيام للتنبيه بالصيانة المستحقة قريباً"
+  }
+},
+{
+  "model": "core.systemsetting",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-19T22:46:43.280Z",
+    "updated_at": "2026-10-10T18:19:36.697Z",
+    "key": "MAINTENANCE_UPCOMING_KM",
+    "value": "2500",
+    "description": "حد الكيلومترات للتنبيه بالصيانة القادمة"
+  }
+},
+{
+  "model": "core.systemsetting",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-19T22:46:43.349Z",
+    "updated_at": "2026-10-10T18:19:36.770Z",
+    "key": "MAINTENANCE_UPCOMING_DAYS",
+    "value": "30",
+    "description": "حد الأيام للتنبيه بالصيانة القادمة"
+  }
+},
+{
+  "model": "core.systemsetting",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-19T22:46:43.414Z",
+    "updated_at": "2026-10-10T18:19:36.845Z",
+    "key": "COMPANY_NAME",
+    "value": "شركة أسطول اللوجستية لنقل وتوزيع البضائع",
+    "description": "اسم الشركة في التقارير والترويسة"
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$zyxz4fv0lxNEW7COf3hCvH$maXCOy1L2jsvRYPIjHnFh4BE1hLFTMHV3I4mKbQeWn8=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "admin",
+    "email": "admin@astol.sa",
+    "full_name": "م. عبدالله السالم (مدير عام الأسطول)",
+    "role": "ADMIN",
+    "phone": "0501234567",
+    "department": "الإدارة العامة والتشغيل",
+    "is_active": true,
+    "is_staff": true,
+    "date_joined": "2026-09-19T22:46:43.493Z",
+    "updated_at": "2026-10-10T18:19:37.855Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$9ll3SmOy4Mth1Of2u3fTT4$NbdcxT65ZFC3LL+I/XvLeJitXzN9cXsI09FqdI0+Pw4=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "operator",
+    "email": "operator@astol.sa",
+    "full_name": "أ. محمد القحطاني (مسؤول حركة وتشغيل)",
+    "role": "OPERATOR",
+    "phone": "0559876543",
+    "department": "قسم الحركة والتشغيل الميداني",
+    "is_active": true,
+    "is_staff": false,
+    "date_joined": "2026-09-19T22:46:44.683Z",
+    "updated_at": "2026-10-10T18:19:38.970Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$iOgHYnLO8QN1eg230SU5G2$+eV1JsqePjaUjZ/984//YATuDhs+F6BFbXmRLwyjXAk=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "reporter",
+    "email": "reporter@astol.sa",
+    "full_name": "أ. سارة الدوسري (مدقق الجودة والتقارير)",
+    "role": "REPORTER",
+    "phone": "0543322110",
+    "department": "إدارة المتابعة والجودة والتقارير",
+    "is_active": true,
+    "is_staff": false,
+    "date_joined": "2026-09-19T22:46:45.750Z",
+    "updated_at": "2026-10-10T18:19:40.062Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "vehicles.vehicletype",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-19T22:46:46.840Z",
+    "updated_at": "2026-10-10T18:19:40.168Z",
+    "name": "سيدان (سيارات الإشراف والمتابعة)",
+    "description": "مركبات ركاب خفيفة للمهندسين والمشرفين",
+    "icon": "car"
+  }
+},
+{
+  "model": "vehicles.vehicletype",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-19T22:46:46.921Z",
+    "updated_at": "2026-10-10T18:19:40.242Z",
+    "name": "بيك أب (نقل خفيف وصيانة سريعة)",
+    "description": "سيارات حوض لنقل المعدات الخفيفة وفرق الدعم",
+    "icon": "truck"
+  }
+},
+{
+  "model": "vehicles.vehicletype",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-19T22:46:47.007Z",
+    "updated_at": "2026-10-10T18:19:40.317Z",
+    "name": "شاحنة نقل ثقيل (تريلات وقلابات)",
+    "description": "شاحنات نقل البضائع والشحن لمسافات طويلة",
+    "icon": "container"
+  }
+},
+{
+  "model": "vehicles.vehicletype",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-19T22:46:47.085Z",
+    "updated_at": "2026-10-10T18:19:40.393Z",
+    "name": "حافلة ركاب (نقل الموظفين والعمالة)",
+    "description": "حافلات لنقل الكوادر والموظفين بين الفروع",
+    "icon": "bus"
+  }
+},
+{
+  "model": "vehicles.vehicletype",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-19T22:46:47.171Z",
+    "updated_at": "2026-10-10T18:19:40.467Z",
+    "name": "فان بضائع ومبرد",
+    "description": "مركبات نقل وتوزيع مغلقة ومبردة",
+    "icon": "package"
+  }
+},
+{
+  "model": "vehicles.vehicle",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-19T22:46:49.425Z",
+    "updated_at": "2026-10-10T18:19:45.238Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "internal_fleet_number": "FL-101",
+    "plate_number": "أ ب ج 1021",
+    "vehicle_type": 1,
+    "make": "تويوتا",
+    "model": "كامري",
+    "year": 2024,
+    "color": "أبيض لؤلؤي",
+    "vin": "4T1B11HK5PU101001",
+    "engine_number": "2AR-FE-901",
+    "current_odometer": 34500,
+    "fuel_type": "GASOLINE_91",
+    "status": "ACTIVE",
+    "assigned_driver": 1,
+    "department": "إدارة العمليات",
+    "purchase_date": "2024-01-15",
+    "registration_expiry_date": "2027-04-08",
+    "insurance_expiry_date": "2027-01-08",
+    "periodic_inspection_expiry_date": "2027-02-07",
+    "notes": "مركبة معتمدة في الأسطول التشغيلي"
+  }
+},
+{
+  "model": "vehicles.vehicle",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-19T22:46:49.926Z",
+    "updated_at": "2026-10-10T18:19:45.323Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "internal_fleet_number": "FL-102",
+    "plate_number": "د هـ و 2045",
+    "vehicle_type": 1,
+    "make": "هيونداي",
+    "model": "سوناتا",
+    "year": 2023,
+    "color": "فضي ميتاليك",
+    "vin": "KMHE24LA4PA202002",
+    "engine_number": "G4KJ-882",
+    "current_odometer": 58200,
+    "fuel_type": "GASOLINE_91",
+    "status": "ACTIVE",
+    "assigned_driver": 2,
+    "department": "قسم السلامة والإشراف",
+    "purchase_date": "2023-01-15",
+    "registration_expiry_date": "2026-11-24",
+    "insurance_expiry_date": "2026-10-20",
+    "periodic_inspection_expiry_date": "2026-12-09",
+    "notes": "مركبة معتمدة في الأسطول التشغيلي"
+  }
+},
+{
+  "model": "vehicles.vehicle",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-19T22:46:50.450Z",
+    "updated_at": "2026-10-10T18:19:45.500Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "internal_fleet_number": "FL-201",
+    "plate_number": "س ص ط 3099",
+    "vehicle_type": 2,
+    "make": "تويوتا",
+    "model": "هايلكس غمارتين 4x4",
+    "year": 2024,
+    "color": "أبيض",
+    "vin": "MROER8CD1P1303003",
+    "engine_number": "1GD-FTV-771",
+    "current_odometer": 42800,
+    "fuel_type": "DIESEL",
+    "status": "ACTIVE",
+    "assigned_driver": 3,
+    "department": "فرق الصيانة الميدانية",
+    "purchase_date": "2024-01-15",
+    "registration_expiry_date": "2027-06-07",
+    "insurance_expiry_date": "2027-04-28",
+    "periodic_inspection_expiry_date": "2027-03-09",
+    "notes": "مركبة معتمدة في الأسطول التشغيلي"
+  }
+},
+{
+  "model": "vehicles.vehicle",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-19T22:46:50.933Z",
+    "updated_at": "2026-10-10T18:19:45.583Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "internal_fleet_number": "FL-202",
+    "plate_number": "ع غ ف 4012",
+    "vehicle_type": 2,
+    "make": "إيسوزو",
+    "model": "ديماكس GT",
+    "year": 2022,
+    "color": "رمادي غامق",
+    "vin": "MPATE12Y7N5404004",
+    "engine_number": "4JJ3-TCX-551",
+    "current_odometer": 89500,
+    "fuel_type": "DIESEL",
+    "status": "IN_MAINTENANCE",
+    "assigned_driver": 4,
+    "department": "الدعم اللوجستي",
+    "purchase_date": "2022-01-15",
+    "registration_expiry_date": "2026-09-25",
+    "insurance_expiry_date": "2027-01-28",
+    "periodic_inspection_expiry_date": "2026-10-05",
+    "notes": "مركبة معتمدة في الأسطول التشغيلي"
+  }
+},
+{
+  "model": "vehicles.vehicle",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-19T22:46:51.422Z",
+    "updated_at": "2026-10-10T18:19:45.667Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "internal_fleet_number": "FL-301",
+    "plate_number": "ق ك ل 5088",
+    "vehicle_type": 3,
+    "make": "مرسيدس-بنز",
+    "model": "أكتروس 2040 راس تريلا",
+    "year": 2023,
+    "color": "أزرق كحلي",
+    "vin": "WDB9634031L505005",
+    "engine_number": "OM471LA-331",
+    "current_odometer": 125400,
+    "fuel_type": "DIESEL",
+    "status": "ACTIVE",
+    "assigned_driver": 5,
+    "department": "الشحن الثقيل بين المدن",
+    "purchase_date": "2023-01-15",
+    "registration_expiry_date": "2027-08-06",
+    "insurance_expiry_date": "2027-06-17",
+    "periodic_inspection_expiry_date": "2027-04-28",
+    "notes": "مركبة معتمدة في الأسطول التشغيلي"
+  }
+},
+{
+  "model": "vehicles.vehicle",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-09-19T22:46:52.105Z",
+    "updated_at": "2026-10-10T18:19:45.789Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "internal_fleet_number": "FL-302",
+    "plate_number": "م ن هـ 6077",
+    "vehicle_type": 3,
+    "make": "فولفو",
+    "model": "FH16 540 Globetrotter",
+    "year": 2024,
+    "color": "أبيض ثلجي",
+    "vin": "YV2RT40A9PB606006",
+    "engine_number": "D16K540-119",
+    "current_odometer": 64100,
+    "fuel_type": "DIESEL",
+    "status": "ACTIVE",
+    "assigned_driver": 6,
+    "department": "النقل المبرد للمستودعات",
+    "purchase_date": "2024-01-15",
+    "registration_expiry_date": "2027-05-08",
+    "insurance_expiry_date": "2027-04-08",
+    "periodic_inspection_expiry_date": "2027-02-27",
+    "notes": "مركبة معتمدة في الأسطول التشغيلي"
+  }
+},
+{
+  "model": "vehicles.vehicle",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-09-19T22:46:52.644Z",
+    "updated_at": "2026-10-10T18:19:45.885Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "internal_fleet_number": "FL-401",
+    "plate_number": "و ي أ 7033",
+    "vehicle_type": 4,
+    "make": "تويوتا",
+    "model": "كوستر 30 راكب",
+    "year": 2023,
+    "color": "أبيض مع خط أزرق",
+    "vin": "JTEDB42P2P8707007",
+    "engine_number": "1HZ-420-994",
+    "current_odometer": 72300,
+    "fuel_type": "DIESEL",
+    "status": "ACTIVE",
+    "assigned_driver": 8,
+    "department": "نقل الكوادر والموظفين",
+    "purchase_date": "2023-01-15",
+    "registration_expiry_date": "2027-02-27",
+    "insurance_expiry_date": "2027-01-28",
+    "periodic_inspection_expiry_date": "2026-12-29",
+    "notes": "مركبة معتمدة في الأسطول التشغيلي"
+  }
+},
+{
+  "model": "vehicles.vehicle",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-09-19T22:46:53.132Z",
+    "updated_at": "2026-10-10T18:19:45.967Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "internal_fleet_number": "FL-501",
+    "plate_number": "ب ت ث 8022",
+    "vehicle_type": 5,
+    "make": "فورد",
+    "model": "ترانزيت كارجو فان مقفل",
+    "year": 2023,
+    "color": "أبيض ناصع",
+    "vin": "1FTYR2Y84PKA80808",
+    "engine_number": "EcoBlue-20-41",
+    "current_odometer": 49600,
+    "fuel_type": "DIESEL",
+    "status": "ACTIVE",
+    "assigned_driver": 1,
+    "department": "التوزيع والتوصيل السريع",
+    "purchase_date": "2023-01-15",
+    "registration_expiry_date": "2027-01-13",
+    "insurance_expiry_date": "2027-01-03",
+    "periodic_inspection_expiry_date": "2026-12-19",
+    "notes": "مركبة معتمدة في الأسطول التشغيلي"
+  }
+},
+{
+  "model": "vehicles.vehicle",
+  "pk": 9,
+  "fields": {
+    "created_at": "2026-09-19T22:46:53.590Z",
+    "updated_at": "2026-10-10T18:19:46.059Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "internal_fleet_number": "FL-502",
+    "plate_number": "ج ح خ 9011",
+    "vehicle_type": 5,
+    "make": "تويوتا",
+    "model": "هايس مبرد ثلاجة",
+    "year": 2022,
+    "color": "أبيض",
+    "vin": "JTFRH22P4N8909009",
+    "engine_number": "2TR-FE-612",
+    "current_odometer": 118900,
+    "fuel_type": "GASOLINE_91",
+    "status": "OUT_OF_SERVICE",
+    "assigned_driver": null,
+    "department": "النقل والتوزيع",
+    "purchase_date": "2022-01-15",
+    "registration_expiry_date": "2026-08-31",
+    "insurance_expiry_date": "2026-09-30",
+    "periodic_inspection_expiry_date": "2026-09-10",
+    "notes": "مركبة متوقفة بحاجة إلى صيانة شاملة لناقل الحركة وعمرة محرك"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-19T22:46:49.510Z",
+    "updated_at": "2026-09-19T22:46:49.510Z",
+    "vehicle": 1,
+    "reading": 33300,
+    "date_time": "2026-09-04T22:46:49.509Z",
+    "source": "INITIAL",
+    "user": [
+      "admin"
+    ],
+    "notes": "قراءة افتتاحية مسجلة بالنظام"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-19T22:46:49.585Z",
+    "updated_at": "2026-09-19T22:46:49.585Z",
+    "vehicle": 1,
+    "reading": 34500,
+    "date_time": "2026-09-18T22:46:49.584Z",
+    "source": "MANUAL",
+    "user": [
+      "operator"
+    ],
+    "notes": "قراءة فحص وتحديث دوري"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-19T22:46:50.033Z",
+    "updated_at": "2026-09-19T22:46:50.033Z",
+    "vehicle": 2,
+    "reading": 57000,
+    "date_time": "2026-09-04T22:46:50.033Z",
+    "source": "INITIAL",
+    "user": [
+      "admin"
+    ],
+    "notes": "قراءة افتتاحية مسجلة بالنظام"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-19T22:46:50.116Z",
+    "updated_at": "2026-09-19T22:46:50.116Z",
+    "vehicle": 2,
+    "reading": 58200,
+    "date_time": "2026-09-18T22:46:50.116Z",
+    "source": "MANUAL",
+    "user": [
+      "operator"
+    ],
+    "notes": "قراءة فحص وتحديث دوري"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-19T22:46:50.535Z",
+    "updated_at": "2026-09-19T22:46:50.535Z",
+    "vehicle": 3,
+    "reading": 41600,
+    "date_time": "2026-09-04T22:46:50.534Z",
+    "source": "INITIAL",
+    "user": [
+      "admin"
+    ],
+    "notes": "قراءة افتتاحية مسجلة بالنظام"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-09-19T22:46:50.615Z",
+    "updated_at": "2026-09-19T22:46:50.615Z",
+    "vehicle": 3,
+    "reading": 42800,
+    "date_time": "2026-09-18T22:46:50.614Z",
+    "source": "MANUAL",
+    "user": [
+      "operator"
+    ],
+    "notes": "قراءة فحص وتحديث دوري"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-09-19T22:46:51.017Z",
+    "updated_at": "2026-09-19T22:46:51.017Z",
+    "vehicle": 4,
+    "reading": 88300,
+    "date_time": "2026-09-04T22:46:51.017Z",
+    "source": "INITIAL",
+    "user": [
+      "admin"
+    ],
+    "notes": "قراءة افتتاحية مسجلة بالنظام"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-09-19T22:46:51.097Z",
+    "updated_at": "2026-09-19T22:46:51.097Z",
+    "vehicle": 4,
+    "reading": 89500,
+    "date_time": "2026-09-18T22:46:51.096Z",
+    "source": "MANUAL",
+    "user": [
+      "operator"
+    ],
+    "notes": "قراءة فحص وتحديث دوري"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 9,
+  "fields": {
+    "created_at": "2026-09-19T22:46:51.524Z",
+    "updated_at": "2026-09-19T22:46:51.524Z",
+    "vehicle": 5,
+    "reading": 124200,
+    "date_time": "2026-09-04T22:46:51.523Z",
+    "source": "INITIAL",
+    "user": [
+      "admin"
+    ],
+    "notes": "قراءة افتتاحية مسجلة بالنظام"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 10,
+  "fields": {
+    "created_at": "2026-09-19T22:46:51.594Z",
+    "updated_at": "2026-09-19T22:46:51.594Z",
+    "vehicle": 5,
+    "reading": 125400,
+    "date_time": "2026-09-18T22:46:51.594Z",
+    "source": "MANUAL",
+    "user": [
+      "operator"
+    ],
+    "notes": "قراءة فحص وتحديث دوري"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 11,
+  "fields": {
+    "created_at": "2026-09-19T22:46:52.197Z",
+    "updated_at": "2026-09-19T22:46:52.197Z",
+    "vehicle": 6,
+    "reading": 62900,
+    "date_time": "2026-09-04T22:46:52.197Z",
+    "source": "INITIAL",
+    "user": [
+      "admin"
+    ],
+    "notes": "قراءة افتتاحية مسجلة بالنظام"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 12,
+  "fields": {
+    "created_at": "2026-09-19T22:46:52.285Z",
+    "updated_at": "2026-09-19T22:46:52.285Z",
+    "vehicle": 6,
+    "reading": 64100,
+    "date_time": "2026-09-18T22:46:52.284Z",
+    "source": "MANUAL",
+    "user": [
+      "operator"
+    ],
+    "notes": "قراءة فحص وتحديث دوري"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 13,
+  "fields": {
+    "created_at": "2026-09-19T22:46:52.728Z",
+    "updated_at": "2026-09-19T22:46:52.728Z",
+    "vehicle": 7,
+    "reading": 71100,
+    "date_time": "2026-09-04T22:46:52.728Z",
+    "source": "INITIAL",
+    "user": [
+      "admin"
+    ],
+    "notes": "قراءة افتتاحية مسجلة بالنظام"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 14,
+  "fields": {
+    "created_at": "2026-09-19T22:46:52.816Z",
+    "updated_at": "2026-09-19T22:46:52.816Z",
+    "vehicle": 7,
+    "reading": 72300,
+    "date_time": "2026-09-18T22:46:52.816Z",
+    "source": "MANUAL",
+    "user": [
+      "operator"
+    ],
+    "notes": "قراءة فحص وتحديث دوري"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 15,
+  "fields": {
+    "created_at": "2026-09-19T22:46:53.217Z",
+    "updated_at": "2026-09-19T22:46:53.217Z",
+    "vehicle": 8,
+    "reading": 48400,
+    "date_time": "2026-09-04T22:46:53.217Z",
+    "source": "INITIAL",
+    "user": [
+      "admin"
+    ],
+    "notes": "قراءة افتتاحية مسجلة بالنظام"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 16,
+  "fields": {
+    "created_at": "2026-09-19T22:46:53.289Z",
+    "updated_at": "2026-09-19T22:46:53.289Z",
+    "vehicle": 8,
+    "reading": 49600,
+    "date_time": "2026-09-18T22:46:53.289Z",
+    "source": "MANUAL",
+    "user": [
+      "operator"
+    ],
+    "notes": "قراءة فحص وتحديث دوري"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 17,
+  "fields": {
+    "created_at": "2026-09-19T22:46:53.666Z",
+    "updated_at": "2026-09-19T22:46:53.666Z",
+    "vehicle": 9,
+    "reading": 117700,
+    "date_time": "2026-09-04T22:46:53.666Z",
+    "source": "INITIAL",
+    "user": [
+      "admin"
+    ],
+    "notes": "قراءة افتتاحية مسجلة بالنظام"
+  }
+},
+{
+  "model": "vehicles.odometerreading",
+  "pk": 18,
+  "fields": {
+    "created_at": "2026-09-19T22:46:53.738Z",
+    "updated_at": "2026-09-19T22:46:53.738Z",
+    "vehicle": 9,
+    "reading": 118900,
+    "date_time": "2026-09-18T22:46:53.738Z",
+    "source": "MANUAL",
+    "user": [
+      "operator"
+    ],
+    "notes": "قراءة فحص وتحديث دوري"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-19T22:46:49.760Z",
+    "updated_at": "2026-09-19T22:46:49.760Z",
+    "vehicle": 1,
+    "doc_type": "REGISTRATION",
+    "document_number": "REG-FL-101",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2027-03-18",
+    "file": "",
+    "notes": "استمارة سير المركبة"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-19T22:46:49.844Z",
+    "updated_at": "2026-09-19T22:46:49.844Z",
+    "vehicle": 1,
+    "doc_type": "INSURANCE",
+    "document_number": "INS-FL-101",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2026-12-18",
+    "file": "",
+    "notes": "وثيقة تأمين شامل أسطول"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-19T22:46:50.283Z",
+    "updated_at": "2026-09-19T22:46:50.283Z",
+    "vehicle": 2,
+    "doc_type": "REGISTRATION",
+    "document_number": "REG-FL-102",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2026-11-03",
+    "file": "",
+    "notes": "استمارة سير المركبة"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-19T22:46:50.368Z",
+    "updated_at": "2026-09-19T22:46:50.368Z",
+    "vehicle": 2,
+    "doc_type": "INSURANCE",
+    "document_number": "INS-FL-102",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2026-09-29",
+    "file": "",
+    "notes": "وثيقة تأمين شامل أسطول"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-19T22:46:50.782Z",
+    "updated_at": "2026-09-19T22:46:50.782Z",
+    "vehicle": 3,
+    "doc_type": "REGISTRATION",
+    "document_number": "REG-FL-201",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2027-05-17",
+    "file": "",
+    "notes": "استمارة سير المركبة"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-09-19T22:46:50.858Z",
+    "updated_at": "2026-09-19T22:46:50.858Z",
+    "vehicle": 3,
+    "doc_type": "INSURANCE",
+    "document_number": "INS-FL-201",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2027-04-07",
+    "file": "",
+    "notes": "وثيقة تأمين شامل أسطول"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-09-19T22:46:51.271Z",
+    "updated_at": "2026-09-19T22:46:51.271Z",
+    "vehicle": 4,
+    "doc_type": "REGISTRATION",
+    "document_number": "REG-FL-202",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2026-09-04",
+    "file": "",
+    "notes": "استمارة سير المركبة"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-09-19T22:46:51.339Z",
+    "updated_at": "2026-09-19T22:46:51.339Z",
+    "vehicle": 4,
+    "doc_type": "INSURANCE",
+    "document_number": "INS-FL-202",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2027-01-07",
+    "file": "",
+    "notes": "وثيقة تأمين شامل أسطول"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 9,
+  "fields": {
+    "created_at": "2026-09-19T22:46:51.936Z",
+    "updated_at": "2026-09-19T22:46:51.936Z",
+    "vehicle": 5,
+    "doc_type": "REGISTRATION",
+    "document_number": "REG-FL-301",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2027-07-16",
+    "file": "",
+    "notes": "استمارة سير المركبة"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 10,
+  "fields": {
+    "created_at": "2026-09-19T22:46:52.020Z",
+    "updated_at": "2026-09-19T22:46:52.021Z",
+    "vehicle": 5,
+    "doc_type": "INSURANCE",
+    "document_number": "INS-FL-301",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2027-05-27",
+    "file": "",
+    "notes": "وثيقة تأمين شامل أسطول"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 11,
+  "fields": {
+    "created_at": "2026-09-19T22:46:52.469Z",
+    "updated_at": "2026-09-19T22:46:52.469Z",
+    "vehicle": 6,
+    "doc_type": "REGISTRATION",
+    "document_number": "REG-FL-302",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2027-04-17",
+    "file": "",
+    "notes": "استمارة سير المركبة"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 12,
+  "fields": {
+    "created_at": "2026-09-19T22:46:52.553Z",
+    "updated_at": "2026-09-19T22:46:52.553Z",
+    "vehicle": 6,
+    "doc_type": "INSURANCE",
+    "document_number": "INS-FL-302",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2027-03-18",
+    "file": "",
+    "notes": "وثيقة تأمين شامل أسطول"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 13,
+  "fields": {
+    "created_at": "2026-09-19T22:46:52.984Z",
+    "updated_at": "2026-09-19T22:46:52.984Z",
+    "vehicle": 7,
+    "doc_type": "REGISTRATION",
+    "document_number": "REG-FL-401",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2027-02-06",
+    "file": "",
+    "notes": "استمارة سير المركبة"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 14,
+  "fields": {
+    "created_at": "2026-09-19T22:46:53.059Z",
+    "updated_at": "2026-09-19T22:46:53.060Z",
+    "vehicle": 7,
+    "doc_type": "INSURANCE",
+    "document_number": "INS-FL-401",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2027-01-07",
+    "file": "",
+    "notes": "وثيقة تأمين شامل أسطول"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 15,
+  "fields": {
+    "created_at": "2026-09-19T22:46:53.440Z",
+    "updated_at": "2026-09-19T22:46:53.440Z",
+    "vehicle": 8,
+    "doc_type": "REGISTRATION",
+    "document_number": "REG-FL-501",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2026-12-23",
+    "file": "",
+    "notes": "استمارة سير المركبة"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 16,
+  "fields": {
+    "created_at": "2026-09-19T22:46:53.516Z",
+    "updated_at": "2026-09-19T22:46:53.516Z",
+    "vehicle": 8,
+    "doc_type": "INSURANCE",
+    "document_number": "INS-FL-501",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2026-12-13",
+    "file": "",
+    "notes": "وثيقة تأمين شامل أسطول"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 17,
+  "fields": {
+    "created_at": "2026-09-19T22:46:53.807Z",
+    "updated_at": "2026-09-19T22:46:53.807Z",
+    "vehicle": 9,
+    "doc_type": "REGISTRATION",
+    "document_number": "REG-FL-502",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2026-08-10",
+    "file": "",
+    "notes": "استمارة سير المركبة"
+  }
+},
+{
+  "model": "vehicles.vehicledocument",
+  "pk": 18,
+  "fields": {
+    "created_at": "2026-09-19T22:46:53.887Z",
+    "updated_at": "2026-09-19T22:46:53.887Z",
+    "vehicle": 9,
+    "doc_type": "INSURANCE",
+    "document_number": "INS-FL-502",
+    "issue_date": "2025-11-23",
+    "expiry_date": "2026-09-09",
+    "file": "",
+    "notes": "وثيقة تأمين شامل أسطول"
+  }
+},
+{
+  "model": "vehicles.vehiclemodel",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-10-10T18:19:40.543Z",
+    "updated_at": "2026-10-10T18:19:40.543Z",
+    "name": "هايلكس غمارتين",
+    "make": "تويوتا",
+    "description": "بيك أب خفيف محرك 2.7 لتر"
+  }
+},
+{
+  "model": "vehicles.vehiclemodel",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-10-10T18:19:40.627Z",
+    "updated_at": "2026-10-10T18:19:40.627Z",
+    "name": "لاند كروزر برادو",
+    "make": "تويوتا",
+    "description": "دفع رباعي للإشراف الميداني"
+  }
+},
+{
+  "model": "vehicles.vehiclemodel",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-10-10T18:19:40.715Z",
+    "updated_at": "2026-10-10T18:19:40.715Z",
+    "name": "كامري",
+    "make": "تويوتا",
+    "description": "سيدان لنقل المشرفين والزيارات"
+  }
+},
+{
+  "model": "vehicles.vehiclemodel",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-10-10T18:19:40.800Z",
+    "updated_at": "2026-10-10T18:19:40.800Z",
+    "name": "أكتروس 1845",
+    "make": "مرسيدس بنز",
+    "description": "شاحنة نقل ثقيل وتريلا خطوط طويلة"
+  }
+},
+{
+  "model": "vehicles.vehiclemodel",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-10-10T18:19:40.948Z",
+    "updated_at": "2026-10-10T18:19:40.948Z",
+    "name": "NPR 75",
+    "make": "إيسوزو",
+    "description": "شاحنة نقل متوسط وصندوق مبرد"
+  }
+},
+{
+  "model": "vehicles.vehiclemodel",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-10-10T18:19:41.041Z",
+    "updated_at": "2026-10-10T18:19:41.041Z",
+    "name": "FH 460",
+    "make": "فولفو",
+    "description": "رأس تريلا ثقيل 6x4"
+  }
+},
+{
+  "model": "vehicles.vehiclemodel",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-10-10T18:19:41.127Z",
+    "updated_at": "2026-10-10T18:19:41.127Z",
+    "name": "إتش وان (H-1)",
+    "make": "هيونداي",
+    "description": "فان ركاب ونقل إشرافي 9 مقاعد"
+  }
+},
+{
+  "model": "vehicles.vehiclemodel",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-10-10T18:19:41.232Z",
+    "updated_at": "2026-10-10T18:19:41.233Z",
+    "name": "فوزو كانتر",
+    "make": "ميتسوبيشي",
+    "description": "دينا نقل خفيف 3.5 طن"
+  }
+},
+{
+  "model": "vehicles.vehiclecolor",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-10-10T18:19:41.318Z",
+    "updated_at": "2026-10-10T18:19:41.318Z",
+    "name": "أبيض لؤلؤي",
+    "code": "#FFFFFF"
+  }
+},
+{
+  "model": "vehicles.vehiclecolor",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-10-10T18:19:41.414Z",
+    "updated_at": "2026-10-10T18:19:41.414Z",
+    "name": "أبيض ناصع",
+    "code": "#F8F9FA"
+  }
+},
+{
+  "model": "vehicles.vehiclecolor",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-10-10T18:19:41.495Z",
+    "updated_at": "2026-10-10T18:19:41.496Z",
+    "name": "فضي ميتاليك",
+    "code": "#C0C0C0"
+  }
+},
+{
+  "model": "vehicles.vehiclecolor",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-10-10T18:19:41.590Z",
+    "updated_at": "2026-10-10T18:19:41.590Z",
+    "name": "رمادي داكن (فيراني)",
+    "code": "#4A4A4A"
+  }
+},
+{
+  "model": "vehicles.vehiclecolor",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-10-10T18:19:41.679Z",
+    "updated_at": "2026-10-10T18:19:41.679Z",
+    "name": "أسود ملكي",
+    "code": "#000000"
+  }
+},
+{
+  "model": "vehicles.vehiclecolor",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-10-10T18:19:41.778Z",
+    "updated_at": "2026-10-10T18:19:41.778Z",
+    "name": "أزرق كحلي",
+    "code": "#002B49"
+  }
+},
+{
+  "model": "vehicles.vehiclecolor",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-10-10T18:19:41.854Z",
+    "updated_at": "2026-10-10T18:19:41.854Z",
+    "name": "أحمر ناري",
+    "code": "#C8102E"
+  }
+},
+{
+  "model": "vehicles.vehiclecolor",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-10-10T18:19:41.946Z",
+    "updated_at": "2026-10-10T18:19:41.946Z",
+    "name": "ذهبي رملي",
+    "code": "#D4AF37"
+  }
+},
+{
+  "model": "vehicles.department",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-10-10T18:19:42.019Z",
+    "updated_at": "2026-10-10T18:19:42.019Z",
+    "name": "قسم الحركة والتشغيل الميداني",
+    "description": "إدارة حركة الأسطول وتوجيه السائقين وتنفيذ الرحلات"
+  }
+},
+{
+  "model": "vehicles.department",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-10-10T18:19:42.179Z",
+    "updated_at": "2026-10-10T18:19:42.179Z",
+    "name": "إدارة الصيانة والدعم الفني",
+    "description": "متابعة جدول الصيانة الدورية وإصلاح الأعطال وقطع الغيار"
+  }
+},
+{
+  "model": "vehicles.department",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-10-10T18:19:42.245Z",
+    "updated_at": "2026-10-10T18:19:42.245Z",
+    "name": "قسم الشحن والنقل اللوجستي",
+    "description": "عمليات الشحن بين المدن وتوزيع البضائع والتسليم"
+  }
+},
+{
+  "model": "vehicles.department",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-10-10T18:19:42.322Z",
+    "updated_at": "2026-10-10T18:19:42.322Z",
+    "name": "الإدارة العامة والتشغيل",
+    "description": "الإدارة العليا وإشراف التشغيل وتخطيط المهام"
+  }
+},
+{
+  "model": "vehicles.department",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-10-10T18:19:42.405Z",
+    "updated_at": "2026-10-10T18:19:42.405Z",
+    "name": "إدارة المتابعة والجودة والتقارير",
+    "description": "مراقبة مؤشرات الأداء واستهلاك الوقود والتراخيص والسلامة"
+  }
+},
+{
+  "model": "vehicles.department",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-10-10T18:19:42.478Z",
+    "updated_at": "2026-10-10T18:19:42.478Z",
+    "name": "قسم الأمن والسلامة والصحة المهنية",
+    "description": "فحص جاهزية المركبات وتدريب السائقين على القيادة الآمنة"
+  }
+},
+{
+  "model": "drivers.driver",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-19T22:46:48.669Z",
+    "updated_at": "2026-10-10T18:19:44.561Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "full_name": "خالد بن سعد العتيبي",
+    "national_id": "1087654321",
+    "phone": "0551122334",
+    "license_number": "DL-88201",
+    "license_expiry_date": "2027-08-15",
+    "status": "ACTIVE",
+    "notes": "سائق معتمد برخصة نقل عمومي وثقيل"
+  }
+},
+{
+  "model": "drivers.driver",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-19T22:46:48.742Z",
+    "updated_at": "2026-10-10T18:19:44.680Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "full_name": "فهد بن ناصر الحربي",
+    "national_id": "1098765432",
+    "phone": "0552233445",
+    "license_number": "DL-77312",
+    "license_expiry_date": "2027-04-10",
+    "status": "ACTIVE",
+    "notes": "سائق معتمد برخصة نقل عمومي وثقيل"
+  }
+},
+{
+  "model": "drivers.driver",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-19T22:46:48.816Z",
+    "updated_at": "2026-10-10T18:19:44.764Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "full_name": "أحمد بن سعيد الشهري",
+    "national_id": "1076543210",
+    "phone": "0553344556",
+    "license_number": "DL-66423",
+    "license_expiry_date": "2026-11-25",
+    "status": "ACTIVE",
+    "notes": "سائق معتمد برخصة نقل عمومي وثقيل"
+  }
+},
+{
+  "model": "drivers.driver",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-19T22:46:48.898Z",
+    "updated_at": "2026-10-10T18:19:44.863Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "full_name": "عمر بن سالم الغامدي",
+    "national_id": "1065432109",
+    "phone": "0554455667",
+    "license_number": "DL-55534",
+    "license_expiry_date": "2026-10-05",
+    "status": "ACTIVE",
+    "notes": "سائق معتمد برخصة نقل عمومي وثقيل"
+  }
+},
+{
+  "model": "drivers.driver",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-19T22:46:49.065Z",
+    "updated_at": "2026-10-10T18:19:44.939Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "full_name": "سلطان بن عبدالعزيز المطيري",
+    "national_id": "1054321098",
+    "phone": "0555566778",
+    "license_number": "DL-44645",
+    "license_expiry_date": "2028-01-20",
+    "status": "ACTIVE",
+    "notes": "سائق معتمد برخصة نقل عمومي وثقيل"
+  }
+},
+{
+  "model": "drivers.driver",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-09-19T22:46:49.167Z",
+    "updated_at": "2026-10-10T18:19:45.012Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "full_name": "راشد بن محمد المري",
+    "national_id": "1043210987",
+    "phone": "0556677889",
+    "license_number": "DL-33756",
+    "license_expiry_date": "2027-06-30",
+    "status": "ACTIVE",
+    "notes": "سائق معتمد برخصة نقل عمومي وثقيل"
+  }
+},
+{
+  "model": "drivers.driver",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-09-19T22:46:49.247Z",
+    "updated_at": "2026-10-10T18:19:45.088Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "full_name": "ياسر بن علي الزهراني",
+    "national_id": "1032109876",
+    "phone": "0557788990",
+    "license_number": "DL-22867",
+    "license_expiry_date": "2026-08-01",
+    "status": "ON_LEAVE",
+    "notes": "سائق معتمد برخصة نقل عمومي وثقيل"
+  }
+},
+{
+  "model": "drivers.driver",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-09-19T22:46:49.340Z",
+    "updated_at": "2026-10-10T18:19:45.163Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "full_name": "طارق بن حمود الرشيدي",
+    "national_id": "1021098765",
+    "phone": "0558899001",
+    "license_number": "DL-11978",
+    "license_expiry_date": "2027-12-12",
+    "status": "ACTIVE",
+    "notes": "سائق معتمد برخصة نقل عمومي وثقيل"
+  }
+},
+{
+  "model": "drivers.driverassignment",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-19T22:46:49.663Z",
+    "updated_at": "2026-09-19T22:46:49.663Z",
+    "driver": 1,
+    "vehicle": 1,
+    "start_date": "2026-07-21",
+    "end_date": null,
+    "is_active": true,
+    "notes": "إسناد رسمي للمركبة",
+    "assigned_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "drivers.driverassignment",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-19T22:46:50.202Z",
+    "updated_at": "2026-09-19T22:46:50.202Z",
+    "driver": 2,
+    "vehicle": 2,
+    "start_date": "2026-07-21",
+    "end_date": null,
+    "is_active": true,
+    "notes": "إسناد رسمي للمركبة",
+    "assigned_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "drivers.driverassignment",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-19T22:46:50.705Z",
+    "updated_at": "2026-09-19T22:46:50.705Z",
+    "driver": 3,
+    "vehicle": 3,
+    "start_date": "2026-07-21",
+    "end_date": null,
+    "is_active": true,
+    "notes": "إسناد رسمي للمركبة",
+    "assigned_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "drivers.driverassignment",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-19T22:46:51.184Z",
+    "updated_at": "2026-09-19T22:46:51.184Z",
+    "driver": 4,
+    "vehicle": 4,
+    "start_date": "2026-07-21",
+    "end_date": null,
+    "is_active": true,
+    "notes": "إسناد رسمي للمركبة",
+    "assigned_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "drivers.driverassignment",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-19T22:46:51.856Z",
+    "updated_at": "2026-09-19T22:46:51.856Z",
+    "driver": 5,
+    "vehicle": 5,
+    "start_date": "2026-07-21",
+    "end_date": null,
+    "is_active": true,
+    "notes": "إسناد رسمي للمركبة",
+    "assigned_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "drivers.driverassignment",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-09-19T22:46:52.373Z",
+    "updated_at": "2026-09-19T22:46:52.373Z",
+    "driver": 6,
+    "vehicle": 6,
+    "start_date": "2026-07-21",
+    "end_date": null,
+    "is_active": true,
+    "notes": "إسناد رسمي للمركبة",
+    "assigned_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "drivers.driverassignment",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-09-19T22:46:52.904Z",
+    "updated_at": "2026-09-19T22:46:52.904Z",
+    "driver": 8,
+    "vehicle": 7,
+    "start_date": "2026-07-21",
+    "end_date": null,
+    "is_active": true,
+    "notes": "إسناد رسمي للمركبة",
+    "assigned_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "drivers.driverassignment",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-09-19T22:46:53.367Z",
+    "updated_at": "2026-09-19T22:46:53.367Z",
+    "driver": 1,
+    "vehicle": 8,
+    "start_date": "2026-07-21",
+    "end_date": null,
+    "is_active": true,
+    "notes": "إسناد رسمي للمركبة",
+    "assigned_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "work_permits.workpermit",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-19T22:47:00.835Z",
+    "updated_at": "2026-09-19T22:47:00.835Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "permit_number": "WP-2026-0001",
+    "vehicle": 1,
+    "driver": 1,
+    "requesting_department": "إدارة المشتريات والتوريد",
+    "departure_location": "المقر الرئيسي",
+    "destination": "الرياض -> الخرج -> حوطة بني تميم",
+    "purpose": "معاينة وفحص مستودعات التوزيع الإقليمية وتسليم وثائق المناقصة",
+    "description": "",
+    "departure_date": "2026-09-14",
+    "departure_time": "08:00:00",
+    "return_date": "2026-09-14",
+    "return_time": "17:30:00",
+    "starting_odometer": 33800,
+    "ending_odometer": 34500,
+    "distance_traveled": 700,
+    "status": "COMPLETED",
+    "created_by": [
+      "operator"
+    ],
+    "approved_by": [
+      "admin"
+    ],
+    "notes": "تم إنجاز المهمة بنجاح وعودة المركبة بحالة ممتازة"
+  }
+},
+{
+  "model": "work_permits.workpermit",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-19T22:47:00.911Z",
+    "updated_at": "2026-09-19T22:47:00.911Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "permit_number": "WP-2026-0002",
+    "vehicle": 5,
+    "driver": 5,
+    "requesting_department": "قطاع الشحن اللوجستي",
+    "departure_location": "المقر الرئيسي",
+    "destination": "مستودع الرياض المركزي -> ميناء الملك عبدالعزيز بالدمام",
+    "purpose": "نقل شحنة حاويات مواد خام ومعدات صناعية",
+    "description": "",
+    "departure_date": "2026-09-16",
+    "departure_time": "06:00:00",
+    "return_date": "2026-09-17",
+    "return_time": "20:00:00",
+    "starting_odometer": 124500,
+    "ending_odometer": 125400,
+    "distance_traveled": 900,
+    "status": "COMPLETED",
+    "created_by": [
+      "operator"
+    ],
+    "approved_by": [
+      "admin"
+    ],
+    "notes": "رحلة شحن بضائع موثقة"
+  }
+},
+{
+  "model": "work_permits.workpermit",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-19T22:47:00.993Z",
+    "updated_at": "2026-09-19T22:47:00.993Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "permit_number": "WP-2026-0003",
+    "vehicle": 3,
+    "driver": 3,
+    "requesting_department": "إدارة الصيانة الهندسية",
+    "departure_location": "المقر الرئيسي",
+    "destination": "الرياض -> القصيم (بريدة وعنيزة)",
+    "purpose": "دعم طوارئ وصيانة محطات الضخ الميدانية",
+    "description": "",
+    "departure_date": "2026-09-19",
+    "departure_time": "07:30:00",
+    "return_date": null,
+    "return_time": null,
+    "starting_odometer": 42800,
+    "ending_odometer": null,
+    "distance_traveled": 0,
+    "status": "IN_PROGRESS",
+    "created_by": [
+      "operator"
+    ],
+    "approved_by": [
+      "admin"
+    ],
+    "notes": "الرحلة جارية حالياً ومتابعة عبر الـ GPS"
+  }
+},
+{
+  "model": "work_permits.workpermit",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-19T22:47:01.068Z",
+    "updated_at": "2026-09-19T22:47:01.068Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "permit_number": "WP-2026-0004",
+    "vehicle": 6,
+    "driver": 6,
+    "requesting_department": "التوزيع وسلاسل الإمداد",
+    "departure_location": "المقر الرئيسي",
+    "destination": "الرياض -> جدة (المستودع الرئيسي)",
+    "purpose": "نقل أدوية ومواد غذائية مبردة",
+    "description": "",
+    "departure_date": "2026-09-20",
+    "departure_time": null,
+    "return_date": null,
+    "return_time": null,
+    "starting_odometer": null,
+    "ending_odometer": null,
+    "distance_traveled": 0,
+    "status": "APPROVED",
+    "created_by": [
+      "operator"
+    ],
+    "approved_by": [
+      "admin"
+    ],
+    "notes": "تم اعتماد مسار الرحلة وتخصيص السائق"
+  }
+},
+{
+  "model": "work_permits.workpermit",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-19T22:47:01.142Z",
+    "updated_at": "2026-09-19T22:47:01.143Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "permit_number": "WP-2026-0005",
+    "vehicle": 8,
+    "driver": 1,
+    "requesting_department": "خدمة العملاء والتوصيل",
+    "departure_location": "المقر الرئيسي",
+    "destination": "جولات التوزيع داخل مدينة الرياض (شمال وشرق الرياض)",
+    "purpose": "توصيل شحنات المستندات وطرود العملاء",
+    "description": "",
+    "departure_date": "2026-09-21",
+    "departure_time": null,
+    "return_date": null,
+    "return_time": null,
+    "starting_odometer": null,
+    "ending_odometer": null,
+    "distance_traveled": 0,
+    "status": "DRAFT",
+    "created_by": [
+      "operator"
+    ],
+    "approved_by": null,
+    "notes": "بانتظار موافقة مدير الحركة"
+  }
+},
+{
+  "model": "parts.partcatalog",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-19T22:46:47.252Z",
+    "updated_at": "2026-10-10T18:19:42.976Z",
+    "name": "زيت المحرك التخليقي 10W-40",
+    "category": "FLUIDS",
+    "default_interval_km": 10000,
+    "warning_threshold_km": 1000,
+    "default_interval_days": 180,
+    "unit": "لتر",
+    "description": "زيت محرك معتمد عالي الجودة للخدمة الشاقة"
+  }
+},
+{
+  "model": "parts.partcatalog",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-19T22:46:47.345Z",
+    "updated_at": "2026-10-10T18:19:43.051Z",
+    "name": "فلتر زيت المحرك",
+    "category": "FILTERS",
+    "default_interval_km": 10000,
+    "warning_threshold_km": 1000,
+    "default_interval_days": 180,
+    "unit": "حبة",
+    "description": "فلتر زيت أصلي وكالة"
+  }
+},
+{
+  "model": "parts.partcatalog",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-19T22:46:47.426Z",
+    "updated_at": "2026-10-10T18:19:43.212Z",
+    "name": "فلتر هواء المحرك",
+    "category": "FILTERS",
+    "default_interval_km": 20000,
+    "warning_threshold_km": 1000,
+    "default_interval_days": 365,
+    "unit": "حبة",
+    "description": "فلتر لتنقية الهواء الداخل لحجرة الاحتراق"
+  }
+},
+{
+  "model": "parts.partcatalog",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-19T22:46:47.519Z",
+    "updated_at": "2026-10-10T18:19:43.284Z",
+    "name": "فحمات الفرامل الأمامية",
+    "category": "BRAKES",
+    "default_interval_km": 30000,
+    "warning_threshold_km": 1000,
+    "default_interval_days": 365,
+    "unit": "طقم",
+    "description": "فحمات كبح سيراميك عالية التحمل"
+  }
+},
+{
+  "model": "parts.partcatalog",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-19T22:46:47.601Z",
+    "updated_at": "2026-10-10T18:19:43.352Z",
+    "name": "فحمات الفرامل الخلفية",
+    "category": "BRAKES",
+    "default_interval_km": 40000,
+    "warning_threshold_km": 1000,
+    "default_interval_days": 365,
+    "unit": "طقم",
+    "description": "فحمات كبح خلفية"
+  }
+},
+{
+  "model": "parts.partcatalog",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-09-19T22:46:47.685Z",
+    "updated_at": "2026-10-10T18:19:43.445Z",
+    "name": "طقم الإطارات (4 إطارات)",
+    "category": "SUSPENSION",
+    "default_interval_km": 50000,
+    "warning_threshold_km": 1000,
+    "default_interval_days": 730,
+    "unit": "طقم",
+    "description": "إطارات مخصصة للأجواء الحارة والحمولات الثقيلة"
+  }
+},
+{
+  "model": "parts.partcatalog",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-09-19T22:46:47.758Z",
+    "updated_at": "2026-10-10T18:19:43.528Z",
+    "name": "بطارية المركبة 12V / 80Ah",
+    "category": "ELECTRICAL",
+    "default_interval_km": 40000,
+    "warning_threshold_km": 1000,
+    "default_interval_days": 540,
+    "unit": "حبة",
+    "description": "بطارية خالية من الصيانة جافة"
+  }
+},
+{
+  "model": "parts.partcatalog",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-09-19T22:46:47.844Z",
+    "updated_at": "2026-10-10T18:19:43.644Z",
+    "name": "سائل تبريد المحرك (ماء الرديتر)",
+    "category": "COOLING",
+    "default_interval_km": 40000,
+    "warning_threshold_km": 1000,
+    "default_interval_days": 365,
+    "unit": "لتر",
+    "description": "سائل تبريد مضاد للتجمد والصدأ الأصلي"
+  }
+},
+{
+  "model": "parts.partcatalog",
+  "pk": 9,
+  "fields": {
+    "created_at": "2026-09-19T22:46:47.916Z",
+    "updated_at": "2026-10-10T18:19:43.727Z",
+    "name": "شمعات الاحتراق (بواجي)",
+    "category": "ENGINE",
+    "default_interval_km": 30000,
+    "warning_threshold_km": 1000,
+    "default_interval_days": 365,
+    "unit": "طقم",
+    "description": "شمعات إيريديوم طويلة العمر"
+  }
+},
+{
+  "model": "parts.partcatalog",
+  "pk": 10,
+  "fields": {
+    "created_at": "2026-09-19T22:46:48.001Z",
+    "updated_at": "2026-10-10T18:19:43.817Z",
+    "name": "سير المحرك الرئيسي (دينامو/مكيف)",
+    "category": "ENGINE",
+    "default_interval_km": 60000,
+    "warning_threshold_km": 1000,
+    "default_interval_days": 730,
+    "unit": "حبة",
+    "description": "سير محرك أصلي مدعم"
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-19T22:46:54.074Z",
+    "updated_at": "2026-10-10T18:19:46.157Z",
+    "vehicle": 1,
+    "part": 1,
+    "part_number": "PN-FL-101-1",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 26000,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 36000,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-19T22:46:54.173Z",
+    "updated_at": "2026-10-10T18:19:46.241Z",
+    "vehicle": 1,
+    "part": 2,
+    "part_number": "PN-FL-101-2",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 26000,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 36000,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-19T22:46:54.255Z",
+    "updated_at": "2026-10-10T18:19:46.316Z",
+    "vehicle": 1,
+    "part": 3,
+    "part_number": "PN-FL-101-3",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-01-17",
+    "installation_odometer": 22500,
+    "interval_km": 20000,
+    "interval_days": 365,
+    "next_replacement_km": 42500,
+    "next_replacement_date": "2027-01-17",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-19T22:46:54.332Z",
+    "updated_at": "2026-10-10T18:19:46.391Z",
+    "vehicle": 1,
+    "part": 4,
+    "part_number": "PN-FL-101-4",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2024-12-31",
+    "installation_odometer": 5300,
+    "interval_km": 30000,
+    "interval_days": 365,
+    "next_replacement_km": 35300,
+    "next_replacement_date": "2025-12-31",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-19T22:46:54.422Z",
+    "updated_at": "2026-10-10T18:19:46.557Z",
+    "vehicle": 1,
+    "part": 6,
+    "part_number": "PN-FL-101-6",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-06-09",
+    "installation_odometer": 12500,
+    "interval_km": 50000,
+    "interval_days": 730,
+    "next_replacement_km": 62500,
+    "next_replacement_date": "2027-06-09",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-09-19T22:46:54.498Z",
+    "updated_at": "2026-10-10T18:19:46.625Z",
+    "vehicle": 1,
+    "part": 7,
+    "part_number": "PN-FL-101-7",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-09-05",
+    "installation_odometer": 16500,
+    "interval_km": 40000,
+    "interval_days": 540,
+    "next_replacement_km": 56500,
+    "next_replacement_date": "2027-02-27",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-09-19T22:46:54.588Z",
+    "updated_at": "2026-10-10T18:19:46.707Z",
+    "vehicle": 1,
+    "part": 8,
+    "part_number": "PN-FL-101-8",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-03-02",
+    "installation_odometer": 24500,
+    "interval_km": 40000,
+    "interval_days": 365,
+    "next_replacement_km": 64500,
+    "next_replacement_date": "2027-03-02",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-09-19T22:46:54.664Z",
+    "updated_at": "2026-10-10T18:19:46.827Z",
+    "vehicle": 2,
+    "part": 1,
+    "part_number": "PN-FL-102-1",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 49700,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 59700,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 9,
+  "fields": {
+    "created_at": "2026-09-19T22:46:54.762Z",
+    "updated_at": "2026-10-10T18:19:46.896Z",
+    "vehicle": 2,
+    "part": 2,
+    "part_number": "PN-FL-102-2",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 49700,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 59700,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 10,
+  "fields": {
+    "created_at": "2026-09-19T22:46:54.838Z",
+    "updated_at": "2026-10-10T18:19:46.977Z",
+    "vehicle": 2,
+    "part": 3,
+    "part_number": "PN-FL-102-3",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-01-17",
+    "installation_odometer": 46200,
+    "interval_km": 20000,
+    "interval_days": 365,
+    "next_replacement_km": 66200,
+    "next_replacement_date": "2027-01-17",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 11,
+  "fields": {
+    "created_at": "2026-09-19T22:46:54.920Z",
+    "updated_at": "2026-10-10T18:19:47.088Z",
+    "vehicle": 2,
+    "part": 4,
+    "part_number": "PN-FL-102-4",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-11-11",
+    "installation_odometer": 43200,
+    "interval_km": 30000,
+    "interval_days": 365,
+    "next_replacement_km": 73200,
+    "next_replacement_date": "2026-11-11",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 12,
+  "fields": {
+    "created_at": "2026-09-19T22:46:55.029Z",
+    "updated_at": "2026-10-10T18:19:47.154Z",
+    "vehicle": 2,
+    "part": 6,
+    "part_number": "PN-FL-102-6",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-06-09",
+    "installation_odometer": 36200,
+    "interval_km": 50000,
+    "interval_days": 730,
+    "next_replacement_km": 86200,
+    "next_replacement_date": "2027-06-09",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 13,
+  "fields": {
+    "created_at": "2026-09-19T22:46:55.110Z",
+    "updated_at": "2026-10-10T18:19:47.247Z",
+    "vehicle": 2,
+    "part": 7,
+    "part_number": "PN-FL-102-7",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2024-05-31",
+    "installation_odometer": 19400,
+    "interval_km": 40000,
+    "interval_days": 540,
+    "next_replacement_km": 59400,
+    "next_replacement_date": "2025-11-22",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 14,
+  "fields": {
+    "created_at": "2026-09-19T22:46:55.278Z",
+    "updated_at": "2026-10-10T18:19:47.311Z",
+    "vehicle": 2,
+    "part": 8,
+    "part_number": "PN-FL-102-8",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-03-02",
+    "installation_odometer": 48200,
+    "interval_km": 40000,
+    "interval_days": 365,
+    "next_replacement_km": 88200,
+    "next_replacement_date": "2027-03-02",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 15,
+  "fields": {
+    "created_at": "2026-09-19T22:46:55.359Z",
+    "updated_at": "2026-10-10T18:19:47.391Z",
+    "vehicle": 3,
+    "part": 1,
+    "part_number": "PN-FL-201-1",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 34300,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 44300,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 16,
+  "fields": {
+    "created_at": "2026-09-19T22:46:55.444Z",
+    "updated_at": "2026-10-10T18:19:47.643Z",
+    "vehicle": 3,
+    "part": 2,
+    "part_number": "PN-FL-201-2",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 34300,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 44300,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 17,
+  "fields": {
+    "created_at": "2026-09-19T22:46:55.517Z",
+    "updated_at": "2026-10-10T18:19:47.731Z",
+    "vehicle": 3,
+    "part": 3,
+    "part_number": "PN-FL-201-3",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-01-17",
+    "installation_odometer": 30800,
+    "interval_km": 20000,
+    "interval_days": 365,
+    "next_replacement_km": 50800,
+    "next_replacement_date": "2027-01-17",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 18,
+  "fields": {
+    "created_at": "2026-09-19T22:46:55.610Z",
+    "updated_at": "2026-10-10T18:19:47.816Z",
+    "vehicle": 3,
+    "part": 4,
+    "part_number": "PN-FL-201-4",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-11-11",
+    "installation_odometer": 27800,
+    "interval_km": 30000,
+    "interval_days": 365,
+    "next_replacement_km": 57800,
+    "next_replacement_date": "2026-11-11",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 19,
+  "fields": {
+    "created_at": "2026-09-19T22:46:55.683Z",
+    "updated_at": "2026-10-10T18:19:47.897Z",
+    "vehicle": 3,
+    "part": 6,
+    "part_number": "PN-FL-201-6",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-06-09",
+    "installation_odometer": 20800,
+    "interval_km": 50000,
+    "interval_days": 730,
+    "next_replacement_km": 70800,
+    "next_replacement_date": "2027-06-09",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 20,
+  "fields": {
+    "created_at": "2026-09-19T22:46:55.760Z",
+    "updated_at": "2026-10-10T18:19:47.977Z",
+    "vehicle": 3,
+    "part": 7,
+    "part_number": "PN-FL-201-7",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-09-05",
+    "installation_odometer": 24800,
+    "interval_km": 40000,
+    "interval_days": 540,
+    "next_replacement_km": 64800,
+    "next_replacement_date": "2027-02-27",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 21,
+  "fields": {
+    "created_at": "2026-09-19T22:46:55.832Z",
+    "updated_at": "2026-10-10T18:19:48.045Z",
+    "vehicle": 3,
+    "part": 8,
+    "part_number": "PN-FL-201-8",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-03-02",
+    "installation_odometer": 32800,
+    "interval_km": 40000,
+    "interval_days": 365,
+    "next_replacement_km": 72800,
+    "next_replacement_date": "2027-03-02",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 22,
+  "fields": {
+    "created_at": "2026-09-19T22:46:55.918Z",
+    "updated_at": "2026-10-10T18:19:48.130Z",
+    "vehicle": 4,
+    "part": 1,
+    "part_number": "PN-FL-202-1",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 81000,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 91000,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 23,
+  "fields": {
+    "created_at": "2026-09-19T22:46:55.991Z",
+    "updated_at": "2026-10-10T18:19:48.203Z",
+    "vehicle": 4,
+    "part": 2,
+    "part_number": "PN-FL-202-2",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 81000,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 91000,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 24,
+  "fields": {
+    "created_at": "2026-09-19T22:46:56.071Z",
+    "updated_at": "2026-10-10T18:19:48.288Z",
+    "vehicle": 4,
+    "part": 3,
+    "part_number": "PN-FL-202-3",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-01-17",
+    "installation_odometer": 77500,
+    "interval_km": 20000,
+    "interval_days": 365,
+    "next_replacement_km": 97500,
+    "next_replacement_date": "2027-01-17",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 25,
+  "fields": {
+    "created_at": "2026-09-19T22:46:56.152Z",
+    "updated_at": "2026-10-10T18:19:48.362Z",
+    "vehicle": 4,
+    "part": 4,
+    "part_number": "PN-FL-202-4",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-11-11",
+    "installation_odometer": 74500,
+    "interval_km": 30000,
+    "interval_days": 365,
+    "next_replacement_km": 104500,
+    "next_replacement_date": "2026-11-11",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 26,
+  "fields": {
+    "created_at": "2026-09-19T22:46:56.229Z",
+    "updated_at": "2026-10-10T18:19:48.465Z",
+    "vehicle": 4,
+    "part": 6,
+    "part_number": "PN-FL-202-6",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2023-09-03",
+    "installation_odometer": 38500,
+    "interval_km": 50000,
+    "interval_days": 730,
+    "next_replacement_km": 88500,
+    "next_replacement_date": "2025-09-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 27,
+  "fields": {
+    "created_at": "2026-09-19T22:46:56.307Z",
+    "updated_at": "2026-10-10T18:19:48.541Z",
+    "vehicle": 4,
+    "part": 7,
+    "part_number": "PN-FL-202-7",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-09-05",
+    "installation_odometer": 71500,
+    "interval_km": 40000,
+    "interval_days": 540,
+    "next_replacement_km": 111500,
+    "next_replacement_date": "2027-02-27",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 28,
+  "fields": {
+    "created_at": "2026-09-19T22:46:56.401Z",
+    "updated_at": "2026-10-10T18:19:48.620Z",
+    "vehicle": 4,
+    "part": 8,
+    "part_number": "PN-FL-202-8",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-03-02",
+    "installation_odometer": 79500,
+    "interval_km": 40000,
+    "interval_days": 365,
+    "next_replacement_km": 119500,
+    "next_replacement_date": "2027-03-02",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 29,
+  "fields": {
+    "created_at": "2026-09-19T22:46:56.481Z",
+    "updated_at": "2026-10-10T18:19:48.785Z",
+    "vehicle": 5,
+    "part": 1,
+    "part_number": "PN-FL-301-1",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 116900,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 126900,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 30,
+  "fields": {
+    "created_at": "2026-09-19T22:46:56.558Z",
+    "updated_at": "2026-10-10T18:19:48.871Z",
+    "vehicle": 5,
+    "part": 2,
+    "part_number": "PN-FL-301-2",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 116900,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 126900,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 31,
+  "fields": {
+    "created_at": "2026-09-19T22:46:56.648Z",
+    "updated_at": "2026-10-10T18:19:48.944Z",
+    "vehicle": 5,
+    "part": 3,
+    "part_number": "PN-FL-301-3",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-01-17",
+    "installation_odometer": 113400,
+    "interval_km": 20000,
+    "interval_days": 365,
+    "next_replacement_km": 133400,
+    "next_replacement_date": "2027-01-17",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 32,
+  "fields": {
+    "created_at": "2026-09-19T22:46:56.733Z",
+    "updated_at": "2026-10-10T18:19:49.034Z",
+    "vehicle": 5,
+    "part": 4,
+    "part_number": "PN-FL-301-4",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-11-11",
+    "installation_odometer": 110400,
+    "interval_km": 30000,
+    "interval_days": 365,
+    "next_replacement_km": 140400,
+    "next_replacement_date": "2026-11-11",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 33,
+  "fields": {
+    "created_at": "2026-09-19T22:46:56.831Z",
+    "updated_at": "2026-10-10T18:19:49.109Z",
+    "vehicle": 5,
+    "part": 6,
+    "part_number": "PN-FL-301-6",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-06-09",
+    "installation_odometer": 103400,
+    "interval_km": 50000,
+    "interval_days": 730,
+    "next_replacement_km": 153400,
+    "next_replacement_date": "2027-06-09",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 34,
+  "fields": {
+    "created_at": "2026-09-19T22:46:56.918Z",
+    "updated_at": "2026-10-10T18:19:49.195Z",
+    "vehicle": 5,
+    "part": 7,
+    "part_number": "PN-FL-301-7",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-09-05",
+    "installation_odometer": 107400,
+    "interval_km": 40000,
+    "interval_days": 540,
+    "next_replacement_km": 147400,
+    "next_replacement_date": "2027-02-27",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 35,
+  "fields": {
+    "created_at": "2026-09-19T22:46:57.016Z",
+    "updated_at": "2026-10-10T18:19:49.294Z",
+    "vehicle": 5,
+    "part": 8,
+    "part_number": "PN-FL-301-8",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-03-02",
+    "installation_odometer": 115400,
+    "interval_km": 40000,
+    "interval_days": 365,
+    "next_replacement_km": 155400,
+    "next_replacement_date": "2027-03-02",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 36,
+  "fields": {
+    "created_at": "2026-09-19T22:46:57.109Z",
+    "updated_at": "2026-10-10T18:19:49.366Z",
+    "vehicle": 6,
+    "part": 1,
+    "part_number": "PN-FL-302-1",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 55600,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 65600,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 37,
+  "fields": {
+    "created_at": "2026-09-19T22:46:57.208Z",
+    "updated_at": "2026-10-10T18:19:49.453Z",
+    "vehicle": 6,
+    "part": 2,
+    "part_number": "PN-FL-302-2",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 55600,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 65600,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 38,
+  "fields": {
+    "created_at": "2026-09-19T22:46:57.422Z",
+    "updated_at": "2026-10-10T18:19:49.522Z",
+    "vehicle": 6,
+    "part": 3,
+    "part_number": "PN-FL-302-3",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-01-17",
+    "installation_odometer": 52100,
+    "interval_km": 20000,
+    "interval_days": 365,
+    "next_replacement_km": 72100,
+    "next_replacement_date": "2027-01-17",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 39,
+  "fields": {
+    "created_at": "2026-09-19T22:46:57.511Z",
+    "updated_at": "2026-10-10T18:19:49.603Z",
+    "vehicle": 6,
+    "part": 4,
+    "part_number": "PN-FL-302-4",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-11-11",
+    "installation_odometer": 49100,
+    "interval_km": 30000,
+    "interval_days": 365,
+    "next_replacement_km": 79100,
+    "next_replacement_date": "2026-11-11",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 40,
+  "fields": {
+    "created_at": "2026-09-19T22:46:57.605Z",
+    "updated_at": "2026-10-10T18:19:49.682Z",
+    "vehicle": 6,
+    "part": 6,
+    "part_number": "PN-FL-302-6",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-06-09",
+    "installation_odometer": 42100,
+    "interval_km": 50000,
+    "interval_days": 730,
+    "next_replacement_km": 92100,
+    "next_replacement_date": "2027-06-09",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 41,
+  "fields": {
+    "created_at": "2026-09-19T22:46:57.703Z",
+    "updated_at": "2026-10-10T18:19:49.859Z",
+    "vehicle": 6,
+    "part": 7,
+    "part_number": "PN-FL-302-7",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-09-05",
+    "installation_odometer": 46100,
+    "interval_km": 40000,
+    "interval_days": 540,
+    "next_replacement_km": 86100,
+    "next_replacement_date": "2027-02-27",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 42,
+  "fields": {
+    "created_at": "2026-09-19T22:46:57.796Z",
+    "updated_at": "2026-10-10T18:19:49.931Z",
+    "vehicle": 6,
+    "part": 8,
+    "part_number": "PN-FL-302-8",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-03-02",
+    "installation_odometer": 54100,
+    "interval_km": 40000,
+    "interval_days": 365,
+    "next_replacement_km": 94100,
+    "next_replacement_date": "2027-03-02",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 43,
+  "fields": {
+    "created_at": "2026-09-19T22:46:57.886Z",
+    "updated_at": "2026-10-10T18:19:50.014Z",
+    "vehicle": 7,
+    "part": 1,
+    "part_number": "PN-FL-401-1",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 63800,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 73800,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 44,
+  "fields": {
+    "created_at": "2026-09-19T22:46:58.004Z",
+    "updated_at": "2026-10-10T18:19:50.127Z",
+    "vehicle": 7,
+    "part": 2,
+    "part_number": "PN-FL-401-2",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 63800,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 73800,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 45,
+  "fields": {
+    "created_at": "2026-09-19T22:46:58.188Z",
+    "updated_at": "2026-10-10T18:19:50.206Z",
+    "vehicle": 7,
+    "part": 3,
+    "part_number": "PN-FL-401-3",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-01-17",
+    "installation_odometer": 60300,
+    "interval_km": 20000,
+    "interval_days": 365,
+    "next_replacement_km": 80300,
+    "next_replacement_date": "2027-01-17",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 46,
+  "fields": {
+    "created_at": "2026-09-19T22:46:58.403Z",
+    "updated_at": "2026-10-10T18:19:50.291Z",
+    "vehicle": 7,
+    "part": 4,
+    "part_number": "PN-FL-401-4",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-11-11",
+    "installation_odometer": 57300,
+    "interval_km": 30000,
+    "interval_days": 365,
+    "next_replacement_km": 87300,
+    "next_replacement_date": "2026-11-11",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 47,
+  "fields": {
+    "created_at": "2026-09-19T22:46:58.600Z",
+    "updated_at": "2026-10-10T18:19:50.365Z",
+    "vehicle": 7,
+    "part": 6,
+    "part_number": "PN-FL-401-6",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-06-09",
+    "installation_odometer": 50300,
+    "interval_km": 50000,
+    "interval_days": 730,
+    "next_replacement_km": 100300,
+    "next_replacement_date": "2027-06-09",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 48,
+  "fields": {
+    "created_at": "2026-09-19T22:46:58.942Z",
+    "updated_at": "2026-10-10T18:19:50.448Z",
+    "vehicle": 7,
+    "part": 7,
+    "part_number": "PN-FL-401-7",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-09-05",
+    "installation_odometer": 54300,
+    "interval_km": 40000,
+    "interval_days": 540,
+    "next_replacement_km": 94300,
+    "next_replacement_date": "2027-02-27",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 49,
+  "fields": {
+    "created_at": "2026-09-19T22:46:59.113Z",
+    "updated_at": "2026-10-10T18:19:50.531Z",
+    "vehicle": 7,
+    "part": 8,
+    "part_number": "PN-FL-401-8",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-03-02",
+    "installation_odometer": 62300,
+    "interval_km": 40000,
+    "interval_days": 365,
+    "next_replacement_km": 102300,
+    "next_replacement_date": "2027-03-02",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 50,
+  "fields": {
+    "created_at": "2026-09-19T22:46:59.219Z",
+    "updated_at": "2026-10-10T18:19:50.653Z",
+    "vehicle": 8,
+    "part": 1,
+    "part_number": "PN-FL-501-1",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 41100,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 51100,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 51,
+  "fields": {
+    "created_at": "2026-09-19T22:46:59.314Z",
+    "updated_at": "2026-10-10T18:19:50.728Z",
+    "vehicle": 8,
+    "part": 2,
+    "part_number": "PN-FL-501-2",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 41100,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 51100,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 52,
+  "fields": {
+    "created_at": "2026-09-19T22:46:59.400Z",
+    "updated_at": "2026-10-10T18:19:50.823Z",
+    "vehicle": 8,
+    "part": 3,
+    "part_number": "PN-FL-501-3",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-01-17",
+    "installation_odometer": 37600,
+    "interval_km": 20000,
+    "interval_days": 365,
+    "next_replacement_km": 57600,
+    "next_replacement_date": "2027-01-17",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 53,
+  "fields": {
+    "created_at": "2026-09-19T22:46:59.488Z",
+    "updated_at": "2026-10-10T18:19:50.903Z",
+    "vehicle": 8,
+    "part": 4,
+    "part_number": "PN-FL-501-4",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-11-11",
+    "installation_odometer": 34600,
+    "interval_km": 30000,
+    "interval_days": 365,
+    "next_replacement_km": 64600,
+    "next_replacement_date": "2026-11-11",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 54,
+  "fields": {
+    "created_at": "2026-09-19T22:46:59.575Z",
+    "updated_at": "2026-10-10T18:19:50.995Z",
+    "vehicle": 8,
+    "part": 6,
+    "part_number": "PN-FL-501-6",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-06-09",
+    "installation_odometer": 27600,
+    "interval_km": 50000,
+    "interval_days": 730,
+    "next_replacement_km": 77600,
+    "next_replacement_date": "2027-06-09",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 55,
+  "fields": {
+    "created_at": "2026-09-19T22:46:59.666Z",
+    "updated_at": "2026-10-10T18:19:51.086Z",
+    "vehicle": 8,
+    "part": 7,
+    "part_number": "PN-FL-501-7",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-09-05",
+    "installation_odometer": 31600,
+    "interval_km": 40000,
+    "interval_days": 540,
+    "next_replacement_km": 71600,
+    "next_replacement_date": "2027-02-27",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 56,
+  "fields": {
+    "created_at": "2026-09-19T22:46:59.748Z",
+    "updated_at": "2026-10-10T18:19:51.168Z",
+    "vehicle": 8,
+    "part": 8,
+    "part_number": "PN-FL-501-8",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-03-02",
+    "installation_odometer": 39600,
+    "interval_km": 40000,
+    "interval_days": 365,
+    "next_replacement_km": 79600,
+    "next_replacement_date": "2027-03-02",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 57,
+  "fields": {
+    "created_at": "2026-09-19T22:46:59.862Z",
+    "updated_at": "2026-10-10T18:19:51.235Z",
+    "vehicle": 9,
+    "part": 1,
+    "part_number": "PN-FL-502-1",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 110400,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 120400,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 58,
+  "fields": {
+    "created_at": "2026-09-19T22:46:59.955Z",
+    "updated_at": "2026-10-10T18:19:51.320Z",
+    "vehicle": 9,
+    "part": 2,
+    "part_number": "PN-FL-502-2",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-04-05",
+    "installation_odometer": 110400,
+    "interval_km": 10000,
+    "interval_days": 180,
+    "next_replacement_km": 120400,
+    "next_replacement_date": "2026-10-02",
+    "current_status": "OVERDUE",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 59,
+  "fields": {
+    "created_at": "2026-09-19T22:47:00.044Z",
+    "updated_at": "2026-10-10T18:19:51.395Z",
+    "vehicle": 9,
+    "part": 3,
+    "part_number": "PN-FL-502-3",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-01-17",
+    "installation_odometer": 106900,
+    "interval_km": 20000,
+    "interval_days": 365,
+    "next_replacement_km": 126900,
+    "next_replacement_date": "2027-01-17",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 60,
+  "fields": {
+    "created_at": "2026-09-19T22:47:00.130Z",
+    "updated_at": "2026-10-10T18:19:51.478Z",
+    "vehicle": 9,
+    "part": 4,
+    "part_number": "PN-FL-502-4",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-11-11",
+    "installation_odometer": 103900,
+    "interval_km": 30000,
+    "interval_days": 365,
+    "next_replacement_km": 133900,
+    "next_replacement_date": "2026-11-11",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 61,
+  "fields": {
+    "created_at": "2026-09-19T22:47:00.220Z",
+    "updated_at": "2026-10-10T18:19:51.558Z",
+    "vehicle": 9,
+    "part": 6,
+    "part_number": "PN-FL-502-6",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-06-09",
+    "installation_odometer": 96900,
+    "interval_km": 50000,
+    "interval_days": 730,
+    "next_replacement_km": 146900,
+    "next_replacement_date": "2027-06-09",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 62,
+  "fields": {
+    "created_at": "2026-09-19T22:47:00.304Z",
+    "updated_at": "2026-10-10T18:19:51.764Z",
+    "vehicle": 9,
+    "part": 7,
+    "part_number": "PN-FL-502-7",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2025-09-05",
+    "installation_odometer": 100900,
+    "interval_km": 40000,
+    "interval_days": 540,
+    "next_replacement_km": 140900,
+    "next_replacement_date": "2027-02-27",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "parts.vehiclepart",
+  "pk": 63,
+  "fields": {
+    "created_at": "2026-09-19T22:47:00.393Z",
+    "updated_at": "2026-10-10T18:19:51.849Z",
+    "vehicle": 9,
+    "part": 8,
+    "part_number": "PN-FL-502-8",
+    "brand": "أصلي وكالة OEM",
+    "installation_date": "2026-03-02",
+    "installation_odometer": 108900,
+    "interval_km": 40000,
+    "interval_days": 365,
+    "next_replacement_km": 148900,
+    "next_replacement_date": "2027-03-02",
+    "current_status": "OK",
+    "notes": ""
+  }
+},
+{
+  "model": "maintenance.maintenancetype",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-19T22:46:48.103Z",
+    "updated_at": "2026-10-10T18:19:43.906Z",
+    "name": "صيانة دورية 10,000 كم (زيت وفلتر وفحص)",
+    "description": "تغيير زيت المحرك وفلتر الزيت وفحص السوائل",
+    "is_periodic": true,
+    "recommended_km": 10000,
+    "recommended_days": 180
+  }
+},
+{
+  "model": "maintenance.maintenancetype",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-19T22:46:48.186Z",
+    "updated_at": "2026-10-10T18:19:43.984Z",
+    "name": "صيانة دورية 20,000 كم (زيوت وفلاتر هواء)",
+    "description": "تغيير الزيوت وفلتر الهواء وفحص نظام التعليق",
+    "is_periodic": true,
+    "recommended_km": 20000,
+    "recommended_days": 360
+  }
+},
+{
+  "model": "maintenance.maintenancetype",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-19T22:46:48.267Z",
+    "updated_at": "2026-10-10T18:19:44.056Z",
+    "name": "خدمة صيانة نظام الكبح والفرامل",
+    "description": "خرط هوبات واستبدال فحمات وتغيير زيت الفرامل",
+    "is_periodic": true,
+    "recommended_km": 30000,
+    "recommended_days": 360
+  }
+},
+{
+  "model": "maintenance.maintenancetype",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-19T22:46:48.350Z",
+    "updated_at": "2026-10-10T18:19:44.134Z",
+    "name": "استبدال الإطارات والترصيص والوزن",
+    "description": "استبدال طقم الإطارات مع ميزان ليزر وترصيص",
+    "is_periodic": true,
+    "recommended_km": 50000,
+    "recommended_days": 720
+  }
+},
+{
+  "model": "maintenance.maintenancetype",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-19T22:46:48.433Z",
+    "updated_at": "2026-10-10T18:19:44.222Z",
+    "name": "فحص وصيانة المنظومة الكهربائية والبطارية",
+    "description": "اختبار الدينامو واستبدال البطارية وفحص الأسلاك",
+    "is_periodic": false,
+    "recommended_km": 40000,
+    "recommended_days": 540
+  }
+},
+{
+  "model": "maintenance.maintenancetype",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-09-19T22:46:48.510Z",
+    "updated_at": "2026-10-10T18:19:44.374Z",
+    "name": "الفحص الفني الدوري الشامل",
+    "description": "فحص وقائي شامل للمركبة وإعداد تقرير السلامة",
+    "is_periodic": true,
+    "recommended_km": 25000,
+    "recommended_days": 365
+  }
+},
+{
+  "model": "maintenance.maintenancetype",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-09-19T22:46:48.592Z",
+    "updated_at": "2026-10-10T18:19:44.468Z",
+    "name": "إصلاح عطل طارئ / ميكانيكا",
+    "description": "إصلاحات طارئة غير مجدولة في المحرك أو ناقل الحركة",
+    "is_periodic": false,
+    "recommended_km": 0,
+    "recommended_days": 0
+  }
+},
+{
+  "model": "maintenance.maintenancerecord",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-19T22:47:00.480Z",
+    "updated_at": "2026-09-19T22:47:00.480Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "vehicle": 1,
+    "maintenance_type": 1,
+    "maintenance_date": "2026-07-11",
+    "odometer": 25000,
+    "description": "تغيير زيت المحرك التخليقي وفلتر الزيت وفحص الإضاءة وضغط الإطارات",
+    "cost": "480.00",
+    "service_provider": "مركز بترومين إكسبريس - فرع التخصصي",
+    "technician": "أحمد رضوان",
+    "notes": "تمت الصيانة بنجاح وحالة المحرك ممتازة",
+    "status": "COMPLETED",
+    "created_by": [
+      "operator"
+    ],
+    "parts_replaced": []
+  }
+},
+{
+  "model": "maintenance.maintenancerecord",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-19T22:47:00.569Z",
+    "updated_at": "2026-09-19T22:47:00.569Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "vehicle": 3,
+    "maintenance_type": 3,
+    "maintenance_date": "2026-08-05",
+    "odometer": 30000,
+    "description": "استبدال فحمات الفرامل الأمامية وخرط الهوبات وتغيير زيت الفرامل DOT 4",
+    "cost": "750.00",
+    "service_provider": "وكالة تويوتا - عبداللطيف جميل",
+    "technician": "م. طارق العسيري",
+    "notes": "قطع أصلية مع ضمان 6 أشهر",
+    "status": "COMPLETED",
+    "created_by": [
+      "admin"
+    ],
+    "parts_replaced": []
+  }
+},
+{
+  "model": "maintenance.maintenancerecord",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-19T22:47:00.745Z",
+    "updated_at": "2026-09-19T22:47:00.745Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "vehicle": 5,
+    "maintenance_type": 2,
+    "maintenance_date": "2026-08-20",
+    "odometer": 110000,
+    "description": "صيانة شاحنة ثقيلة: استبدال فلاتر الديزل وفلتر الهواء وزيت المحرك الديزل",
+    "cost": "2400.00",
+    "service_provider": "شركة الجفالي للسيارات والمعدات",
+    "technician": "م. كمال الدين",
+    "notes": "فحص كمبيوتر وحالة التيربو سليمة",
+    "status": "COMPLETED",
+    "created_by": [
+      "operator"
+    ],
+    "parts_replaced": []
+  }
+},
+{
+  "model": "fuel.fueltype",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-10-10T18:19:42.557Z",
+    "updated_at": "2026-10-10T18:19:42.557Z",
+    "name": "ديزل",
+    "price_per_liter": "1.15",
+    "currency": "ر.س",
+    "description": "ديزل عالي الكفاءة للشاحنات الثقيلة والمعدات"
+  }
+},
+{
+  "model": "fuel.fueltype",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-10-10T18:19:42.652Z",
+    "updated_at": "2026-10-10T18:19:42.652Z",
+    "name": "بنزين 91",
+    "price_per_liter": "2.18",
+    "currency": "ر.س",
+    "description": "بنزين أوكتان 91 للمركبات الخفيفة والسيدان"
+  }
+},
+{
+  "model": "fuel.fueltype",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-10-10T18:19:42.736Z",
+    "updated_at": "2026-10-10T18:19:42.736Z",
+    "name": "بنزين 95",
+    "price_per_liter": "2.33",
+    "currency": "ر.س",
+    "description": "بنزين ممتاز أوكتان 95 للسيارات الإشرافية الحديثة"
+  }
+},
+{
+  "model": "fuel.fueltype",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-10-10T18:19:42.809Z",
+    "updated_at": "2026-10-10T18:19:42.809Z",
+    "name": "كهربائي (كيلوواط/ساعة)",
+    "price_per_liter": "0.32",
+    "currency": "ر.س",
+    "description": "شحن كهربائي للمركبات الكهربائية"
+  }
+},
+{
+  "model": "fuel.fueltype",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-10-10T18:19:42.893Z",
+    "updated_at": "2026-10-10T18:19:42.893Z",
+    "name": "غاز طبيعي مضغوط (CNG)",
+    "price_per_liter": "0.90",
+    "currency": "ر.س",
+    "description": "غاز طبيعي بيئي للمركبات الهجينة"
+  }
+},
+{
+  "model": "fuel.fuelrecord",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-19T22:47:01.227Z",
+    "updated_at": "2026-09-19T22:47:01.227Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "vehicle": 1,
+    "date": "2026-09-14",
+    "odometer": 33800,
+    "fuel_type": "GASOLINE_91",
+    "quantity": "55.00",
+    "price_per_unit": "2.18",
+    "total_cost": "119.90",
+    "station": "محطة الدريس - مخرج 16",
+    "driver": 1,
+    "notes": "تعبئة منتظمة معتمدة ببطاقة الوقود الذكية",
+    "created_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "fuel.fuelrecord",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-19T22:47:01.307Z",
+    "updated_at": "2026-09-19T22:47:01.307Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "vehicle": 1,
+    "date": "2026-09-17",
+    "odometer": 34500,
+    "fuel_type": "GASOLINE_91",
+    "quantity": "60.00",
+    "price_per_unit": "2.18",
+    "total_cost": "130.80",
+    "station": "محطة ساسكو - طريق الخرج",
+    "driver": 1,
+    "notes": "تعبئة منتظمة معتمدة ببطاقة الوقود الذكية",
+    "created_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "fuel.fuelrecord",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-19T22:47:01.393Z",
+    "updated_at": "2026-09-19T22:47:01.393Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "vehicle": 3,
+    "date": "2026-09-15",
+    "odometer": 42000,
+    "fuel_type": "DIESEL",
+    "quantity": "80.00",
+    "price_per_unit": "1.15",
+    "total_cost": "92.00",
+    "station": "محطة نفط - الدائري الشرقي",
+    "driver": 3,
+    "notes": "تعبئة منتظمة معتمدة ببطاقة الوقود الذكية",
+    "created_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "fuel.fuelrecord",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-19T22:47:01.465Z",
+    "updated_at": "2026-09-19T22:47:01.465Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "vehicle": 5,
+    "date": "2026-09-16",
+    "odometer": 124500,
+    "fuel_type": "DIESEL",
+    "quantity": "320.00",
+    "price_per_unit": "1.15",
+    "total_cost": "368.00",
+    "station": "محطة التسهيلات - طريق الدمام",
+    "driver": 5,
+    "notes": "تعبئة منتظمة معتمدة ببطاقة الوقود الذكية",
+    "created_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "fuel.fuelrecord",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-19T22:47:01.559Z",
+    "updated_at": "2026-09-19T22:47:01.559Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "vehicle": 5,
+    "date": "2026-09-17",
+    "odometer": 125400,
+    "fuel_type": "DIESEL",
+    "quantity": "290.00",
+    "price_per_unit": "1.15",
+    "total_cost": "333.50",
+    "station": "محطة ساسكو بالميرا - الدمام",
+    "driver": 5,
+    "notes": "تعبئة منتظمة معتمدة ببطاقة الوقود الذكية",
+    "created_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "fuel.fuelrecord",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-09-19T22:47:01.639Z",
+    "updated_at": "2026-09-19T22:47:01.639Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "vehicle": 7,
+    "date": "2026-09-18",
+    "odometer": 72300,
+    "fuel_type": "DIESEL",
+    "quantity": "110.00",
+    "price_per_unit": "1.15",
+    "total_cost": "126.50",
+    "station": "محطة بترومين - طريق الملك خالد",
+    "driver": 8,
+    "notes": "تعبئة منتظمة معتمدة ببطاقة الوقود الذكية",
+    "created_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "fuel.fuelrecord",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-10-10T18:19:51.929Z",
+    "updated_at": "2026-10-10T18:19:51.929Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "vehicle": 1,
+    "date": "2026-10-05",
+    "odometer": 33800,
+    "fuel_type": "GASOLINE_91",
+    "quantity": "55.00",
+    "price_per_unit": "2.18",
+    "total_cost": "119.90",
+    "station": "محطة الدريس - مخرج 16",
+    "driver": 1,
+    "notes": "تعبئة منتظمة معتمدة ببطاقة الوقود الذكية",
+    "created_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "fuel.fuelrecord",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-10-10T18:19:52.023Z",
+    "updated_at": "2026-10-10T18:19:52.023Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "vehicle": 1,
+    "date": "2026-10-08",
+    "odometer": 34500,
+    "fuel_type": "GASOLINE_91",
+    "quantity": "60.00",
+    "price_per_unit": "2.18",
+    "total_cost": "130.80",
+    "station": "محطة ساسكو - طريق الخرج",
+    "driver": 1,
+    "notes": "تعبئة منتظمة معتمدة ببطاقة الوقود الذكية",
+    "created_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "fuel.fuelrecord",
+  "pk": 9,
+  "fields": {
+    "created_at": "2026-10-10T18:19:52.106Z",
+    "updated_at": "2026-10-10T18:19:52.106Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "vehicle": 3,
+    "date": "2026-10-06",
+    "odometer": 42000,
+    "fuel_type": "DIESEL",
+    "quantity": "80.00",
+    "price_per_unit": "1.15",
+    "total_cost": "92.00",
+    "station": "محطة نفط - الدائري الشرقي",
+    "driver": 3,
+    "notes": "تعبئة منتظمة معتمدة ببطاقة الوقود الذكية",
+    "created_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "fuel.fuelrecord",
+  "pk": 10,
+  "fields": {
+    "created_at": "2026-10-10T18:19:52.204Z",
+    "updated_at": "2026-10-10T18:19:52.204Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "vehicle": 5,
+    "date": "2026-10-07",
+    "odometer": 124500,
+    "fuel_type": "DIESEL",
+    "quantity": "320.00",
+    "price_per_unit": "1.15",
+    "total_cost": "368.00",
+    "station": "محطة التسهيلات - طريق الدمام",
+    "driver": 5,
+    "notes": "تعبئة منتظمة معتمدة ببطاقة الوقود الذكية",
+    "created_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "fuel.fuelrecord",
+  "pk": 11,
+  "fields": {
+    "created_at": "2026-10-10T18:19:52.297Z",
+    "updated_at": "2026-10-10T18:19:52.297Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "vehicle": 5,
+    "date": "2026-10-08",
+    "odometer": 125400,
+    "fuel_type": "DIESEL",
+    "quantity": "290.00",
+    "price_per_unit": "1.15",
+    "total_cost": "333.50",
+    "station": "محطة ساسكو بالميرا - الدمام",
+    "driver": 5,
+    "notes": "تعبئة منتظمة معتمدة ببطاقة الوقود الذكية",
+    "created_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "fuel.fuelrecord",
+  "pk": 12,
+  "fields": {
+    "created_at": "2026-10-10T18:19:52.381Z",
+    "updated_at": "2026-10-10T18:19:52.381Z",
+    "is_deleted": false,
+    "deleted_at": null,
+    "vehicle": 7,
+    "date": "2026-10-09",
+    "odometer": 72300,
+    "fuel_type": "DIESEL",
+    "quantity": "110.00",
+    "price_per_unit": "1.15",
+    "total_cost": "126.50",
+    "station": "محطة بترومين - طريق الملك خالد",
+    "driver": 8,
+    "notes": "تعبئة منتظمة معتمدة ببطاقة الوقود الذكية",
+    "created_by": [
+      "operator"
+    ]
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-19T22:47:01.964Z",
+    "updated_at": "2026-09-19T22:47:01.964Z",
+    "vehicle": 1,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: فحمات الفرامل الأمامية للسيارة رقم FL-101",
+    "message": "السيارة رقم FL-101 تجاوزت موعد صيانة فحمات الفرامل الأمامية (المتبقي: 800 كم، -283 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-19T22:47:02.121Z",
+    "updated_at": "2026-09-19T22:47:02.121Z",
+    "vehicle": 1,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: زيت المحرك التخليقي 10W-40 للسيارة رقم FL-101",
+    "message": "السيارة رقم FL-101 تجاوزت موعد صيانة زيت المحرك التخليقي 10W-40 (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-19T22:47:02.271Z",
+    "updated_at": "2026-09-19T22:47:02.271Z",
+    "vehicle": 1,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: فلتر زيت المحرك للسيارة رقم FL-101",
+    "message": "السيارة رقم FL-101 تجاوزت موعد صيانة فلتر زيت المحرك (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-19T22:47:02.431Z",
+    "updated_at": "2026-09-19T22:47:02.431Z",
+    "vehicle": 2,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: بطارية المركبة 12V / 80Ah للسيارة رقم FL-102",
+    "message": "السيارة رقم FL-102 تجاوزت موعد صيانة بطارية المركبة 12V / 80Ah (المتبقي: 1200 كم، -322 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-19T22:47:02.588Z",
+    "updated_at": "2026-09-19T22:47:02.588Z",
+    "vehicle": 2,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: زيت المحرك التخليقي 10W-40 للسيارة رقم FL-102",
+    "message": "السيارة رقم FL-102 تجاوزت موعد صيانة زيت المحرك التخليقي 10W-40 (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-09-19T22:47:02.763Z",
+    "updated_at": "2026-09-19T22:47:02.763Z",
+    "vehicle": 2,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: فلتر زيت المحرك للسيارة رقم FL-102",
+    "message": "السيارة رقم FL-102 تجاوزت موعد صيانة فلتر زيت المحرك (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-09-19T22:47:02.852Z",
+    "updated_at": "2026-10-10T18:19:52.499Z",
+    "vehicle": 2,
+    "alert_type": "DOCUMENT_EXPIRING",
+    "severity": "WARNING",
+    "title": "قرب انتهاء وثيقة: وثيقة التأمين للسيارة رقم FL-102",
+    "message": "تنتهي صلاحية وثيقة التأمين للمركبة رقم FL-102 خلال 10 يوم (تاريخ الانتهاء: 2026-10-20)",
+    "is_read": false,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-09-19T22:47:03.141Z",
+    "updated_at": "2026-09-19T22:47:03.141Z",
+    "vehicle": 3,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: زيت المحرك التخليقي 10W-40 للسيارة رقم FL-201",
+    "message": "السيارة رقم FL-201 تجاوزت موعد صيانة زيت المحرك التخليقي 10W-40 (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 9,
+  "fields": {
+    "created_at": "2026-09-19T22:47:03.323Z",
+    "updated_at": "2026-09-19T22:47:03.323Z",
+    "vehicle": 3,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: فلتر زيت المحرك للسيارة رقم FL-201",
+    "message": "السيارة رقم FL-201 تجاوزت موعد صيانة فلتر زيت المحرك (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 10,
+  "fields": {
+    "created_at": "2026-09-19T22:47:03.546Z",
+    "updated_at": "2026-09-19T22:47:03.546Z",
+    "vehicle": 4,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: طقم الإطارات (4 إطارات) للسيارة رقم FL-202",
+    "message": "السيارة رقم FL-202 تجاوزت موعد صيانة طقم الإطارات (4 إطارات) (المتبقي: -1000 كم، -403 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 11,
+  "fields": {
+    "created_at": "2026-09-19T22:47:03.738Z",
+    "updated_at": "2026-09-19T22:47:03.738Z",
+    "vehicle": 4,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: زيت المحرك التخليقي 10W-40 للسيارة رقم FL-202",
+    "message": "السيارة رقم FL-202 تجاوزت موعد صيانة زيت المحرك التخليقي 10W-40 (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 12,
+  "fields": {
+    "created_at": "2026-09-19T22:47:03.927Z",
+    "updated_at": "2026-09-19T22:47:03.927Z",
+    "vehicle": 4,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: فلتر زيت المحرك للسيارة رقم FL-202",
+    "message": "السيارة رقم FL-202 تجاوزت موعد صيانة فلتر زيت المحرك (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 13,
+  "fields": {
+    "created_at": "2026-09-19T22:47:04.059Z",
+    "updated_at": "2026-10-10T18:19:52.649Z",
+    "vehicle": 4,
+    "alert_type": "DOCUMENT_EXPIRED",
+    "severity": "CRITICAL",
+    "title": "وثيقة منتهية: استمارة المركبة للسيارة رقم FL-202",
+    "message": "انتهت صلاحية استمارة المركبة للمركبة رقم FL-202 منذ 15 يوم (تاريخ الانتهاء: 2026-09-25)",
+    "is_read": false,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 14,
+  "fields": {
+    "created_at": "2026-09-19T22:47:04.256Z",
+    "updated_at": "2026-10-10T18:19:52.731Z",
+    "vehicle": 4,
+    "alert_type": "DOCUMENT_EXPIRED",
+    "severity": "CRITICAL",
+    "title": "وثيقة منتهية: الفحص الدوري للسيارة رقم FL-202",
+    "message": "انتهت صلاحية الفحص الدوري للمركبة رقم FL-202 منذ 5 يوم (تاريخ الانتهاء: 2026-10-05)",
+    "is_read": false,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 15,
+  "fields": {
+    "created_at": "2026-09-19T22:47:04.451Z",
+    "updated_at": "2026-09-19T22:47:04.452Z",
+    "vehicle": 5,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: زيت المحرك التخليقي 10W-40 للسيارة رقم FL-301",
+    "message": "السيارة رقم FL-301 تجاوزت موعد صيانة زيت المحرك التخليقي 10W-40 (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 16,
+  "fields": {
+    "created_at": "2026-09-19T22:47:04.624Z",
+    "updated_at": "2026-09-19T22:47:04.624Z",
+    "vehicle": 5,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: فلتر زيت المحرك للسيارة رقم FL-301",
+    "message": "السيارة رقم FL-301 تجاوزت موعد صيانة فلتر زيت المحرك (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 17,
+  "fields": {
+    "created_at": "2026-09-19T22:47:04.813Z",
+    "updated_at": "2026-09-19T22:47:04.813Z",
+    "vehicle": 6,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: زيت المحرك التخليقي 10W-40 للسيارة رقم FL-302",
+    "message": "السيارة رقم FL-302 تجاوزت موعد صيانة زيت المحرك التخليقي 10W-40 (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 18,
+  "fields": {
+    "created_at": "2026-09-19T22:47:04.971Z",
+    "updated_at": "2026-09-19T22:47:04.971Z",
+    "vehicle": 6,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: فلتر زيت المحرك للسيارة رقم FL-302",
+    "message": "السيارة رقم FL-302 تجاوزت موعد صيانة فلتر زيت المحرك (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 19,
+  "fields": {
+    "created_at": "2026-09-19T22:47:05.162Z",
+    "updated_at": "2026-09-19T22:47:05.162Z",
+    "vehicle": 7,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: زيت المحرك التخليقي 10W-40 للسيارة رقم FL-401",
+    "message": "السيارة رقم FL-401 تجاوزت موعد صيانة زيت المحرك التخليقي 10W-40 (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 20,
+  "fields": {
+    "created_at": "2026-09-19T22:47:05.345Z",
+    "updated_at": "2026-09-19T22:47:05.345Z",
+    "vehicle": 7,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: فلتر زيت المحرك للسيارة رقم FL-401",
+    "message": "السيارة رقم FL-401 تجاوزت موعد صيانة فلتر زيت المحرك (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 21,
+  "fields": {
+    "created_at": "2026-09-19T22:47:05.552Z",
+    "updated_at": "2026-09-19T22:47:05.552Z",
+    "vehicle": 8,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: زيت المحرك التخليقي 10W-40 للسيارة رقم FL-501",
+    "message": "السيارة رقم FL-501 تجاوزت موعد صيانة زيت المحرك التخليقي 10W-40 (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 22,
+  "fields": {
+    "created_at": "2026-09-19T22:47:05.727Z",
+    "updated_at": "2026-09-19T22:47:05.727Z",
+    "vehicle": 8,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: فلتر زيت المحرك للسيارة رقم FL-501",
+    "message": "السيارة رقم FL-501 تجاوزت موعد صيانة فلتر زيت المحرك (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 23,
+  "fields": {
+    "created_at": "2026-09-19T22:47:05.918Z",
+    "updated_at": "2026-09-19T22:47:05.918Z",
+    "vehicle": 9,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: زيت المحرك التخليقي 10W-40 للسيارة رقم FL-502",
+    "message": "السيارة رقم FL-502 تجاوزت موعد صيانة زيت المحرك التخليقي 10W-40 (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 24,
+  "fields": {
+    "created_at": "2026-09-19T22:47:06.192Z",
+    "updated_at": "2026-09-19T22:47:06.192Z",
+    "vehicle": 9,
+    "alert_type": "MAINTENANCE_OVERDUE",
+    "severity": "CRITICAL",
+    "title": "صيانة متأخرة: فلتر زيت المحرك للسيارة رقم FL-502",
+    "message": "السيارة رقم FL-502 تجاوزت موعد صيانة فلتر زيت المحرك (المتبقي: 1500 كم، -8 يوم)",
+    "is_read": true,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 25,
+  "fields": {
+    "created_at": "2026-09-19T22:47:06.291Z",
+    "updated_at": "2026-10-10T18:19:52.900Z",
+    "vehicle": 9,
+    "alert_type": "DOCUMENT_EXPIRED",
+    "severity": "CRITICAL",
+    "title": "وثيقة منتهية: استمارة المركبة للسيارة رقم FL-502",
+    "message": "انتهت صلاحية استمارة المركبة للمركبة رقم FL-502 منذ 40 يوم (تاريخ الانتهاء: 2026-08-31)",
+    "is_read": false,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 26,
+  "fields": {
+    "created_at": "2026-09-19T22:47:06.379Z",
+    "updated_at": "2026-10-10T18:19:52.985Z",
+    "vehicle": 9,
+    "alert_type": "DOCUMENT_EXPIRED",
+    "severity": "CRITICAL",
+    "title": "وثيقة منتهية: وثيقة التأمين للسيارة رقم FL-502",
+    "message": "انتهت صلاحية وثيقة التأمين للمركبة رقم FL-502 منذ 10 يوم (تاريخ الانتهاء: 2026-09-30)",
+    "is_read": false,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "notifications.vehiclealert",
+  "pk": 27,
+  "fields": {
+    "created_at": "2026-09-19T22:47:06.486Z",
+    "updated_at": "2026-10-10T18:19:53.066Z",
+    "vehicle": 9,
+    "alert_type": "DOCUMENT_EXPIRED",
+    "severity": "CRITICAL",
+    "title": "وثيقة منتهية: الفحص الدوري للسيارة رقم FL-502",
+    "message": "انتهت صلاحية الفحص الدوري للمركبة رقم FL-502 منذ 30 يوم (تاريخ الانتهاء: 2026-09-10)",
+    "is_read": false,
+    "is_resolved": false,
+    "resolved_at": null
+  }
+},
+{
+  "model": "audit.auditlog",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "action": "LOGIN",
+    "module": "المصادقة والأمان",
+    "object_repr": "تسجيل دخول ناجح للنظام",
+    "object_id": "admin",
+    "details": {
+      "auth_method": "JWT",
+      "client": "Mozilla/5.0 Enterprise Fleet Client"
+    },
+    "ip_address": "192.168.1.100",
+    "timestamp": "2026-09-19T22:47:01.725Z"
+  }
+},
+{
+  "model": "audit.auditlog",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "operator"
+    ],
+    "action": "TRIP_START",
+    "module": "أذونات التشغيل",
+    "object_repr": "انطلاق رحلة العمل رقم WP-2026-0003",
+    "object_id": "WP-2026-0003",
+    "details": {
+      "vehicle": "FL-201",
+      "driver": "أحمد الشهري",
+      "starting_odometer": 42800
+    },
+    "ip_address": "192.168.1.105",
+    "timestamp": "2026-09-19T22:47:01.797Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "jti": "bf1faca3c18f40dab67086e0c03c707c",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MDQ2MzI3MywiaWF0IjoxNzg5ODU4NDczLCJqdGkiOiJiZjFmYWNhM2MxOGY0MGRhYjY3MDg2ZTBjMDNjNzA3YyIsInVzZXJfaWQiOiIxIn0.x1GkcmZYaYV3VRl7TDs_YdWUu6zlUxXBndj9jO_svWs",
+    "created_at": "2026-09-19T22:54:33.133Z",
+    "expires_at": "2026-09-26T22:54:33Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "jti": "f7142e4e1e334c0ea7568e0d15df6d25",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MDQ2MzI5NywiaWF0IjoxNzg5ODU4NDk3LCJqdGkiOiJmNzE0MmU0ZTFlMzM0YzBlYTc1NjhlMGQxNWRmNmQyNSIsInVzZXJfaWQiOiIxIn0.B_P58ZYJp0A-dU26GQN8z1U5Z3O7JgAo24wRkznIHbY",
+    "created_at": "2026-09-19T22:54:57.978Z",
+    "expires_at": "2026-09-26T22:54:57Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 3,
+  "fields": {
+    "user": [
+      "reporter"
+    ],
+    "jti": "3e1fe32a5f1c4c38849b9d50841c8be1",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MDQ2MzMxMCwiaWF0IjoxNzg5ODU4NTEwLCJqdGkiOiIzZTFmZTMyYTVmMWM0YzM4ODQ5YjlkNTA4NDFjOGJlMSIsInVzZXJfaWQiOiIzIn0.Cd0ogtJknjfYZlg-usS7G81B3Ycl0L6DqgkiOZEQOEc",
+    "created_at": "2026-09-19T22:55:10.747Z",
+    "expires_at": "2026-09-26T22:55:10Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 4,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "jti": "2856949dfc52443597aa0875caf9d0a8",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MDQ2NDI0NCwiaWF0IjoxNzg5ODU5NDQ0LCJqdGkiOiIyODU2OTQ5ZGZjNTI0NDM1OTdhYTA4NzVjYWY5ZDBhOCIsInVzZXJfaWQiOiIxIn0.sj_qB9cb1wWAiK2xuXVVzJGnsfCVW2vCuoCxLzTS1ow",
+    "created_at": "2026-09-19T23:10:44.948Z",
+    "expires_at": "2026-09-26T23:10:44Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 5,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "jti": "2299c4a3d08c44aabf2862d9921b0e5c",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MDQ2NDQ1MywiaWF0IjoxNzg5ODU5NjUzLCJqdGkiOiIyMjk5YzRhM2QwOGM0NGFhYmYyODYyZDk5MjFiMGU1YyIsInVzZXJfaWQiOiIxIn0.ql-gypFWLoe5RUDuT2yYzhAZafVqoOMSz5I1xlQYm9U",
+    "created_at": "2026-09-19T23:14:13.011Z",
+    "expires_at": "2026-09-26T23:14:13Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "jti": "7bee91bb7f7d41bea40392dbfa9d9d8f",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MDQ2NDY1MSwiaWF0IjoxNzg5ODU5ODUxLCJqdGkiOiI3YmVlOTFiYjdmN2Q0MWJlYTQwMzkyZGJmYTlkOWQ4ZiIsInVzZXJfaWQiOiIxIn0.YZB_FkhaxzrHlqnAW9gcfxzna-MAZNelJc7mus2xRSk",
+    "created_at": "2026-09-19T23:17:31.279Z",
+    "expires_at": "2026-09-26T23:17:31Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 7,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "jti": "3178343a9bdb415cbf195799fbe22d3c",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MDQ2NDY1OSwiaWF0IjoxNzg5ODU5ODU5LCJqdGkiOiIzMTc4MzQzYTliZGI0MTVjYmYxOTU3OTlmYmUyMmQzYyIsInVzZXJfaWQiOiIxIn0.6UBFoJrTkzv3DY5g9ZNjBb6gjrgK9OuioDEhxCmKAqM",
+    "created_at": "2026-09-19T23:17:39.256Z",
+    "expires_at": "2026-09-26T23:17:39Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 8,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "jti": "833f447fabfe434a908730b0a225cf20",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MDQ2NTMxNSwiaWF0IjoxNzg5ODYwNTE1LCJqdGkiOiI4MzNmNDQ3ZmFiZmU0MzRhOTA4NzMwYjBhMjI1Y2YyMCIsInVzZXJfaWQiOiIxIn0._ajDwnjAPFKnivFraUY2jCkiSC4g8xnQA_I2_7sfe2Y",
+    "created_at": "2026-09-19T23:28:35.249Z",
+    "expires_at": "2026-09-26T23:28:35Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 9,
+  "fields": {
+    "user": [
+      "operator"
+    ],
+    "jti": "993d7094e52d480496c7ee17f5accdfb",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MDQ2NTMzOSwiaWF0IjoxNzg5ODYwNTM5LCJqdGkiOiI5OTNkNzA5NGU1MmQ0ODA0OTZjN2VlMTdmNWFjY2RmYiIsInVzZXJfaWQiOiIyIn0.YE7m-viALrJgFlp0I6fwqPX19XvTs21-wayixTGFKK0",
+    "created_at": "2026-09-19T23:28:59.627Z",
+    "expires_at": "2026-09-26T23:28:59Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 10,
+  "fields": {
+    "user": [
+      "reporter"
+    ],
+    "jti": "81093c56db09440dbc8e77c3616c298a",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MDQ2NTM1NywiaWF0IjoxNzg5ODYwNTU3LCJqdGkiOiI4MTA5M2M1NmRiMDk0NDBkYmM4ZTc3YzM2MTZjMjk4YSIsInVzZXJfaWQiOiIzIn0.QM9hn0IDJwIdAGbDgrOEf_WBp9vA6qMMwFSu3EzYJbM",
+    "created_at": "2026-09-19T23:29:17.432Z",
+    "expires_at": "2026-09-26T23:29:17Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 11,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "jti": "c02939beb0d2458fa8b70f8988766796",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MDQ2NTM5NSwiaWF0IjoxNzg5ODYwNTk1LCJqdGkiOiJjMDI5MzliZWIwZDI0NThmYThiNzBmODk4ODc2Njc5NiIsInVzZXJfaWQiOiIxIn0.1NixyjsOcYmy4Wp02gGH1KBy5C9SsMQguXlbDP_ZOnA",
+    "created_at": "2026-09-19T23:29:55.239Z",
+    "expires_at": "2026-09-26T23:29:55Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 12,
+  "fields": {
+    "user": [
+      "reporter"
+    ],
+    "jti": "cb70b568acdd47c285cf1b54021a8561",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MDQ2NzA1MywiaWF0IjoxNzg5ODYyMjUzLCJqdGkiOiJjYjcwYjU2OGFjZGQ0N2MyODVjZjFiNTQwMjFhODU2MSIsInVzZXJfaWQiOiIzIn0.n-NOEE6GPJ_5SJZ3tllrtCfM8EFv4WM8Hnb1Ox0m_y4",
+    "created_at": "2026-09-19T23:57:33.615Z",
+    "expires_at": "2026-09-26T23:57:33Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 13,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "jti": "d74cc52815d845438241e7ac9317b45e",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MDU0ODEwMywiaWF0IjoxNzg5OTQzMzAzLCJqdGkiOiJkNzRjYzUyODE1ZDg0NTQzODI0MWU3YWM5MzE3YjQ1ZSIsInVzZXJfaWQiOiIxIn0.2ZRGO7h1tFhMdDxKzUcnSsjmTh8brY_qAwY0jWNYPgo",
+    "created_at": "2026-09-20T22:28:23.328Z",
+    "expires_at": "2026-09-27T22:28:23Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 14,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "jti": "346dcf4a45bd4a2eab331eaea945ddf9",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MDU0OTAwNywiaWF0IjoxNzg5OTQ0MjA3LCJqdGkiOiIzNDZkY2Y0YTQ1YmQ0YTJlYWIzMzFlYWVhOTQ1ZGRmOSIsInVzZXJfaWQiOiIxIn0.IkpDOhVHmHrYfJwf-WN-wRhRY0WE4D9kIrDVqWkrZqs",
+    "created_at": "2026-09-20T22:43:27.125Z",
+    "expires_at": "2026-09-27T22:43:27Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 15,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "jti": "a2d9c4bfe57d42b397e97168a0157491",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MjE0OTMzMCwiaWF0IjoxNzkxNTQ0NTMwLCJqdGkiOiJhMmQ5YzRiZmU1N2Q0MmIzOTdlOTcxNjhhMDE1NzQ5MSIsInVzZXJfaWQiOiIxIn0.Prd-affbtzvv7LIiobp0w2GCot8dp-K-pBHlPjj3UgA",
+    "created_at": "2026-10-09T11:15:30.462Z",
+    "expires_at": "2026-10-16T11:15:30Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 16,
+  "fields": {
+    "user": [
+      "operator"
+    ],
+    "jti": "e143e2b81e3a434bbddb13a1a7b262dd",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MjE1MTE1NywiaWF0IjoxNzkxNTQ2MzU3LCJqdGkiOiJlMTQzZTJiODFlM2E0MzRiYmRkYjEzYTFhN2IyNjJkZCIsInVzZXJfaWQiOiIyIn0.PuTfdSP7xhneqyi9vwVFVr4BNtTsZnKsSkEG3l1dJa0",
+    "created_at": "2026-10-09T11:45:57.703Z",
+    "expires_at": "2026-10-16T11:45:57Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 17,
+  "fields": {
+    "user": [
+      "reporter"
+    ],
+    "jti": "666a0224e4a14cd3ad53c8ff8c8028bf",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MjE1MTM1NiwiaWF0IjoxNzkxNTQ2NTU2LCJqdGkiOiI2NjZhMDIyNGU0YTE0Y2QzYWQ1M2M4ZmY4YzgwMjhiZiIsInVzZXJfaWQiOiIzIn0.E78P3A-qS49nLP0mK3mFFpqVZoq2p1NZngDtEDSshDs",
+    "created_at": "2026-10-09T11:49:16.792Z",
+    "expires_at": "2026-10-16T11:49:16Z"
+  }
+}
+]

@@ -76,6 +76,30 @@ class Vehicle(SoftDeleteModel):
     def __str__(self):
         return f"[{self.internal_fleet_number}] {self.make} {self.model} ({self.plate_number})"
 
+    @classmethod
+    def generate_next_fleet_number(cls):
+        """
+        Generates the next sequential internal fleet number using an automatic counter.
+        Example: FL-101, FL-502 -> FL-503
+        """
+        import re
+        highest_num = 100
+        for num_str in cls.objects.values_list('internal_fleet_number', flat=True):
+            matches = re.findall(r'\d+', str(num_str))
+            if matches:
+                try:
+                    val = int(matches[-1])
+                    if val > highest_num:
+                        highest_num = val
+                except ValueError:
+                    pass
+        return f"FL-{highest_num + 1}"
+
+    def save(self, *args, **kwargs):
+        if not self.internal_fleet_number:
+            self.internal_fleet_number = self.generate_next_fleet_number()
+        super().save(*args, **kwargs)
+
     def clean(self):
         super().clean()
         # Ensure that odometer does not decrease below recorded history
@@ -183,3 +207,44 @@ class VehicleDocument(TimeStampedModel):
     @property
     def days_until_expiry(self):
         return (self.expiry_date - timezone.now().date()).days
+
+
+class VehicleModel(TimeStampedModel):
+    name = models.CharField(max_length=100, unique=True, verbose_name="طراز المركبة")
+    make = models.CharField(max_length=100, blank=True, default="", verbose_name="الشركة الصانعة / الماركة")
+    description = models.TextField(blank=True, default="", verbose_name="الوصف والمواصفات")
+
+    class Meta:
+        verbose_name = "طراز مركبة"
+        verbose_name_plural = "طرازات المركبات"
+        ordering = ['make', 'name']
+
+    def __str__(self):
+        return f"{self.make} {self.name}".strip()
+
+
+class VehicleColor(TimeStampedModel):
+    name = models.CharField(max_length=50, unique=True, verbose_name="اسم اللون")
+    code = models.CharField(max_length=20, blank=True, default="", verbose_name="رمز اللون (Hex/Code)")
+
+    class Meta:
+        verbose_name = "لون مركبة"
+        verbose_name_plural = "ألوان المركبات"
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+class Department(TimeStampedModel):
+    name = models.CharField(max_length=100, unique=True, verbose_name="اسم القسم / الإدارة")
+    description = models.TextField(blank=True, default="", verbose_name="الوصف والمهام")
+
+    class Meta:
+        verbose_name = "قسم / إدارة"
+        verbose_name_plural = "الأقسام والإدارات"
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+

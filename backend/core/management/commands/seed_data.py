@@ -10,13 +10,16 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 from accounts.models import User
 from core.models import SystemSetting
-from vehicles.models import VehicleType, Vehicle, OdometerReading, VehicleDocument
+from vehicles.models import (
+    VehicleType, Vehicle, OdometerReading, VehicleDocument,
+    VehicleModel, VehicleColor, Department
+)
 from drivers.models import Driver, DriverAssignment
 from parts.models import PartCatalog, VehiclePart
 from maintenance.models import MaintenanceType, MaintenanceRecord
 from maintenance.services import MaintenanceRuleEngine
 from work_permits.models import WorkPermit
-from fuel.models import FuelRecord
+from fuel.models import FuelRecord, FuelType
 from audit.models import AuditLog
 
 
@@ -94,6 +97,61 @@ class Command(BaseCommand):
             'bus': VehicleType.objects.update_or_create(name='حافلة ركاب (نقل الموظفين والعمالة)', defaults={'description': 'حافلات لنقل الكوادر والموظفين بين الفروع', 'icon': 'bus'})[0],
             'van': VehicleType.objects.update_or_create(name='فان بضائع ومبرد', defaults={'description': 'مركبات نقل وتوزيع مغلقة ومبردة', 'icon': 'package'})[0],
         }
+
+        # 3.1 Vehicle Models
+        self.stdout.write('3.1 طرازات وموديلات المركبات...')
+        models_data = [
+            ('تويوتا', 'هايلكس غمارتين', 'بيك أب خفيف محرك 2.7 لتر'),
+            ('تويوتا', 'لاند كروزر برادو', 'دفع رباعي للإشراف الميداني'),
+            ('تويوتا', 'كامري', 'سيدان لنقل المشرفين والزيارات'),
+            ('مرسيدس بنز', 'أكتروس 1845', 'شاحنة نقل ثقيل وتريلا خطوط طويلة'),
+            ('إيسوزو', 'NPR 75', 'شاحنة نقل متوسط وصندوق مبرد'),
+            ('فولفو', 'FH 460', 'رأس تريلا ثقيل 6x4'),
+            ('هيونداي', 'إتش وان (H-1)', 'فان ركاب ونقل إشرافي 9 مقاعد'),
+            ('ميتسوبيشي', 'فوزو كانتر', 'دينا نقل خفيف 3.5 طن'),
+        ]
+        for make, name, desc in models_data:
+            VehicleModel.objects.update_or_create(name=name, defaults={'make': make, 'description': desc})
+
+        # 3.2 Vehicle Colors
+        self.stdout.write('3.2 ألوان المركبات...')
+        colors_data = [
+            ('أبيض لؤلؤي', '#FFFFFF'),
+            ('أبيض ناصع', '#F8F9FA'),
+            ('فضي ميتاليك', '#C0C0C0'),
+            ('رمادي داكن (فيراني)', '#4A4A4A'),
+            ('أسود ملكي', '#000000'),
+            ('أزرق كحلي', '#002B49'),
+            ('أحمر ناري', '#C8102E'),
+            ('ذهبي رملي', '#D4AF37'),
+        ]
+        for name, code in colors_data:
+            VehicleColor.objects.update_or_create(name=name, defaults={'code': code})
+
+        # 3.3 Departments
+        self.stdout.write('3.3 الأقسام والإدارات...')
+        departments_data = [
+            ('قسم الحركة والتشغيل الميداني', 'إدارة حركة الأسطول وتوجيه السائقين وتنفيذ الرحلات'),
+            ('إدارة الصيانة والدعم الفني', 'متابعة جدول الصيانة الدورية وإصلاح الأعطال وقطع الغيار'),
+            ('قسم الشحن والنقل اللوجستي', 'عمليات الشحن بين المدن وتوزيع البضائع والتسليم'),
+            ('الإدارة العامة والتشغيل', 'الإدارة العليا وإشراف التشغيل وتخطيط المهام'),
+            ('إدارة المتابعة والجودة والتقارير', 'مراقبة مؤشرات الأداء واستهلاك الوقود والتراخيص والسلامة'),
+            ('قسم الأمن والسلامة والصحة المهنية', 'فحص جاهزية المركبات وتدريب السائقين على القيادة الآمنة'),
+        ]
+        for name, desc in departments_data:
+            Department.objects.update_or_create(name=name, defaults={'description': desc})
+
+        # 3.4 Fuel Types & Pricing
+        self.stdout.write('3.4 أنواع الوقود والتسعير المعتمد...')
+        fuel_types_data = [
+            ('ديزل', Decimal('1.15'), 'ر.س', 'ديزل عالي الكفاءة للشاحنات الثقيلة والمعدات'),
+            ('بنزين 91', Decimal('2.18'), 'ر.س', 'بنزين أوكتان 91 للمركبات الخفيفة والسيدان'),
+            ('بنزين 95', Decimal('2.33'), 'ر.س', 'بنزين ممتاز أوكتان 95 للسيارات الإشرافية الحديثة'),
+            ('كهربائي (كيلوواط/ساعة)', Decimal('0.32'), 'ر.س', 'شحن كهربائي للمركبات الكهربائية'),
+            ('غاز طبيعي مضغوط (CNG)', Decimal('0.90'), 'ر.س', 'غاز طبيعي بيئي للمركبات الهجينة'),
+        ]
+        for name, price, curr, desc in fuel_types_data:
+            FuelType.objects.update_or_create(name=name, defaults={'price_per_liter': price, 'currency': curr, 'description': desc})
 
         # 4. Part Catalog
         self.stdout.write('4. كتالوج قطع الغيار والصيانة...')

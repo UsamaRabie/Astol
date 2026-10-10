@@ -133,6 +133,7 @@ export class SidebarComponent {
     {
       title: 'النظام والرقابة',
       items: [
+        { path: '/lookups', title: 'إدارة القوائم والخيارات', icon: 'list', adminOnly: true },
         { path: '/audit-logs', title: 'سجل التدقيق والعمليات', icon: 'shield-check', adminOnly: true },
         { path: '/settings', title: 'المستخدمون والإعدادات', icon: 'cog', adminOnly: true }
       ]

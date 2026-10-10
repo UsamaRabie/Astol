@@ -1,6 +1,27 @@
 from rest_framework import serializers
-from .models import Vehicle, VehicleType, OdometerReading, VehicleDocument
+from .models import (
+    Vehicle, VehicleType, OdometerReading, VehicleDocument,
+    VehicleModel, VehicleColor, Department
+)
 from drivers.models import Driver
+
+
+class VehicleModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VehicleModel
+        fields = ['id', 'name', 'make', 'description', 'created_at']
+
+
+class VehicleColorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VehicleColor
+        fields = ['id', 'name', 'code', 'created_at']
+
+
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = ['id', 'name', 'description', 'created_at']
 
 
 class VehicleTypeSerializer(serializers.ModelSerializer):
@@ -82,6 +103,8 @@ class VehicleDetailSerializer(serializers.ModelSerializer):
 
 
 class VehicleCreateUpdateSerializer(serializers.ModelSerializer):
+    internal_fleet_number = serializers.CharField(required=False, allow_blank=True)
+
     class Meta:
         model = Vehicle
         fields = [
@@ -93,6 +116,8 @@ class VehicleCreateUpdateSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
+        if not validated_data.get('internal_fleet_number'):
+            validated_data.pop('internal_fleet_number', None)
         initial_odometer = validated_data.get('current_odometer', 0)
         vehicle = Vehicle.objects.create(**validated_data)
         if initial_odometer > 0:

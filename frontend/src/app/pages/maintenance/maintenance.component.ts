@@ -106,11 +106,12 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
               <th>القطع المستبدلة</th>
               <th>الحالة</th>
               <th>المسؤول</th>
+              <th *ngIf="isAdmin" style="text-align: center;">الإجراءات</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngIf="loading">
-              <td colspan="10" style="text-align: center; padding: 3rem; color: #64748b;">
+              <td [attr.colspan]="isAdmin ? 11 : 10" style="text-align: center; padding: 3rem; color: #64748b;">
                 <div style="display: inline-flex; align-items: center; gap: 8px;">
                   <app-icon name="refresh" [size]="18" className="spin"></app-icon>
                   <span>جاري تحميل سجلات الصيانة...</span>
@@ -118,7 +119,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
               </td>
             </tr>
             <tr *ngIf="!loading && records.length === 0">
-              <td colspan="10" style="text-align: center; padding: 3rem; color: #94a3b8;">
+              <td [attr.colspan]="isAdmin ? 11 : 10" style="text-align: center; padding: 3rem; color: #94a3b8;">
                 <app-icon name="wrench" [size]="32" style="color: #cbd5e1; margin-bottom: 8px;"></app-icon>
                 <div style="font-weight: 600; color: #475569;">لا توجد عمليات صيانة مسجلة</div>
                 <div style="font-size: 11.5px; color: #94a3b8;">يمكنك توثيق عملية صيانة دورية أو إصلاح جديد</div>
@@ -147,6 +148,22 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
                 <span class="badge badge-success" style="font-size: 11px;">{{ r.status_display }}</span>
               </td>
               <td style="font-size: 12px; color: #64748b;">{{ r.created_by_name || 'النظام المركزي' }}</td>
+              <td *ngIf="isAdmin" style="text-align: center; white-space: nowrap;">
+                <div style="display: inline-flex; align-items: center; gap: 4px;">
+                  <button (click)="openEditModal(r)"
+                          class="btn btn-outline btn-sm"
+                          title="تعديل سجل الصيانة"
+                          style="padding: 4px 7px; border-radius: 6px;">
+                    <app-icon name="edit" [size]="14"></app-icon>
+                  </button>
+                  <button (click)="openDeleteModal(r)"
+                          class="btn btn-outline btn-sm"
+                          title="حذف سجل الصيانة"
+                          style="padding: 4px 7px; border-radius: 6px; color: #e11d48; border-color: #fecdd3;">
+                    <app-icon name="trash" [size]="14"></app-icon>
+                  </button>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -251,15 +268,28 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
                   <textarea [(ngModel)]="newRecord.description" name="desc" rows="2" class="form-control" placeholder="تفاصيل الإصلاحات أو بنود الفاتورة"></textarea>
                 </div>
 
-                <!-- Select Replaced Parts -->
-                <div class="form-group" style="grid-column: span 2;" *ngIf="vehicleParts.length > 0">
-                  <label class="form-label">القطع المستبدلة (إن وجدت)</label>
-                  <div style="display: flex; flex-wrap: wrap; gap: 12px; padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
-                    <label *ngFor="let vp of vehicleParts" style="display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; cursor: pointer;">
-                      <input type="checkbox" [checked]="isPartSelected(vp.id)" (change)="togglePartSelection(vp.id)" />
-                      <span>{{ vp.part_name }}</span>
-                    </label>
+                <!-- Dropdown selection for Replaced Parts -->
+                <div class="form-group" style="grid-column: span 2;">
+                  <label class="form-label">القطع المستبدلة (اختيار من القائمة المنسدلة)</label>
+                  <div style="display: flex; gap: 8px;">
+                    <select [(ngModel)]="selectedPartToAdd" (change)="addPartFromDropdown()" name="part_select" class="form-select">
+                      <option value="">-- اختر قطعة غيار مستبدلة لإضافتها --</option>
+                      <option *ngFor="let vp of vehicleParts" [value]="vp.id">
+                        {{ vp.part_name }} (الحالة: {{ vp.status_display || vp.current_status }})
+                      </option>
+                    </select>
                   </div>
+
+                  <!-- Selected Parts Chips -->
+                  <div *ngIf="selectedPartIds.length > 0" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+                    <div *ngFor="let pid of selectedPartIds" class="badge badge-info" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; font-size: 12px; border-radius: 6px;">
+                      <span>{{ getPartName(pid) }}</span>
+                      <button type="button" (click)="removePart(pid)" style="background: none; border: none; cursor: pointer; color: inherit; padding: 0; display: inline-flex; align-items: center;" title="إزالة">
+                        <app-icon name="x" [size]="13"></app-icon>
+                      </button>
+                    </div>
+                  </div>
+
                   <div style="margin-top: 8px;">
                     <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #0369a1; font-weight: 700; cursor: pointer;">
                       <input type="checkbox" [(ngModel)]="newRecord.reset_parts_intervals" name="reset_intervals" />
@@ -278,6 +308,157 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
               </button>
             </div>
           </form>
+        </div>
+      </div>
+
+      <!-- Modal: Edit Maintenance Record (Admin) -->
+      <div *ngIf="showEditModal" class="modal-overlay">
+        <div class="modal-box modal-box-lg">
+          <div class="modal-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <app-icon name="edit" [size]="20" style="color: #0284c7;"></app-icon>
+              <h3 style="font-weight: 700; font-size: 1.15rem; color: #0f172a; margin: 0;">
+                تعديل سجل الصيانة #{{ editingRecord.id }}
+              </h3>
+            </div>
+            <button (click)="showEditModal = false" class="btn btn-outline btn-sm" style="padding: 4px 8px; border-radius: 6px;">
+              <app-icon name="x" [size]="16"></app-icon>
+            </button>
+          </div>
+
+          <form (ngSubmit)="updateRecord()">
+            <div class="modal-body">
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">المركبة المعنية *</label>
+                  <select [(ngModel)]="editingRecord.vehicle" (change)="onEditVehicleSelected()" name="edit_v_id" required class="form-select">
+                    <option *ngFor="let v of vehicles" [value]="v.id">
+                      {{ v.internal_fleet_number }} - {{ v.plate_number }} ({{ v.make }} {{ v.model }})
+                    </option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">نوع الصيانة *</label>
+                  <select [(ngModel)]="editingRecord.maintenance_type" name="edit_type_id" required class="form-select">
+                    <option *ngFor="let t of maintenanceTypes" [value]="t.id">{{ t.name }}</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">تاريخ الصيانة *</label>
+                  <input type="date" [(ngModel)]="editingRecord.maintenance_date" name="edit_m_date" required class="form-control" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">قراءة العداد عند الصيانة (كم) *</label>
+                  <input type="number" [(ngModel)]="editingRecord.odometer" name="edit_odo" required min="0" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">التكلفة الإجمالية (ر.س) *</label>
+                  <input type="number" step="0.01" [(ngModel)]="editingRecord.cost" name="edit_cost" required min="0" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">مزود الخدمة / الورشة</label>
+                  <input type="text" [(ngModel)]="editingRecord.service_provider" name="edit_provider" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">اسم الفني / المهندس</label>
+                  <input type="text" [(ngModel)]="editingRecord.technician" name="edit_tech" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">حالة العملية</label>
+                  <select [(ngModel)]="editingRecord.status" name="edit_st" class="form-select">
+                    <option value="COMPLETED">مكتملة</option>
+                    <option value="IN_PROGRESS">قيد التنفيذ</option>
+                    <option value="SCHEDULED">مجدولة</option>
+                    <option value="CANCELLED">ملغاة</option>
+                  </select>
+                </div>
+
+                <div class="form-group" style="grid-column: span 2;">
+                  <label class="form-label">تفاصيل الأعمال والإصلاحات</label>
+                  <textarea [(ngModel)]="editingRecord.description" name="edit_desc" rows="2" class="form-control"></textarea>
+                </div>
+
+                <div class="form-group" style="grid-column: span 2;">
+                  <label class="form-label">ملاحظات إضافية</label>
+                  <textarea [(ngModel)]="editingRecord.notes" name="edit_notes" rows="2" class="form-control"></textarea>
+                </div>
+
+                <!-- Dropdown for Edit Replaced Parts -->
+                <div class="form-group" style="grid-column: span 2;">
+                  <label class="form-label">القطع المستبدلة (اختيار من القائمة المنسدلة)</label>
+                  <div style="display: flex; gap: 8px;">
+                    <select [(ngModel)]="editSelectedPartToAdd" (change)="addEditPartFromDropdown()" name="edit_part_select" class="form-select">
+                      <option value="">-- اختر قطعة غيار مستبدلة لإضافتها --</option>
+                      <option *ngFor="let vp of editVehicleParts" [value]="vp.id">
+                        {{ vp.part_name }} (الحالة: {{ vp.status_display || vp.current_status }})
+                      </option>
+                    </select>
+                  </div>
+
+                  <!-- Selected Parts Chips -->
+                  <div *ngIf="editSelectedPartIds.length > 0" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+                    <div *ngFor="let pid of editSelectedPartIds" class="badge badge-info" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; font-size: 12px; border-radius: 6px;">
+                      <span>{{ getEditPartName(pid) }}</span>
+                      <button type="button" (click)="removeEditPart(pid)" style="background: none; border: none; cursor: pointer; color: inherit; padding: 0; display: inline-flex; align-items: center;" title="إزالة">
+                        <app-icon name="x" [size]="13"></app-icon>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div style="margin-top: 8px;">
+                    <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #0369a1; font-weight: 700; cursor: pointer;">
+                      <input type="checkbox" [(ngModel)]="editingRecord.reset_parts_intervals" name="edit_reset_intervals" />
+                      <span>إعادة ضبط فواصل الصيانة وتحديث حالة القطع المستبدلة تلقائياً إلى (سليم)</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" (click)="showEditModal = false" class="btn btn-secondary">إلغاء</button>
+              <button type="submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px;">
+                <app-icon name="check" [size]="16"></app-icon>
+                <span>تحديث وحفظ التعديلات</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Modal: Confirm Delete Record -->
+      <div *ngIf="showDeleteModal && deletingRecord" class="modal-overlay">
+        <div class="modal-box" style="max-width: 440px;">
+          <div class="modal-header">
+            <h3 style="font-weight: 700; font-size: 1.1rem; color: #e11d48; margin: 0; display: flex; align-items: center; gap: 8px;">
+              <app-icon name="alert-triangle" [size]="20"></app-icon>
+              <span>تأكيد حذف سجل الصيانة</span>
+            </h3>
+            <button (click)="showDeleteModal = false" class="btn btn-outline btn-sm" style="padding: 4px 8px; border-radius: 6px;">
+              <app-icon name="x" [size]="16"></app-icon>
+            </button>
+          </div>
+          <div class="modal-body" style="padding: 1.25rem;">
+            <p style="color: #475569; font-size: 13.5px; line-height: 1.6; margin: 0;">
+              هل أنت متأكد من حذف سجل الصيانة للمركبة
+              <strong style="color: #0f172a;">{{ deletingRecord.vehicle_plate }}</strong>
+              (نوع الصيانة: <strong>{{ deletingRecord.maintenance_type_name }}</strong> بتكلفة <strong>{{ deletingRecord.cost }} ر.س</strong>)؟
+            </p>
+          </div>
+          <div class="modal-footer" style="padding: 1rem 1.25rem;">
+            <button type="button" (click)="showDeleteModal = false" class="btn btn-secondary">إلغاء</button>
+            <button type="button" (click)="confirmDelete()" class="btn btn-danger" style="display: inline-flex; align-items: center; gap: 6px;">
+              <app-icon name="trash" [size]="15"></app-icon>
+              <span>نعم، حذف السجل</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -303,6 +484,7 @@ export class MaintenanceComponent implements OnInit {
   maintenanceTypes: MaintenanceType[] = [];
   vehicles: Vehicle[] = [];
   vehicleParts: VehiclePart[] = [];
+  editVehicleParts: VehiclePart[] = [];
   loading = true;
   evaluating = false;
 
@@ -314,7 +496,16 @@ export class MaintenanceComponent implements OnInit {
   totalCount = 0;
 
   showCreateModal = false;
+  showEditModal = false;
+  showDeleteModal = false;
+
+  selectedPartToAdd = '';
   selectedPartIds: number[] = [];
+
+  editSelectedPartToAdd = '';
+  editSelectedPartIds: number[] = [];
+  editingRecord: any = {};
+  deletingRecord: MaintenanceRecord | null = null;
 
   newRecord: any = {
     maintenance_date: new Date().toISOString().slice(0, 10),
@@ -325,6 +516,10 @@ export class MaintenanceComponent implements OnInit {
 
   get canWrite(): boolean {
     return this.authService.canWrite();
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 
   ngOnInit(): void {
@@ -368,6 +563,19 @@ export class MaintenanceComponent implements OnInit {
       this.fleetService.getVehicleParts(v.id).subscribe({
         next: (p) => {
           this.vehicleParts = p;
+          this.cdr.markForCheck();
+        },
+        error: () => {}
+      });
+    }
+  }
+
+  onEditVehicleSelected(): void {
+    const v = this.vehicles.find(item => item.id === Number(this.editingRecord.vehicle));
+    if (v) {
+      this.fleetService.getVehicleParts(v.id).subscribe({
+        next: (p) => {
+          this.editVehicleParts = p;
           this.cdr.markForCheck();
         },
         error: () => {}
@@ -442,22 +650,114 @@ export class MaintenanceComponent implements OnInit {
       reset_parts_intervals: true
     };
     this.selectedPartIds = [];
+    this.selectedPartToAdd = '';
     if (defaultVehicle) {
       this.onVehicleSelected();
     }
     this.showCreateModal = true;
   }
 
-  isPartSelected(id: number): boolean {
-    return this.selectedPartIds.includes(id);
-  }
-
-  togglePartSelection(id: number): void {
-    if (this.isPartSelected(id)) {
-      this.selectedPartIds = this.selectedPartIds.filter(x => x !== id);
-    } else {
+  addPartFromDropdown(): void {
+    const id = Number(this.selectedPartToAdd);
+    if (id && !this.selectedPartIds.includes(id)) {
       this.selectedPartIds.push(id);
     }
+    this.selectedPartToAdd = '';
+  }
+
+  removePart(id: number): void {
+    this.selectedPartIds = this.selectedPartIds.filter(x => x !== id);
+  }
+
+  getPartName(id: number): string {
+    const p = this.vehicleParts.find(x => x.id === id);
+    return (p && p.part_name) ? p.part_name : `قطعة #${id}`;
+  }
+
+  addEditPartFromDropdown(): void {
+    const id = Number(this.editSelectedPartToAdd);
+    if (id && !this.editSelectedPartIds.includes(id)) {
+      this.editSelectedPartIds.push(id);
+    }
+    this.editSelectedPartToAdd = '';
+  }
+
+  removeEditPart(id: number): void {
+    this.editSelectedPartIds = this.editSelectedPartIds.filter(x => x !== id);
+  }
+
+  getEditPartName(id: number): string {
+    const p = this.editVehicleParts.find(x => x.id === id);
+    return (p && p.part_name) ? p.part_name : `قطعة #${id}`;
+  }
+
+  openEditModal(record: MaintenanceRecord): void {
+    this.editingRecord = {
+      id: record.id,
+      vehicle: record.vehicle,
+      maintenance_type: record.maintenance_type,
+      maintenance_date: record.maintenance_date,
+      odometer: record.odometer,
+      cost: record.cost,
+      service_provider: record.service_provider || '',
+      technician: record.technician || '',
+      status: record.status,
+      description: record.description || '',
+      notes: record.notes || '',
+      reset_parts_intervals: false
+    };
+    this.editSelectedPartIds = record.parts_replaced_details?.map(p => p.id) || [];
+    this.editSelectedPartToAdd = '';
+
+    // Load parts for the vehicle
+    this.fleetService.getVehicleParts(record.vehicle).subscribe({
+      next: (p) => {
+        this.editVehicleParts = p;
+        this.cdr.markForCheck();
+      },
+      error: () => {}
+    });
+
+    this.showEditModal = true;
+  }
+
+  updateRecord(): void {
+    const payload = {
+      ...this.editingRecord,
+      parts_replaced: this.editSelectedPartIds
+    };
+    this.maintenanceService.updateRecord(this.editingRecord.id, payload).subscribe({
+      next: () => {
+        this.toastService.success('تم تحديث سجل الصيانة بنجاح');
+        this.showEditModal = false;
+        this.loadRecords();
+      },
+      error: (err) => {
+        const msg = err.error?.detail || err.error?.message || 'فشل تحديث سجل الصيانة';
+        this.toastService.error(msg);
+      }
+    });
+  }
+
+  openDeleteModal(record: MaintenanceRecord): void {
+    this.deletingRecord = record;
+    this.showDeleteModal = true;
+  }
+
+  confirmDelete(): void {
+    if (!this.deletingRecord) return;
+    this.maintenanceService.deleteRecord(this.deletingRecord.id).subscribe({
+      next: () => {
+        this.toastService.success('تم حذف سجل الصيانة بنجاح');
+        this.showDeleteModal = false;
+        this.deletingRecord = null;
+        this.loadRecords();
+      },
+      error: (err) => {
+        const msg = err.error?.detail || err.error?.message || 'فشل حذف سجل الصيانة';
+        this.toastService.error(msg);
+      }
+    });
   }
 
   saveRecord(): void {

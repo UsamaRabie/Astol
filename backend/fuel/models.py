@@ -8,6 +8,21 @@ from vehicles.models import Vehicle, OdometerReading
 from drivers.models import Driver
 
 
+class FuelType(TimeStampedModel):
+    name = models.CharField(max_length=100, unique=True, verbose_name="نوع الوقود")
+    price_per_liter = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal('2.18'), verbose_name="سعر اللتر")
+    currency = models.CharField(max_length=20, default="ر.س", verbose_name="العملة")
+    description = models.TextField(blank=True, default="", verbose_name="الوصف")
+
+    class Meta:
+        verbose_name = "نوع وقود"
+        verbose_name_plural = "أنواع الوقود"
+        ordering = ['name']
+
+    def __str__(self):
+        return f"{self.name} ({self.price_per_liter} {self.currency}/لتر)"
+
+
 class FuelRecord(SoftDeleteModel):
     vehicle = models.ForeignKey(
         Vehicle,
@@ -18,9 +33,8 @@ class FuelRecord(SoftDeleteModel):
     date = models.DateField(default=timezone.now, verbose_name="تاريخ التعبئة")
     odometer = models.PositiveIntegerField(verbose_name="قراءة العداد عند التعبئة (كم)")
     fuel_type = models.CharField(
-        max_length=30,
-        choices=Vehicle.FuelType.choices,
-        default=Vehicle.FuelType.DIESEL,
+        max_length=100,
+        default="ديزل",
         verbose_name="نوع الوقود"
     )
     quantity = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="الكمية باللتر")

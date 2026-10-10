@@ -3,11 +3,17 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db.models import Sum, Avg, Count
-from accounts.permissions import IsOperatorOrAdmin
+from accounts.permissions import IsOperatorOrAdmin, IsAdminOrReadOnly
 from audit.utils import log_action
 from audit.models import AuditLog
-from .models import FuelRecord
-from .serializers import FuelRecordSerializer, FuelRecordCreateUpdateSerializer
+from .models import FuelRecord, FuelType
+from .serializers import FuelRecordSerializer, FuelRecordCreateUpdateSerializer, FuelTypeSerializer
+
+
+class FuelTypeViewSet(viewsets.ModelViewSet):
+    queryset = FuelType.objects.all()
+    serializer_class = FuelTypeSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class FuelRecordViewSet(viewsets.ModelViewSet):
@@ -54,6 +60,17 @@ class FuelRecordViewSet(viewsets.ModelViewSet):
             action=AuditLog.Action.CREATE,
             module='الوقود',
             object_repr=f"تسجيل وقود: {record}",
+            object_id=str(record.id),
+            details={'cost': str(record.total_cost), 'quantity': str(record.quantity)},
+            request=self.request
+        )
+
+    def perform_update(self, serializer):
+        record = serializer.save()
+        log_action(
+            action=AuditLog.Action.UPDATE,
+            module='الوقود',
+            object_repr=f"تعديل سجل وقود: {record}",
             object_id=str(record.id),
             details={'cost': str(record.total_cost), 'quantity': str(record.quantity)},
             request=self.request

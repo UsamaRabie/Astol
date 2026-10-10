@@ -40,6 +40,37 @@ export interface VehicleType {
   vehicle_count?: number;
 }
 
+export interface VehicleModel {
+  id: number;
+  name: string;
+  make?: string;
+  description?: string;
+  created_at?: string;
+}
+
+export interface VehicleColor {
+  id: number;
+  name: string;
+  code?: string;
+  created_at?: string;
+}
+
+export interface Department {
+  id: number;
+  name: string;
+  description?: string;
+  created_at?: string;
+}
+
+export interface FuelType {
+  id: number;
+  name: string;
+  price_per_liter: number | string;
+  currency: string;
+  description?: string;
+  created_at?: string;
+}
+
 export interface Vehicle {
   id: number;
   internal_fleet_number: string;
@@ -136,6 +167,7 @@ export interface WorkPermit {
   driver_name?: string;
   driver_phone?: string;
   requesting_department: string;
+  departure_location?: string;
   destination: string;
   purpose: string;
   description?: string;
@@ -160,6 +192,7 @@ export interface PartCatalog {
   category: string;
   category_display?: string;
   default_interval_km: number;
+  warning_threshold_km?: number;
   default_interval_days: number;
   unit: string;
   description?: string;
@@ -254,6 +287,7 @@ export interface VehicleAlert {
   message: string;
   is_read: boolean;
   is_resolved: boolean;
+  resolved_at?: string;
   created_at: string;
 }
 

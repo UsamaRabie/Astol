@@ -3,7 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
   Vehicle, VehicleType, OdometerReading, VehicleDocument,
-  VehiclePart, PartCatalog, PaginatedResponse
+  VehiclePart, PartCatalog, VehicleModel, VehicleColor, Department,
+  PaginatedResponse
 } from '../models/models';
 
 @Injectable({
@@ -28,6 +29,10 @@ export class FleetService {
 
   getVehicle(id: number): Observable<Vehicle> {
     return this.http.get<Vehicle>(`${this.apiUrl}/vehicles/${id}/`);
+  }
+
+  getNextFleetNumber(): Observable<{ next_fleet_number: string }> {
+    return this.http.get<{ next_fleet_number: string }>(`${this.apiUrl}/vehicles/next-fleet-number/`);
   }
 
   createVehicle(vehicle: Partial<Vehicle>): Observable<Vehicle> {
@@ -77,6 +82,87 @@ export class FleetService {
     return this.http.get<PaginatedResponse<VehicleType>>(`${this.apiUrl}/vehicle-types/`);
   }
 
+  createVehicleType(type: Partial<VehicleType>): Observable<VehicleType> {
+    return this.http.post<VehicleType>(`${this.apiUrl}/vehicle-types/`, type);
+  }
+
+  updateVehicleType(id: number, type: Partial<VehicleType>): Observable<VehicleType> {
+    return this.http.put<VehicleType>(`${this.apiUrl}/vehicle-types/${id}/`, type);
+  }
+
+  deleteVehicleType(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/vehicle-types/${id}/`);
+  }
+
+  // Vehicle Models
+  getVehicleModels(params?: any): Observable<PaginatedResponse<VehicleModel>> {
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.keys(params).forEach(k => {
+        if (params[k]) httpParams = httpParams.set(k, params[k]);
+      });
+    }
+    return this.http.get<PaginatedResponse<VehicleModel>>(`${this.apiUrl}/vehicle-models/`, { params: httpParams });
+  }
+
+  createVehicleModel(model: Partial<VehicleModel>): Observable<VehicleModel> {
+    return this.http.post<VehicleModel>(`${this.apiUrl}/vehicle-models/`, model);
+  }
+
+  updateVehicleModel(id: number, model: Partial<VehicleModel>): Observable<VehicleModel> {
+    return this.http.put<VehicleModel>(`${this.apiUrl}/vehicle-models/${id}/`, model);
+  }
+
+  deleteVehicleModel(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/vehicle-models/${id}/`);
+  }
+
+  // Vehicle Colors
+  getVehicleColors(params?: any): Observable<PaginatedResponse<VehicleColor>> {
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.keys(params).forEach(k => {
+        if (params[k]) httpParams = httpParams.set(k, params[k]);
+      });
+    }
+    return this.http.get<PaginatedResponse<VehicleColor>>(`${this.apiUrl}/vehicle-colors/`, { params: httpParams });
+  }
+
+  createVehicleColor(color: Partial<VehicleColor>): Observable<VehicleColor> {
+    return this.http.post<VehicleColor>(`${this.apiUrl}/vehicle-colors/`, color);
+  }
+
+  updateVehicleColor(id: number, color: Partial<VehicleColor>): Observable<VehicleColor> {
+    return this.http.put<VehicleColor>(`${this.apiUrl}/vehicle-colors/${id}/`, color);
+  }
+
+  deleteVehicleColor(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/vehicle-colors/${id}/`);
+  }
+
+  // Departments
+  getDepartments(params?: any): Observable<PaginatedResponse<Department>> {
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.keys(params).forEach(k => {
+        if (params[k]) httpParams = httpParams.set(k, params[k]);
+      });
+    }
+    return this.http.get<PaginatedResponse<Department>>(`${this.apiUrl}/departments/`, { params: httpParams });
+  }
+
+  createDepartment(dept: Partial<Department>): Observable<Department> {
+    return this.http.post<Department>(`${this.apiUrl}/departments/`, dept);
+  }
+
+  updateDepartment(id: number, dept: Partial<Department>): Observable<Department> {
+    return this.http.put<Department>(`${this.apiUrl}/departments/${id}/`, dept);
+  }
+
+  deleteDepartment(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/departments/${id}/`);
+  }
+
   // Parts Catalog & Installations
   getPartCatalog(params?: any): Observable<PaginatedResponse<PartCatalog>> {
     let httpParams = new HttpParams();
@@ -90,6 +176,14 @@ export class FleetService {
 
   createPartCatalog(part: Partial<PartCatalog>): Observable<PartCatalog> {
     return this.http.post<PartCatalog>(`${this.apiUrl}/part-catalog/`, part);
+  }
+
+  updatePartCatalog(id: number, part: Partial<PartCatalog>): Observable<PartCatalog> {
+    return this.http.put<PartCatalog>(`${this.apiUrl}/part-catalog/${id}/`, part);
+  }
+
+  deletePartCatalog(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/part-catalog/${id}/`);
   }
 
   getVehiclePartsList(params?: any): Observable<PaginatedResponse<VehiclePart>> {

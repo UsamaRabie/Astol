@@ -19,7 +19,8 @@ class PartCatalog(TimeStampedModel):
 
     name = models.CharField(max_length=150, unique=True, verbose_name="اسم قطعة الغيار")
     category = models.CharField(max_length=50, choices=Category.choices, default=Category.OTHER, verbose_name="الفئة")
-    default_interval_km = models.PositiveIntegerField(default=10000, verbose_name="الفاصل الافتراضي بالكيلومتر")
+    default_interval_km = models.PositiveIntegerField(default=10000, verbose_name="الفاصل الافتراضي بالكيلومتر (تتغير كل كام كم)")
+    warning_threshold_km = models.PositiveIntegerField(default=1000, verbose_name="عتبة التحذير للسماحية قبل موعد التغيير (كم)")
     default_interval_days = models.PositiveIntegerField(default=180, verbose_name="الفاصل الافتراضي بالأيام")
     unit = models.CharField(max_length=30, default="قطعة", verbose_name="وحدة القياس")
     description = models.TextField(blank=True, default="", verbose_name="الوصف والمواصفات")

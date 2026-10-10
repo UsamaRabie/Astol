@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from accounts.permissions import IsOperatorOrAdmin
+from accounts.permissions import IsOperatorOrAdmin, IsAdminOrReadOnly
 from audit.utils import log_action
 from audit.models import AuditLog
 from .models import MaintenanceType, MaintenanceRecord
@@ -15,7 +15,7 @@ from .services import MaintenanceRuleEngine
 class MaintenanceTypeViewSet(viewsets.ModelViewSet):
     queryset = MaintenanceType.objects.all()
     serializer_class = MaintenanceTypeSerializer
-    permission_classes = [IsOperatorOrAdmin]
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class MaintenanceRecordViewSet(viewsets.ModelViewSet):
@@ -63,6 +63,18 @@ class MaintenanceRecordViewSet(viewsets.ModelViewSet):
             action=AuditLog.Action.MAINTENANCE_RECORD,
             module='الصيانة',
             object_repr=f"تسجيل صيانة: {record}",
+            object_id=str(record.id),
+            details={'cost': str(record.cost), 'vehicle': record.vehicle.plate_number},
+            request=self.request
+        )
+
+    def perform_update(self, serializer):
+        record = serializer.save()
+        MaintenanceRuleEngine.evaluate_vehicle(record.vehicle)
+        log_action(
+            action=AuditLog.Action.UPDATE,
+            module='الصيانة',
+            object_repr=f"تعديل سجل صيانة: {record}",
             object_id=str(record.id),
             details={'cost': str(record.cost), 'vehicle': record.vehicle.plate_number},
             request=self.request

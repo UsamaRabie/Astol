@@ -1,12 +1,15 @@
 import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FleetService } from '../../core/services/fleet.service';
+import { FuelService } from '../../core/services/fuel.service';
+import { DriverService } from '../../core/services/driver.service';
 import { ToastService } from '../../core/services/toast.service';
 import { AuthService } from '../../core/services/auth.service';
 import {
-  Vehicle, OdometerReading, VehiclePart, VehicleDocument
+  Vehicle, OdometerReading, VehiclePart, VehicleDocument,
+  VehicleModel, VehicleColor, Department, FuelType, Driver
 } from '../../core/models/models';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 
@@ -38,10 +41,24 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
           </button>
           <button *ngIf="canWrite"
                   (click)="showOdometerModal = true"
-                  class="btn btn-primary btn-sm"
+                  class="btn btn-secondary btn-sm"
                   style="display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-size: 12.5px;">
             <app-icon name="gauge" [size]="14"></app-icon>
             <span>تحديث قراءة العداد</span>
+          </button>
+          <button *ngIf="isAdmin"
+                  (click)="openEditVehicleModal()"
+                  class="btn btn-primary btn-sm"
+                  style="display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-size: 12.5px;">
+            <app-icon name="edit" [size]="14"></app-icon>
+            <span>تعديل المركبة</span>
+          </button>
+          <button *ngIf="isAdmin"
+                  (click)="showDeleteModal = true"
+                  class="btn btn-outline btn-sm"
+                  style="display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-size: 12.5px; color: #e11d48; border-color: #fecdd3;">
+            <app-icon name="trash" [size]="14"></app-icon>
+            <span>حذف المركبة</span>
           </button>
         </div>
       </div>
@@ -572,6 +589,141 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
             </div>
           </form>
         </div>
+      <!-- Modal: Edit Vehicle (Admin) -->
+      <div *ngIf="showEditModal" class="modal-overlay">
+        <div class="modal-box modal-box-lg">
+          <div class="modal-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <app-icon name="edit" [size]="20" style="color: #0284c7;"></app-icon>
+              <h3 style="font-weight: 700; font-size: 1.15rem; color: #0f172a; margin: 0;">
+                تعديل بيانات المركبة #{{ vehicle.internal_fleet_number }}
+              </h3>
+            </div>
+            <button (click)="showEditModal = false" class="btn btn-outline btn-sm" style="padding: 4px 8px; border-radius: 6px;">
+              <app-icon name="x" [size]="16"></app-icon>
+            </button>
+          </div>
+
+          <form (ngSubmit)="saveVehicleEdit()">
+            <div class="modal-body">
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">الشركة المصنعة (Make) *</label>
+                  <input type="text" [(ngModel)]="editingVehicle.make" name="edit_make" required class="form-control" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">طراز المركبة (Model) *</label>
+                  <select [(ngModel)]="editingVehicle.model" name="edit_model" required class="form-select">
+                    <option value="">-- اختر طراز المركبة --</option>
+                    <option *ngFor="let m of models" [value]="m.name">{{ m.name }} ({{ m.make }})</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">سنة الصنع *</label>
+                  <input type="number" [(ngModel)]="editingVehicle.year" name="edit_year" required min="1990" max="2035" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">رقم اللوحة الرسمي *</label>
+                  <input type="text" [(ngModel)]="editingVehicle.plate_number" name="edit_plate" required class="form-control" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">نوع وتصنيف المركبة *</label>
+                  <select [(ngModel)]="editingVehicle.vehicle_type" name="edit_type" required class="form-select">
+                    <option *ngFor="let t of vehicleTypes" [value]="t.id">{{ t.name }}</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">لون المركبة</label>
+                  <select [(ngModel)]="editingVehicle.color" name="edit_color" class="form-select">
+                    <option value="">-- اختر اللون --</option>
+                    <option *ngFor="let c of colors" [value]="c.name">{{ c.name }}</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">نوع الوقود</label>
+                  <select [(ngModel)]="editingVehicle.fuel_type" name="edit_fuel" class="form-select">
+                    <option value="">-- اختر نوع الوقود --</option>
+                    <option *ngFor="let ft of fuelTypes" [value]="ft.name">{{ ft.name }} ({{ ft.price_per_liter }} {{ ft.currency }})</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">القسم التابع له</label>
+                  <select [(ngModel)]="editingVehicle.department" name="edit_dept" class="form-select">
+                    <option value="">-- اختر القسم --</option>
+                    <option *ngFor="let d of departments" [value]="d.name">{{ d.name }}</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">السائق المعين</label>
+                  <select [(ngModel)]="editingVehicle.assigned_driver" name="edit_driver" class="form-select">
+                    <option [ngValue]="null">-- بدون سائق معين --</option>
+                    <option *ngFor="let drv of drivers" [value]="drv.id">{{ drv.full_name }} ({{ drv.phone_number }})</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">الحالة التشغيلية *</label>
+                  <select [(ngModel)]="editingVehicle.status" name="edit_st" required class="form-select">
+                    <option value="ACTIVE">نشطة في الخدمة</option>
+                    <option value="IN_MAINTENANCE">في الصيانة</option>
+                    <option value="OUT_OF_SERVICE">خارج الخدمة</option>
+                    <option value="RETIRED">متقاعدة</option>
+                  </select>
+                </div>
+
+                <div class="form-group" style="grid-column: span 2;">
+                  <label class="form-label">ملاحظات</label>
+                  <textarea [(ngModel)]="editingVehicle.notes" name="edit_notes" rows="2" class="form-control"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" (click)="showEditModal = false" class="btn btn-secondary">إلغاء</button>
+              <button type="submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px;">
+                <app-icon name="check" [size]="16"></app-icon>
+                <span>حفظ تعديلات المركبة</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Modal: Confirm Delete Vehicle (Admin) -->
+      <div *ngIf="showDeleteModal && vehicle" class="modal-overlay">
+        <div class="modal-box" style="max-width: 440px;">
+          <div class="modal-header">
+            <h3 style="font-weight: 700; font-size: 1.1rem; color: #e11d48; margin: 0; display: flex; align-items: center; gap: 8px;">
+              <app-icon name="alert-triangle" [size]="20"></app-icon>
+              <span>تأكيد حذف المركبة</span>
+            </h3>
+            <button (click)="showDeleteModal = false" class="btn btn-outline btn-sm" style="padding: 4px 8px; border-radius: 6px;">
+              <app-icon name="x" [size]="16"></app-icon>
+            </button>
+          </div>
+          <div class="modal-body" style="padding: 1.25rem;">
+            <p style="color: #475569; font-size: 13.5px; line-height: 1.6; margin: 0;">
+              هل أنت متأكد من حذف المركبة
+              <strong style="color: #0f172a;">#{{ vehicle.internal_fleet_number }} ({{ vehicle.plate_number }})</strong>؟
+              سيتم نقلها إلى المحذوفات وحجبها من العمليات.
+            </p>
+          </div>
+          <div class="modal-footer" style="padding: 1rem 1.25rem;">
+            <button type="button" (click)="showDeleteModal = false" class="btn btn-secondary">إلغاء</button>
+            <button type="button" (click)="confirmDeleteVehicle()" class="btn btn-danger" style="display: inline-flex; align-items: center; gap: 6px;">
+              <app-icon name="trash" [size]="15"></app-icon>
+              <span>نعم، حذف المركبة</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   `,
@@ -610,7 +762,10 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
 })
 export class VehicleDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private fleetService = inject(FleetService);
+  private fuelService = inject(FuelService);
+  private driverService = inject(DriverService);
   private toastService = inject(ToastService);
   private authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
@@ -636,8 +791,22 @@ export class VehicleDetailComponent implements OnInit {
   replaceDate = new Date().toISOString().slice(0, 10);
   replaceNotes = '';
 
+  showEditModal = false;
+  showDeleteModal = false;
+  editingVehicle: any = {};
+  models: VehicleModel[] = [];
+  colors: VehicleColor[] = [];
+  fuelTypes: FuelType[] = [];
+  departments: Department[] = [];
+  vehicleTypes: any[] = [];
+  drivers: any[] = [];
+
   get canWrite(): boolean {
     return this.authService.canWrite();
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 
   ngOnInit(): void {
@@ -761,6 +930,80 @@ export class VehicleDetailComponent implements OnInit {
       },
       error: (err) => {
         const msg = err.error?.detail || err.error?.message || 'فشل تسجيل استبدال القطعة';
+        this.toastService.error(msg);
+      }
+    });
+  }
+
+  loadLookups(): void {
+    this.fleetService.getVehicleModels().subscribe({
+      next: (res) => { this.models = res.results; this.cdr.markForCheck(); },
+      error: () => {}
+    });
+    this.fleetService.getVehicleColors().subscribe({
+      next: (res) => { this.colors = res.results; this.cdr.markForCheck(); },
+      error: () => {}
+    });
+    this.fuelService.getFuelTypes().subscribe({
+      next: (res) => { this.fuelTypes = res.results; this.cdr.markForCheck(); },
+      error: () => {}
+    });
+    this.fleetService.getDepartments().subscribe({
+      next: (res) => { this.departments = res.results; this.cdr.markForCheck(); },
+      error: () => {}
+    });
+    this.fleetService.getVehicleTypes().subscribe({
+      next: (res) => { this.vehicleTypes = res.results; this.cdr.markForCheck(); },
+      error: () => {}
+    });
+    this.driverService.getDrivers().subscribe({
+      next: (res: any) => { this.drivers = res.results; this.cdr.markForCheck(); },
+      error: () => {}
+    });
+  }
+
+  openEditVehicleModal(): void {
+    if (!this.vehicle) return;
+    this.loadLookups();
+    this.editingVehicle = {
+      make: this.vehicle.make,
+      model: this.vehicle.model,
+      year: this.vehicle.year,
+      plate_number: this.vehicle.plate_number,
+      vehicle_type: this.vehicle.vehicle_type,
+      color: this.vehicle.color || '',
+      fuel_type: this.vehicle.fuel_type || '',
+      department: this.vehicle.department || '',
+      assigned_driver: this.vehicle.assigned_driver || null,
+      status: this.vehicle.status,
+      notes: this.vehicle.notes || ''
+    };
+    this.showEditModal = true;
+  }
+
+  saveVehicleEdit(): void {
+    this.fleetService.updateVehicle(this.vehicleId, this.editingVehicle).subscribe({
+      next: () => {
+        this.toastService.success('تم تحديث بيانات المركبة بنجاح');
+        this.showEditModal = false;
+        this.loadAllVehicleData();
+      },
+      error: (err) => {
+        const msg = err.error?.detail || err.error?.plate_number?.[0] || 'فشل تحديث بيانات المركبة';
+        this.toastService.error(msg);
+      }
+    });
+  }
+
+  confirmDeleteVehicle(): void {
+    this.fleetService.deleteVehicle(this.vehicleId).subscribe({
+      next: () => {
+        this.toastService.success('تم حذف المركبة بنجاح');
+        this.showDeleteModal = false;
+        this.router.navigate(['/vehicles']);
+      },
+      error: (err) => {
+        const msg = err.error?.detail || 'فشل حذف المركبة';
         this.toastService.error(msg);
       }
     });

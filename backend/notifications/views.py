@@ -34,6 +34,12 @@ class VehicleAlertViewSet(viewsets.ModelViewSet):
         alert.save(update_fields=['is_read', 'updated_at'])
         return Response({'success': True, 'message': 'تم تعليم التنبيه كمقروء'})
 
+    @action(detail=True, methods=['post'], url_path='resolve')
+    def resolve_alert(self, request, pk=None):
+        alert = self.get_object()
+        alert.resolve()
+        return Response({'success': True, 'message': 'تم تعليم التنبيه كمعالج وتم حل المشكلة'})
+
     @action(detail=False, methods=['post'], url_path='mark-all-read')
     def mark_all_read(self, request):
         VehicleAlert.objects.filter(is_read=False).update(is_read=True)

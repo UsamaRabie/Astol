@@ -36,3 +36,18 @@ class IsReporterReadOnly(permissions.BasePermission):
             return False
 
         return True
+
+
+class IsAdminOrReadOnly(permissions.BasePermission):
+    """
+    Allows read-only access to authenticated users (e.g. Operator, Reporter).
+    Allows write (create, update, delete) only to Admins.
+    """
+    def has_permission(self, request, view):
+        if not (request.user and request.user.is_authenticated):
+            return False
+
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return bool(request.user.is_admin)

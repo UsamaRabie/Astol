@@ -30,6 +30,10 @@ export class AlertService {
     return this.http.post(`${this.apiUrl}/notifications/mark-all-read/`, {});
   }
 
+  resolveAlert(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/notifications/${id}/resolve/`, {});
+  }
+
   getUnreadCount(): Observable<{ unread_count: number; critical_count: number }> {
     return this.http.get<{ unread_count: number; critical_count: number }>(`${this.apiUrl}/notifications/unread-count/`);
   }

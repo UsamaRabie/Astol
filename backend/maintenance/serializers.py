@@ -81,3 +81,32 @@ class MaintenanceRecordCreateUpdateSerializer(serializers.ModelSerializer):
         MaintenanceRuleEngine.evaluate_vehicle(record.vehicle)
 
         return record
+
+    def update(self, instance, validated_data):
+        reset_parts = validated_data.pop('reset_parts_intervals', False)
+        parts = validated_data.pop('parts_replaced', None)
+
+        record = super().update(instance, validated_data)
+        if parts is not None:
+            record.parts_replaced.set(parts)
+            if reset_parts:
+                for vp in parts:
+                    vp.record_replacement(
+                        new_odometer=record.odometer,
+                        replacement_date=record.maintenance_date,
+                        notes=f"صيانة: {record.maintenance_type.name}"
+                    )
+
+        if record.odometer > record.vehicle.current_odometer:
+            from vehicles.models import OdometerReading
+            user = self.context['request'].user if 'request' in self.context else None
+            record.vehicle.update_odometer(
+                new_reading=record.odometer,
+                source=OdometerReading.Source.MAINTENANCE,
+                user=user,
+                notes=f"تعديل صيانة {record.maintenance_type.name} - الورشة: {record.service_provider}"
+            )
+
+        from maintenance.services import MaintenanceRuleEngine
+        MaintenanceRuleEngine.evaluate_vehicle(record.vehicle)
+        return record

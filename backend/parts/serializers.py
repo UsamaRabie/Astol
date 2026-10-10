@@ -10,7 +10,8 @@ class PartCatalogSerializer(serializers.ModelSerializer):
         model = PartCatalog
         fields = [
             'id', 'name', 'category', 'category_display', 'default_interval_km',
-            'default_interval_days', 'unit', 'description', 'usage_count', 'created_at'
+            'warning_threshold_km', 'default_interval_days', 'unit', 'description',
+            'usage_count', 'created_at'
         ]
 
 

@@ -22,7 +22,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
             أذونات التشغيل ورحلات العمل
           </h1>
           <p style="color: #64748b; font-size: 0.875rem; margin: 0;">
-            إصدار تراخيص الحركة، مراقبة انطلاق وعودة الرحلات، واحتساب المسافات المقطوعة بدقة
+            إصدار تراخيص الحركة، تحديد نقطة الانطلاق والمسار، وتحديث عدادات المركبات تلقائياً فور اكتمال الرحلة
           </p>
         </div>
 
@@ -46,7 +46,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
               <input type="text"
                      [(ngModel)]="searchQuery"
                      (keyup.enter)="loadPermits()"
-                     placeholder="رقم الإذن، الوجهة، الغرض، السائق..."
+                     placeholder="رقم الإذن، مكان الانطلاق، الوجهة، السائق..."
                      class="form-control"
                      style="padding-left: 2rem;" />
               <app-icon name="search" [size]="16" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none;"></app-icon>
@@ -58,7 +58,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
             <select [(ngModel)]="selectedStatus" (change)="loadPermits()" class="form-select">
               <option value="">جميع الحالات التشغيلية</option>
               <option value="DRAFT">مسودة (Draft)</option>
-              <option value="APPROVED">معتمد وبانتظار الانطلاق (Approved)</option>
+              <option value="APPROVED">معتمد / صادر (Approved)</option>
               <option value="IN_PROGRESS">قيد التنفيذ بالميدان (In Progress)</option>
               <option value="COMPLETED">مكتمل ومنتهي (Completed)</option>
               <option value="CANCELLED">ملغي (Cancelled)</option>
@@ -92,17 +92,17 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
         <table class="table" style="font-size: 13px;">
           <thead>
             <tr>
-              <th style="width: 120px;">رقم الإذن</th>
+              <th style="width: 110px;">رقم الإذن</th>
               <th>المركبة</th>
               <th>السائق المسؤول</th>
-              <th>الجهة الطالبة</th>
+              <th>مكان الانطلاق</th>
               <th>الوجهة والغرض</th>
               <th>تاريخ الانطلاق</th>
               <th>عداد البداية</th>
               <th>عداد العودة</th>
-              <th>المسافة</th>
+              <th>المسافة المقطوعة</th>
               <th>الحالة</th>
-              <th *ngIf="canWrite" style="text-align: center; width: 170px;">إجراءات التشغيل</th>
+              <th style="text-align: center; width: 230px;">إجراءات التشغيل</th>
             </tr>
           </thead>
           <tbody>
@@ -131,10 +131,14 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
                 <div style="font-weight: 600; color: #0f172a;">{{ p.driver_name }}</div>
                 <div style="font-size: 11px; color: #94a3b8;">{{ p.driver_phone }}</div>
               </td>
-              <td style="color: #475569;">{{ p.requesting_department }}</td>
+              <td>
+                <span style="background: #f1f5f9; color: #0f172a; padding: 3px 8px; border-radius: 6px; font-weight: 600; font-size: 11.5px;">
+                  {{ p.departure_location || 'المقر الرئيسي' }}
+                </span>
+              </td>
               <td>
                 <div style="font-weight: 600; color: #1e293b;">{{ p.destination }}</div>
-                <div style="font-size: 11.5px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">
+                <div style="font-size: 11.5px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px;">
                   {{ p.purpose }}
                 </div>
               </td>
@@ -159,43 +163,61 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
                   {{ p.status_display }}
                 </span>
               </td>
-              <td *ngIf="canWrite" style="text-align: center;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
-                  <!-- Approve Button (if Draft) -->
-                  <button *ngIf="p.status === 'DRAFT'"
-                          (click)="approvePermit(p)"
-                          class="btn btn-secondary btn-sm"
-                          style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; font-size: 11.5px;"
-                          title="اعتماد الإذن">
-                    <app-icon name="check" [size]="12"></app-icon>
-                    <span>اعتماد</span>
+              <td style="text-align: center;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 4px; flex-wrap: wrap;">
+                  <!-- Complete Trip Action (if Approved or In Progress): opens modal for ending odometer -->
+                  <button *ngIf="p.status === 'IN_PROGRESS' || p.status === 'APPROVED'"
+                          (click)="openCompleteTripModal(p)"
+                          class="btn btn-sm"
+                          style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; display: inline-flex; align-items: center; gap: 3px; padding: 4px 8px; font-size: 11px; border-radius: 6px;"
+                          title="إتمام الرحلة وتسجيل عداد العودة">
+                    <app-icon name="check-circle" [size]="12"></app-icon>
+                    <span>الرحلة اكتملت</span>
                   </button>
 
                   <!-- Start Trip Button (if Approved or Draft) -->
                   <button *ngIf="p.status === 'APPROVED' || p.status === 'DRAFT'"
                           (click)="openStartTripModal(p)"
-                          class="btn btn-primary btn-sm"
-                          style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; font-size: 11.5px;"
+                          class="btn btn-secondary btn-sm"
+                          style="display: inline-flex; align-items: center; gap: 3px; padding: 4px 8px; font-size: 11px; border-radius: 6px;"
                           title="تسجيل انطلاق الرحلة">
                     <app-icon name="gauge" [size]="12"></app-icon>
                     <span>انطلاق</span>
                   </button>
 
-                  <!-- Complete Trip Button (if In Progress) -->
-                  <button *ngIf="p.status === 'IN_PROGRESS'"
-                          (click)="openCompleteTripModal(p)"
+                  <!-- Approve Button (if Draft) -->
+                  <button *ngIf="p.status === 'DRAFT'"
+                          (click)="approvePermit(p)"
+                          class="btn btn-outline btn-sm"
+                          style="display: inline-flex; align-items: center; gap: 3px; padding: 4px 8px; font-size: 11px; border-radius: 6px;"
+                          title="اعتماد الإذن">
+                    <app-icon name="check" [size]="12"></app-icon>
+                    <span>اعتماد</span>
+                  </button>
+
+                  <!-- Admin Full CRUD: Edit -->
+                  <button *ngIf="isAdmin && p.status !== 'COMPLETED'"
+                          (click)="openEditModal(p)"
                           class="btn btn-sm"
-                          style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; font-size: 11.5px;"
-                          title="تسجيل عودة المركبة وإتمام الرحلة">
-                    <app-icon name="check-circle" [size]="12"></app-icon>
-                    <span>عودة</span>
+                          style="background: #f1f5f9; border: 1px solid #cbd5e1; color: #0284c7; padding: 4px 6px; border-radius: 6px; font-size: 11px;"
+                          title="تعديل الإذن">
+                    <app-icon name="edit" [size]="12"></app-icon>
+                  </button>
+
+                  <!-- Admin Full CRUD: Delete -->
+                  <button *ngIf="isAdmin"
+                          (click)="confirmDeletePermit(p)"
+                          class="btn btn-sm"
+                          style="background: #fef2f2; border: 1px solid #fee2e2; color: #ef4444; padding: 4px 6px; border-radius: 6px; font-size: 11px;"
+                          title="حذف الإذن">
+                    <app-icon name="trash" [size]="12"></app-icon>
                   </button>
 
                   <!-- Cancel Button -->
                   <button *ngIf="p.status !== 'COMPLETED' && p.status !== 'CANCELLED'"
                           (click)="openCancelModal(p)"
                           class="btn btn-outline btn-sm"
-                          style="color: #ef4444; border-color: #fecaca; padding: 4px 6px;"
+                          style="color: #ef4444; border-color: #fecaca; padding: 4px 6px; border-radius: 6px;"
                           title="إلغاء الإذن">
                     <app-icon name="x" [size]="12"></app-icon>
                   </button>
@@ -264,14 +286,29 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
                   </select>
                 </div>
 
+                <!-- Input: مكان انطلاق الرحلة -->
                 <div class="form-group">
-                  <label class="form-label">الجهة / القسم الطالب *</label>
-                  <input type="text" [(ngModel)]="newPermit.requesting_department" name="dept" required class="form-control" placeholder="مثال: قطاع العمليات الميدانية" />
+                  <label class="form-label">مكان انطلاق الرحلة *</label>
+                  <input type="text" [(ngModel)]="newPermit.departure_location" name="dep_loc" required class="form-control" placeholder="مثال: المستودع المركزي، المقر الرئيسي" />
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">تاريخ الانطلاق المخطط *</label>
+                  <label class="form-label">الجهة / القسم الطالب *</label>
+                  <input type="text" [(ngModel)]="newPermit.requesting_department" name="dept" required class="form-control" placeholder="مثال: قطاع العمليات والتشغيل" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">تاريخ الانطلاق *</label>
                   <input type="date" [(ngModel)]="newPermit.departure_date" name="dep_date" required class="form-control" />
+                </div>
+
+                <!-- Status choice: DRAFT vs APPROVED -->
+                <div class="form-group">
+                  <label class="form-label">حالة الإذن عند الإصدار *</label>
+                  <select [(ngModel)]="newPermit.status" name="status_choice" class="form-select">
+                    <option value="APPROVED">معتمد / صادر مباشرة (Approved)</option>
+                    <option value="DRAFT">مسودة قيد المراجعة (Draft)</option>
+                  </select>
                 </div>
 
                 <div class="form-group" style="grid-column: span 2;">
@@ -285,7 +322,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
                 </div>
 
                 <div class="form-group" style="grid-column: span 2;">
-                  <label class="form-label">تعليمات وملاحظات إضافية للسائق</label>
+                  <label class="form-label">تعليمات وملاحظات إضافية</label>
                   <textarea [(ngModel)]="newPermit.description" name="desc" rows="2" class="form-control" placeholder="تعليمات فنية أو إرشادات أمان خاصة بالمهمة"></textarea>
                 </div>
               </div>
@@ -296,6 +333,94 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
               <button type="submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px;">
                 <app-icon name="check" [size]="16"></app-icon>
                 <span>حفظ وإصدار إذن التشغيل</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Modal: EDIT Work Permit (Admin Full CRUD) -->
+      <div *ngIf="showEditModal" class="modal-overlay">
+        <div class="modal-box modal-box-lg">
+          <div class="modal-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <app-icon name="edit" [size]="20" style="color: #0284c7;"></app-icon>
+              <h3 style="font-weight: 700; font-size: 1.15rem; color: #0f172a; margin: 0;">
+                تعديل إذن التشغيل {{ editingPermit?.permit_number }}
+              </h3>
+            </div>
+            <button (click)="showEditModal = false" class="btn btn-outline btn-sm" style="padding: 4px 8px; border-radius: 6px;">
+              <app-icon name="x" [size]="16"></app-icon>
+            </button>
+          </div>
+
+          <form (ngSubmit)="saveEditPermit()">
+            <div class="modal-body">
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">المركبة *</label>
+                  <select [(ngModel)]="editingPermit.vehicle" name="edit_v" required class="form-select">
+                    <option *ngFor="let v of activeVehicles" [value]="v.id">
+                      {{ v.internal_fleet_number }} - {{ v.plate_number }} ({{ v.make }} {{ v.model }})
+                    </option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">السائق المسؤول *</label>
+                  <select [(ngModel)]="editingPermit.driver" name="edit_d" required class="form-select">
+                    <option *ngFor="let d of drivers" [value]="d.id">{{ d.full_name }} ({{ d.phone }})</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">مكان انطلاق الرحلة *</label>
+                  <input type="text" [(ngModel)]="editingPermit.departure_location" name="edit_dep_loc" required class="form-control" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">الجهة / القسم الطالب *</label>
+                  <input type="text" [(ngModel)]="editingPermit.requesting_department" name="edit_dept" required class="form-control" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">تاريخ الانطلاق *</label>
+                  <input type="date" [(ngModel)]="editingPermit.departure_date" name="edit_dep_date" required class="form-control" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">حالة الإذن *</label>
+                  <select [(ngModel)]="editingPermit.status" name="edit_status" class="form-select">
+                    <option value="DRAFT">مسودة</option>
+                    <option value="APPROVED">معتمد / صادر</option>
+                    <option value="IN_PROGRESS">قيد التنفيذ</option>
+                    <option value="COMPLETED">مكتمل</option>
+                    <option value="CANCELLED">ملغي</option>
+                  </select>
+                </div>
+
+                <div class="form-group" style="grid-column: span 2;">
+                  <label class="form-label">الوجهة ومسار الرحلة *</label>
+                  <input type="text" [(ngModel)]="editingPermit.destination" name="edit_dest" required class="form-control" />
+                </div>
+
+                <div class="form-group" style="grid-column: span 2;">
+                  <label class="form-label">الغرض من الرحلة *</label>
+                  <input type="text" [(ngModel)]="editingPermit.purpose" name="edit_purp" required class="form-control" />
+                </div>
+
+                <div class="form-group" style="grid-column: span 2;">
+                  <label class="form-label">ملاحظات وتفاصيل</label>
+                  <textarea [(ngModel)]="editingPermit.description" name="edit_desc" rows="2" class="form-control"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" (click)="showEditModal = false" class="btn btn-secondary">إلغاء</button>
+              <button type="submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px;">
+                <app-icon name="check" [size]="16"></app-icon>
+                <span>حفظ التعديلات</span>
               </button>
             </div>
           </form>
@@ -321,6 +446,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
             <div class="modal-body">
               <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 12px; margin-bottom: 1.25rem; font-size: 12.5px;">
                 <div style="margin-bottom: 4px;"><strong>المركبة: </strong> {{ selectedPermit?.fleet_number }} ({{ selectedPermit?.vehicle_plate }})</div>
+                <div style="margin-bottom: 4px;"><strong>مكان الانطلاق: </strong> {{ selectedPermit?.departure_location || 'المقر الرئيسي' }}</div>
                 <div style="margin-bottom: 4px;"><strong>السائق: </strong> {{ selectedPermit?.driver_name }}</div>
                 <div><strong>الوجهة: </strong> {{ selectedPermit?.destination }}</div>
               </div>
@@ -350,14 +476,14 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
         </div>
       </div>
 
-      <!-- Modal: Complete Trip -->
+      <!-- POPUP MODAL: COMPLETE TRIP ("الرحلة اكتملت" - يسألني عداد العودة كام ويسمع في السيستم كله) -->
       <div *ngIf="showCompleteTripModal" class="modal-overlay">
-        <div class="modal-box">
+        <div class="modal-box" style="max-width: 500px;">
           <div class="modal-header">
             <div style="display: flex; align-items: center; gap: 8px;">
-              <app-icon name="check-circle" [size]="20" style="color: #059669;"></app-icon>
-              <h3 style="font-weight: 700; font-size: 1.15rem; color: #0f172a; margin: 0;">
-                إتمام وعودة الرحلة - {{ selectedPermit?.permit_number }}
+              <app-icon name="check-circle" [size]="22" style="color: #059669;"></app-icon>
+              <h3 style="font-weight: 800; font-size: 1.2rem; color: #0f172a; margin: 0;">
+                إتمام الرحلة وتحديث عداد المركبة
               </h3>
             </div>
             <button (click)="showCompleteTripModal = false" class="btn btn-outline btn-sm" style="padding: 4px 8px; border-radius: 6px;">
@@ -367,26 +493,40 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
 
           <form (ngSubmit)="submitCompleteTrip()">
             <div class="modal-body">
-              <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 12px; margin-bottom: 1.25rem;">
-                <div style="font-size: 12px; color: #065f46; margin-bottom: 4px;">
-                  عداد البداية المسجل: <strong>{{ selectedPermit?.starting_odometer | number }} كم</strong>
+              <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px; margin-bottom: 1.25rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                  <span style="font-size: 12.5px; color: #166534; font-weight: 700;">المركبة: {{ selectedPermit?.fleet_number }} ({{ selectedPermit?.vehicle_plate }})</span>
+                  <span style="font-size: 11px; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 4px; font-weight: 700;">إذن {{ selectedPermit?.permit_number }}</span>
                 </div>
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                  <span style="font-size: 12px; color: #065f46; font-weight: 600;">المسافة المقطوعة المحتسبة:</span>
-                  <span style="font-size: 1.25rem; font-weight: 800; color: #059669;">
+                <div style="font-size: 12px; color: #166534; margin-bottom: 6px;">
+                  عداد البداية للرحلة: <strong>{{ (selectedPermit?.starting_odometer || 0) | number }} كم</strong>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px dashed #86efac; padding-top: 6px; margin-top: 6px;">
+                  <span style="font-size: 12px; color: #166534; font-weight: 700;">المسافة المقطوعة المحتسبة:</span>
+                  <span style="font-size: 1.3rem; font-weight: 900; color: #059669;">
                     {{ (tripEndingOdometer - (selectedPermit?.starting_odometer || 0)) > 0 ? ((tripEndingOdometer - (selectedPermit?.starting_odometer || 0)) | number) : 0 }} كم
                   </span>
                 </div>
               </div>
 
+              <!-- Required: Ending Odometer -->
               <div class="form-group">
-                <label class="form-label">قراءة عداد العودة الفعلي (كم) *</label>
-                <input type="number"
-                       [(ngModel)]="tripEndingOdometer"
-                       name="end_odo"
-                       required
-                       [min]="selectedPermit?.starting_odometer || 0"
-                       class="form-control" />
+                <label class="form-label" style="font-size: 13.5px; font-weight: 800; color: #0f172a;">
+                  قراءة عداد العودة الحالي للمركبة (كم) <span style="color: #ef4444;">*</span>
+                </label>
+                <div style="position: relative;">
+                  <input type="number"
+                         [(ngModel)]="tripEndingOdometer"
+                         name="end_odo"
+                         required
+                         [min]="selectedPermit?.starting_odometer || 0"
+                         class="form-control"
+                         style="font-size: 1.15rem; font-weight: 800; color: #059669; padding: 10px 14px;"
+                         placeholder="أدخل قراءة العداد عند العودة" />
+                </div>
+                <span style="font-size: 11.5px; color: #0284c7; margin-top: 5px; display: block; font-weight: 600;">
+                  ⚡ سيتم تحديث عداد المركبة في النظام فوراً، وإعادة تقييم جداول الصيانة وتنبيهات قطع الغيار تلقائياً.
+                </span>
               </div>
 
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1rem;">
@@ -406,15 +546,15 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
                           name="ret_notes"
                           rows="2"
                           class="form-control"
-                          placeholder="أي ملاحظات فنية أو حالة المركبة بعد العودة"></textarea>
+                          placeholder="حالة المركبة عند العودة، أي ملاحظات من السائق..."></textarea>
               </div>
             </div>
 
             <div class="modal-footer">
               <button type="button" (click)="showCompleteTripModal = false" class="btn btn-secondary">إلغاء</button>
-              <button type="submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px;">
+              <button type="submit" class="btn btn-primary" style="background: #059669; border: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 700; padding: 9px 18px;">
                 <app-icon name="check" [size]="16"></app-icon>
-                <span>تأكيد إنهاء الرحلة وتحديث العداد</span>
+                <span>اعتماد إتمام الرحلة وتحديث العداد</span>
               </button>
             </div>
           </form>
@@ -459,6 +599,25 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
           </form>
         </div>
       </div>
+
+      <!-- Modal: Delete Work Permit Confirmation (Admin Full CRUD) -->
+      <div *ngIf="showDeleteModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 440px; text-align: center; padding: 1.5rem;">
+          <div style="width: 52px; height: 52px; border-radius: 50%; background: #fef2f2; color: #ef4444; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto;">
+            <app-icon name="alert-triangle" [size]="28"></app-icon>
+          </div>
+          <h3 style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0 0 8px 0;">تأكيد حذف إذن التشغيل</h3>
+          <p style="font-size: 0.9rem; color: #64748b; margin: 0 0 1.5rem 0; line-height: 1.5;">
+            هل أنت متأكد من رغبتك في حذف إذن التشغيل رقم <b>"{{ permitToDelete?.permit_number }}"</b>؟
+          </p>
+          <div style="display: flex; gap: 10px; justify-content: center;">
+            <button (click)="showDeleteModal = false" class="btn btn-secondary">إلغاء</button>
+            <button (click)="executeDeletePermit()" class="btn btn-danger" style="background: #ef4444; color: #fff; border: none; padding: 8px 20px; border-radius: 6px; font-weight: 700; cursor: pointer;">
+              تأكيد الحذف
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   `,
   styles: [`
@@ -492,10 +651,15 @@ export class WorkPermitsComponent implements OnInit {
   totalCount = 0;
 
   showCreateModal = false;
+  showEditModal = false;
+  showDeleteModal = false;
   showStartTripModal = false;
   showCompleteTripModal = false;
   showCancelModal = false;
+
   selectedPermit: WorkPermit | null = null;
+  permitToDelete: WorkPermit | null = null;
+  editingPermit: any = {};
 
   tripStartingOdometer = 0;
   tripDepartureTime = '08:00';
@@ -507,11 +671,17 @@ export class WorkPermitsComponent implements OnInit {
 
   newPermit: Partial<WorkPermit> = {
     departure_date: new Date().toISOString().slice(0, 10),
-    requesting_department: 'قسم العمليات والتشغيل'
+    departure_location: 'المقر الرئيسي',
+    requesting_department: 'قسم العمليات والتشغيل',
+    status: 'APPROVED'
   };
 
   get canWrite(): boolean {
     return this.authService.canWrite();
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 
   ngOnInit(): void {
@@ -590,7 +760,9 @@ export class WorkPermitsComponent implements OnInit {
   openCreateModal(): void {
     this.newPermit = {
       departure_date: new Date().toISOString().slice(0, 10),
+      departure_location: 'المقر الرئيسي',
       requesting_department: 'قسم العمليات والتشغيل',
+      status: 'APPROVED',
       vehicle: this.activeVehicles[0]?.id,
       driver: this.drivers[0]?.id
     };
@@ -607,6 +779,45 @@ export class WorkPermitsComponent implements OnInit {
       error: (err) => {
         const msg = err.error?.detail || err.error?.message || 'فشل حفظ إذن التشغيل';
         this.toastService.error(msg);
+      }
+    });
+  }
+
+  openEditModal(p: WorkPermit): void {
+    this.editingPermit = { ...p };
+    this.showEditModal = true;
+  }
+
+  saveEditPermit(): void {
+    if (!this.editingPermit.id) return;
+    this.permitService.updatePermit(this.editingPermit.id, this.editingPermit).subscribe({
+      next: () => {
+        this.toastService.success('تم تحديث إذن التشغيل بنجاح');
+        this.showEditModal = false;
+        this.loadPermits();
+      },
+      error: (err) => {
+        this.toastService.error(err.error?.detail || 'فشل تعديل إذن التشغيل');
+      }
+    });
+  }
+
+  confirmDeletePermit(p: WorkPermit): void {
+    this.permitToDelete = p;
+    this.showDeleteModal = true;
+  }
+
+  executeDeletePermit(): void {
+    if (!this.permitToDelete) return;
+    this.permitService.deletePermit(this.permitToDelete.id).subscribe({
+      next: () => {
+        this.toastService.success('تم حذف إذن التشغيل بنجاح');
+        this.showDeleteModal = false;
+        this.permitToDelete = null;
+        this.loadPermits();
+      },
+      error: (err) => {
+        this.toastService.error(err.error?.detail || 'فشل حذف إذن التشغيل');
       }
     });
   }
@@ -650,7 +861,9 @@ export class WorkPermitsComponent implements OnInit {
 
   openCompleteTripModal(p: WorkPermit): void {
     this.selectedPermit = p;
-    this.tripEndingOdometer = (p.starting_odometer || 0) + 50;
+    const v = this.activeVehicles.find(item => item.id === p.vehicle);
+    const startKm = p.starting_odometer || (v ? v.current_odometer : 0);
+    this.tripEndingOdometer = startKm + 50;
     this.tripReturnDate = new Date().toISOString().slice(0, 10);
     this.tripReturnTime = new Date().toTimeString().slice(0, 5);
     this.tripCompleteNotes = '';
@@ -659,8 +872,9 @@ export class WorkPermitsComponent implements OnInit {
 
   submitCompleteTrip(): void {
     if (!this.selectedPermit) return;
-    if (this.tripEndingOdometer < (this.selectedPermit.starting_odometer || 0)) {
-      this.toastService.error('قراءة عداد العودة لا يمكن أن تكون أقل من قراءة عداد البداية');
+    const startKm = this.selectedPermit.starting_odometer || 0;
+    if (this.tripEndingOdometer < startKm) {
+      this.toastService.error(`قراءة عداد العودة (${this.tripEndingOdometer} كم) لا يمكن أن تكون أقل من عداد البداية (${startKm} كم)`);
       return;
     }
 
@@ -671,7 +885,7 @@ export class WorkPermitsComponent implements OnInit {
       notes: this.tripCompleteNotes
     }).subscribe({
       next: (res) => {
-        this.toastService.success(res.message || 'تم إنهاء الرحلة وتحديث عداد المركبة بنجاح');
+        this.toastService.success(res.message || 'تم إنهاء الرحلة وتحديث عداد المركبة في النظام بالكامل');
         this.showCompleteTripModal = false;
         this.loadPermits();
       },

@@ -10,8 +10,26 @@ export class MaintenanceService {
   private http = inject(HttpClient);
   private apiUrl = 'http://127.0.0.1:8000/api';
 
-  getTypes(): Observable<PaginatedResponse<MaintenanceType>> {
-    return this.http.get<PaginatedResponse<MaintenanceType>>(`${this.apiUrl}/maintenance-types/`);
+  getTypes(params?: any): Observable<PaginatedResponse<MaintenanceType>> {
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.keys(params).forEach(k => {
+        if (params[k]) httpParams = httpParams.set(k, params[k]);
+      });
+    }
+    return this.http.get<PaginatedResponse<MaintenanceType>>(`${this.apiUrl}/maintenance-types/`, { params: httpParams });
+  }
+
+  createType(type: Partial<MaintenanceType>): Observable<MaintenanceType> {
+    return this.http.post<MaintenanceType>(`${this.apiUrl}/maintenance-types/`, type);
+  }
+
+  updateType(id: number, type: Partial<MaintenanceType>): Observable<MaintenanceType> {
+    return this.http.put<MaintenanceType>(`${this.apiUrl}/maintenance-types/${id}/`, type);
+  }
+
+  deleteType(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/maintenance-types/${id}/`);
   }
 
   getRecords(params?: any): Observable<PaginatedResponse<MaintenanceRecord>> {

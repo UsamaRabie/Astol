@@ -1,8 +1,14 @@
 from decimal import Decimal
 from rest_framework import serializers
-from .models import FuelRecord
+from .models import FuelRecord, FuelType
 from vehicles.serializers import VehicleListSerializer
 from drivers.serializers import DriverSerializer
+
+
+class FuelTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FuelType
+        fields = ['id', 'name', 'price_per_liter', 'currency', 'description', 'created_at']
 
 
 class FuelRecordSerializer(serializers.ModelSerializer):
@@ -38,3 +44,9 @@ class FuelRecordCreateUpdateSerializer(serializers.ModelSerializer):
         price = Decimal(str(validated_data.get('price_per_unit', 0)))
         validated_data['total_cost'] = round(quantity * price, 2)
         return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        quantity = Decimal(str(validated_data.get('quantity', instance.quantity)))
+        price = Decimal(str(validated_data.get('price_per_unit', instance.price_per_unit)))
+        validated_data['total_cost'] = round(quantity * price, 2)
+        return super().update(instance, validated_data)

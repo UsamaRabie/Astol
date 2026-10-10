@@ -19,7 +19,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
             مركز التنبيهات والإشعارات الفنية
           </h1>
           <p style="color: #64748b; font-size: 0.875rem; margin: 0;">
-            متابعة التنبيهات المباشرة للصيانات المتأخرة، انتهاء الرخص والاستمارات، والأعطال الميدانية
+            متابعة التنبيهات المباشرة للصيانات المتأخرة، انتهاء الرخص والاستمارات، وحالات حل المشكلات
           </p>
         </div>
 
@@ -34,22 +34,30 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
         </div>
       </div>
 
-      <!-- Severity Filter Tabs -->
+      <!-- Filter Tabs -->
       <div style="display: flex; border-bottom: 2px solid #e2e8f0; gap: 0.5rem; overflow-x: auto;">
-        <button (click)="setSeverity('')" class="tab-btn" [class.active-tab]="selectedSeverity === ''">
+        <button (click)="setFilter('ALL')" class="tab-btn" [class.active-tab]="activeFilter === 'ALL'">
           <span>الكل ({{ totalCount }})</span>
         </button>
-        <button (click)="setSeverity('CRITICAL')" class="tab-btn" [class.active-tab]="selectedSeverity === 'CRITICAL'" style="color: #e11d48;">
+        <button (click)="setFilter('UNRESOLVED')" class="tab-btn" [class.active-tab]="activeFilter === 'UNRESOLVED'" style="color: #ea580c;">
+          <app-icon name="alert-triangle" [size]="14"></app-icon>
+          <span>نشطة (غير محلولة)</span>
+        </button>
+        <button (click)="setFilter('RESOLVED')" class="tab-btn" [class.active-tab]="activeFilter === 'RESOLVED'" style="color: #059669;">
+          <app-icon name="check-circle" [size]="14"></app-icon>
+          <span>تم حل المشكلة</span>
+        </button>
+        <button (click)="setFilter('CRITICAL')" class="tab-btn" [class.active-tab]="activeFilter === 'CRITICAL'" style="color: #e11d48;">
           <app-icon name="alert-triangle" [size]="14"></app-icon>
           <span>حرجة وعاجلة</span>
         </button>
-        <button (click)="setSeverity('WARNING')" class="tab-btn" [class.active-tab]="selectedSeverity === 'WARNING'" style="color: #d97706;">
+        <button (click)="setFilter('WARNING')" class="tab-btn" [class.active-tab]="activeFilter === 'WARNING'" style="color: #d97706;">
           <app-icon name="clock" [size]="14"></app-icon>
-          <span>تحذيرات ومستحقة قريباً</span>
+          <span>تحذيرات</span>
         </button>
-        <button (click)="setSeverity('NORMAL')" class="tab-btn" [class.active-tab]="selectedSeverity === 'NORMAL'" style="color: #0284c7;">
+        <button (click)="setFilter('NORMAL')" class="tab-btn" [class.active-tab]="activeFilter === 'NORMAL'" style="color: #0284c7;">
           <app-icon name="info" [size]="14"></app-icon>
-          <span>عادية ومجدولة</span>
+          <span>عادية</span>
         </button>
       </div>
 
@@ -72,9 +80,10 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
              class="card"
              style="border-radius: 10px; padding: 1.25rem; transition: all 0.15s ease;"
              [ngClass]="{
-               'bg-rose-50/40 border-rose-200': alert.severity === 'CRITICAL',
-               'bg-amber-50/40 border-amber-200': alert.severity === 'WARNING',
-               'bg-slate-50/60 border-slate-200': alert.severity === 'NORMAL'
+               'bg-rose-50/40 border-rose-200': alert.severity === 'CRITICAL' && !alert.is_resolved,
+               'bg-amber-50/40 border-amber-200': alert.severity === 'WARNING' && !alert.is_resolved,
+               'bg-slate-50/60 border-slate-200': alert.severity === 'NORMAL' && !alert.is_resolved,
+               'bg-emerald-50/40 border-emerald-200': alert.is_resolved
              }">
           <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;">
             <div style="flex: 1;">
@@ -91,19 +100,44 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
                   <span class="plate-badge" style="font-size: 11px; padding: 1px 6px;">{{ alert.vehicle_plate }}</span>
                   <span style="font-size: 11px; color: #64748b; margin-right: 4px;">#{{ alert.fleet_number }}</span>
                 </span>
-                <span *ngIf="!alert.is_read" class="badge badge-danger" style="font-size: 9.5px; padding: 1px 5px;">جديد</span>
+
+                <!-- Status Badges: Resolved / Read / New -->
+                <span *ngIf="alert.is_resolved" class="badge badge-success" style="font-size: 10.5px; padding: 2px 7px;">
+                  ✓ تم حل المشكلة
+                </span>
+                <span *ngIf="!alert.is_resolved && alert.is_read" class="badge badge-secondary" style="font-size: 10.5px; padding: 2px 7px;">
+                  تم الاطلاع
+                </span>
+                <span *ngIf="!alert.is_resolved && !alert.is_read" class="badge badge-danger" style="font-size: 10.5px; padding: 2px 7px;">
+                  جديد غير مقروء
+                </span>
               </div>
 
               <h4 style="font-size: 1rem; color: #0f172a; margin: 0 0 4px 0; font-weight: 700;">{{ alert.title }}</h4>
               <p style="color: #475569; font-size: 0.875rem; line-height: 1.6; margin: 0;">{{ alert.message }}</p>
 
-              <div style="font-size: 11.5px; color: #94a3b8; margin-top: 8px;">
-                تاريخ تسجيل التنبيه: {{ alert.created_at | date:'yyyy-MM-dd HH:mm' }}
+              <div style="font-size: 11.5px; color: #94a3b8; margin-top: 8px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <span>تاريخ التسجيل: {{ alert.created_at | date:'yyyy-MM-dd HH:mm' }}</span>
+                <span *ngIf="alert.resolved_at" style="color: #059669; font-weight: 600;">
+                  تاريخ حل المشكلة: {{ alert.resolved_at | date:'yyyy-MM-dd HH:mm' }}
+                </span>
               </div>
             </div>
 
+            <!-- Action Buttons -->
             <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0;">
-              <button *ngIf="!alert.is_read"
+              <!-- Resolve Issue Button -->
+              <button *ngIf="!alert.is_resolved"
+                      (click)="markAsResolved(alert)"
+                      class="btn btn-primary btn-sm"
+                      style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; padding: 5px 10px; border-radius: 6px; background: #059669; border-color: #059669;"
+                      title="تم حل المشكلة وتوثيق المعالجة">
+                <app-icon name="check-circle" [size]="14"></app-icon>
+                <span>تم حل المشكلة</span>
+              </button>
+
+              <!-- Mark as Read Button -->
+              <button *ngIf="!alert.is_read && !alert.is_resolved"
                       (click)="markAsRead(alert)"
                       class="btn btn-outline btn-sm"
                       style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 5px 10px; border-radius: 6px;"
@@ -157,22 +191,36 @@ export class NotificationsComponent implements OnInit {
 
   alerts: VehicleAlert[] = [];
   loading = true;
-  selectedSeverity = '';
+  activeFilter = 'ALL';
   totalCount = 0;
 
   ngOnInit(): void {
     this.loadAlerts();
   }
 
-  setSeverity(sev: string): void {
-    this.selectedSeverity = sev;
+  setFilter(filter: string): void {
+    this.activeFilter = filter;
     this.loadAlerts();
   }
 
   loadAlerts(): void {
     this.loading = true;
     this.cdr.markForCheck();
-    this.alertService.getAlerts({ severity: this.selectedSeverity }).subscribe({
+
+    let params: any = {};
+    if (this.activeFilter === 'CRITICAL') {
+      params.severity = 'CRITICAL';
+    } else if (this.activeFilter === 'WARNING') {
+      params.severity = 'WARNING';
+    } else if (this.activeFilter === 'NORMAL') {
+      params.severity = 'NORMAL';
+    } else if (this.activeFilter === 'RESOLVED') {
+      params.is_resolved = 'true';
+    } else if (this.activeFilter === 'UNRESOLVED') {
+      params.is_resolved = 'false';
+    }
+
+    this.alertService.getAlerts(params).subscribe({
       next: (res) => {
         this.alerts = res.results;
         this.totalCount = res.count;
@@ -194,7 +242,24 @@ export class NotificationsComponent implements OnInit {
         this.toastService.success('تم تعليم التنبيه كمقروء');
         this.cdr.markForCheck();
       },
-      error: () => {}
+      error: () => {
+        this.toastService.error('فشل تحديث حالة التنبيه');
+      }
+    });
+  }
+
+  markAsResolved(alert: VehicleAlert): void {
+    this.alertService.resolveAlert(alert.id).subscribe({
+      next: () => {
+        alert.is_resolved = true;
+        alert.is_read = true;
+        alert.resolved_at = new Date().toISOString();
+        this.toastService.success('تم حل المشكلة وتوثيق المعالجة بنجاح');
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.toastService.error('فشل توثيق حل المشكلة');
+      }
     });
   }
 
@@ -205,7 +270,9 @@ export class NotificationsComponent implements OnInit {
         this.alerts.forEach(a => a.is_read = true);
         this.cdr.markForCheck();
       },
-      error: () => {}
+      error: () => {
+        this.toastService.error('فشل تحديث التنبيهات');
+      }
     });
   }
 }

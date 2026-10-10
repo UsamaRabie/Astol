@@ -30,6 +30,7 @@ class WorkPermit(SoftDeleteModel):
         verbose_name="السائق"
     )
     requesting_department = models.CharField(max_length=150, verbose_name="الجهة / القسم الطالب")
+    departure_location = models.CharField(max_length=255, default="المقر الرئيسي", verbose_name="مكان انطلاق الرحلة")
     destination = models.CharField(max_length=255, verbose_name="الوجهة / مسار الرحلة")
     purpose = models.CharField(max_length=255, verbose_name="الغرض من الرحلة / المهمة")
     description = models.TextField(blank=True, default="", verbose_name="تفاصيل إضافية")
@@ -132,8 +133,13 @@ class WorkPermit(SoftDeleteModel):
         - Updates vehicle odometer & creates OdometerReading
         - Re-evaluates vehicle maintenance rules
         """
-        if self.status != self.Status.IN_PROGRESS:
-            raise ValidationError("يمكن إنهاء الرحلات التي تكون في حالة (قيد التنفيذ) فقط")
+        if self.status not in [self.Status.IN_PROGRESS, self.Status.APPROVED]:
+            raise ValidationError("يمكن إنهاء الرحلات التي تكون في حالة (قيد التنفيذ) أو (معتمد) فقط")
+
+        if self.starting_odometer is None:
+            self.starting_odometer = self.vehicle.current_odometer
+        if not self.departure_time:
+            self.departure_time = timezone.now().time()
 
         if ending_odometer < self.starting_odometer:
             raise ValidationError(
