@@ -360,32 +360,26 @@ Write-Host "====================================================================
 Write-Host "            ASTOL FLEET MANAGEMENT SYSTEM - READY AND RUNNING!                  " -ForegroundColor Yellow
 Write-Host "================================================================================" -ForegroundColor Green
 Write-Host ""
-Write-Host "  [1] LOCAL SYSTEM (Opened in your browser):" -ForegroundColor White
-Write-Host "  >>  $localUrl" -ForegroundColor Cyan
-Write-Host ""
-Write-Host "  [2] PUBLIC SHARE LINK (Send this link to your client / friend to view):" -ForegroundColor White
-Write-Host "  >>  $shareUrl" -ForegroundColor Green
-Write-Host "      (Copied to Clipboard! Ready to paste and send)" -ForegroundColor DarkGray
+Write-Host "  >>> CLOUDFLARE PUBLIC SHARING LINK (Send this link to anyone): <<<" -ForegroundColor Yellow
+Write-Host "  >>  $shareUrl" -ForegroundColor Cyan
+Write-Host "      [SUCCESS] Link copied to Clipboard! Just press Ctrl+V to paste & send." -ForegroundColor Green
 Write-Host ""
 Write-Host "  [DEFAULT LOGIN CREDENTIALS]:" -ForegroundColor White
 Write-Host "     Username:  admin" -ForegroundColor Yellow
 Write-Host "     Password:  Admin@123456" -ForegroundColor Yellow
 Write-Host ""
-Write-Host "================================================================================" -ForegroundColor DarkGray
-Write-Host "  NOTE:" -ForegroundColor White
-Write-Host "  - The Local Link (http://127.0.0.1:8000) opens instantly on this computer." -ForegroundColor DarkGray
-Write-Host "  - The Public Link can be opened on any mobile phone or external device." -ForegroundColor DarkGray
-Write-Host "  - If your local Wi-Fi router blocks new Cloudflare domains, your client" -ForegroundColor DarkGray
-Write-Host "    can still open the Public Link from mobile data or outside networks!" -ForegroundColor DarkGray
+Write-Host "  [LOCAL BACKUP LINK] (Only for this PC if needed):" -ForegroundColor DarkGray
+Write-Host "  >>  $localUrl" -ForegroundColor DarkGray
+Write-Host ""
 Write-Host "================================================================================" -ForegroundColor DarkGray
 Write-Host "  IMPORTANT: Keep this window OPEN as long as you are using or sharing the system." -ForegroundColor Yellow
 Write-Host "  To stop the system and close all services: Press [Ctrl + C] or close this window." -ForegroundColor DarkGray
 Write-Host "================================================================================" -ForegroundColor DarkGray
 Write-Host ""
 
-# Open Local System in Browser
+# Open Public Cloudflare Link in Browser
 try {
-    Start-Process $localUrl
+    Start-Process $shareUrl
 } catch {}
 
 # Keep script running and clean up on exit
