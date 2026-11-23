@@ -1,9 +1,10 @@
+import { environment } from '../../../environments/environment';
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
   Vehicle, VehicleType, OdometerReading, VehicleDocument,
-  VehiclePart, PartCatalog, VehicleModel, VehicleColor, Department,
+  VehiclePart, PartCatalog, PartMovement, VehicleModel, VehicleColor, Department,
   PaginatedResponse
 } from '../models/models';
 
@@ -12,7 +13,7 @@ import {
 })
 export class FleetService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = environment.apiUrl;
 
   // Vehicles
   getVehicles(params?: any): Observable<PaginatedResponse<Vehicle>> {
@@ -200,7 +201,20 @@ export class FleetService {
     return this.http.post<VehiclePart>(`${this.apiUrl}/vehicle-parts/`, data);
   }
 
-  replaceVehiclePart(vehiclePartId: number, data: { new_odometer: number; replacement_date?: string; notes?: string }): Observable<any> {
+  replaceVehiclePart(vehiclePartId: number, data: { new_odometer: number; replacement_date?: string; cost?: number; service_provider?: string; notes?: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/vehicle-parts/${vehiclePartId}/replace/`, data);
+  }
+
+  // Part Movements (سجل وحركات استبدال القطع)
+  getPartMovements(params?: any): Observable<PaginatedResponse<PartMovement>> {
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.keys(params).forEach(k => {
+        if (params[k] !== undefined && params[k] !== null && params[k] !== '') {
+          httpParams = httpParams.set(k, params[k]);
+        }
+      });
+    }
+    return this.http.get<PaginatedResponse<PartMovement>>(`${this.apiUrl}/part-movements/`, { params: httpParams });
   }
 }

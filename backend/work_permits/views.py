@@ -13,6 +13,22 @@ from .serializers import (
 )
 
 
+def format_validation_error(e):
+    if hasattr(e, 'message') and e.message:
+        return e.message
+    if hasattr(e, 'message_dict') and e.message_dict:
+        msgs = []
+        for f, errs in e.message_dict.items():
+            if isinstance(errs, list):
+                msgs.extend([str(item) for item in errs])
+            else:
+                msgs.append(str(errs))
+        return " - ".join(msgs)
+    if hasattr(e, 'messages') and e.messages:
+        return " - ".join(e.messages)
+    return str(e)
+
+
 class WorkPermitViewSet(viewsets.ModelViewSet):
     queryset = WorkPermit.objects.filter(is_deleted=False).select_related('vehicle', 'driver', 'created_by', 'approved_by')
     permission_classes = [IsOperatorOrAdmin]
@@ -105,7 +121,7 @@ class WorkPermitViewSet(viewsets.ModelViewSet):
             )
             return Response({'success': True, 'message': 'تم اعتماد إذن التشغيل بنجاح'})
         except ValidationError as e:
-            return Response({'detail': str(e.message if hasattr(e, 'message') else e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': format_validation_error(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['post'], url_path='start-trip')
     def start_trip(self, request, pk=None):
@@ -138,7 +154,7 @@ class WorkPermitViewSet(viewsets.ModelViewSet):
                 'starting_odometer': permit.starting_odometer
             })
         except ValidationError as e:
-            return Response({'detail': str(e.message if hasattr(e, 'message') else e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': format_validation_error(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['post'], url_path='complete-trip')
     def complete_trip(self, request, pk=None):
@@ -181,7 +197,7 @@ class WorkPermitViewSet(viewsets.ModelViewSet):
                 'vehicle_odometer': permit.vehicle.current_odometer
             })
         except ValidationError as e:
-            return Response({'detail': str(e.message if hasattr(e, 'message') else e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': format_validation_error(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['post'], url_path='cancel')
     def cancel_permit(self, request, pk=None):
@@ -203,4 +219,4 @@ class WorkPermitViewSet(viewsets.ModelViewSet):
             )
             return Response({'success': True, 'message': 'تم إلغاء إذن التشغيل بنجاح'})
         except ValidationError as e:
-            return Response({'detail': str(e.message if hasattr(e, 'message') else e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': format_validation_error(e)}, status=status.HTTP_400_BAD_REQUEST)

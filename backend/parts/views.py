@@ -5,10 +5,11 @@ from accounts.permissions import IsOperatorOrAdmin, IsAdminOrReadOnly
 from audit.utils import log_action
 from audit.models import AuditLog
 from maintenance.services import MaintenanceRuleEngine
-from .models import PartCatalog, VehiclePart
+from .models import PartCatalog, VehiclePart, PartMovement
 from .serializers import (
     PartCatalogSerializer, VehiclePartSerializer,
-    VehiclePartCreateSerializer, ReplacePartSerializer
+    VehiclePartCreateSerializer, ReplacePartSerializer,
+    PartMovementSerializer
 )
 
 
@@ -85,9 +86,18 @@ class VehiclePartViewSet(viewsets.ModelViewSet):
 
         new_odometer = serializer.validated_data['new_odometer']
         replacement_date = serializer.validated_data.get('replacement_date')
+        cost = serializer.validated_data.get('cost', 0.00)
+        service_provider = serializer.validated_data.get('service_provider', '')
         notes = serializer.validated_data.get('notes', '')
 
-        vp.record_replacement(new_odometer=new_odometer, replacement_date=replacement_date, notes=notes)
+        vp.record_replacement(
+            new_odometer=new_odometer,
+            replacement_date=replacement_date,
+            notes=notes,
+            user=request.user,
+            cost=cost,
+            service_provider=service_provider
+        )
         MaintenanceRuleEngine.evaluate_vehicle(vp.vehicle)
 
         log_action(
@@ -101,6 +111,47 @@ class VehiclePartViewSet(viewsets.ModelViewSet):
 
         return Response({
             'success': True,
-            'message': f"تم تسجيل استبدال {vp.part.name} بنجاح",
+            'message': f"تم تسجيل استبدال {vp.part.name} وتوثيق الحركة بنجاح",
             'part': VehiclePartSerializer(vp).data
         })
+
+
+class PartMovementViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    سجل الحركات التاريخية واستبدال قطع الغيار
+    """
+    queryset = PartMovement.objects.all().select_related(
+        'vehicle', 'part', 'vehicle_part', 'performed_by', 'maintenance_record'
+    ).order_by('-movement_date', '-odometer', '-created_at')
+    serializer_class = PartMovementSerializer
+    permission_classes = [IsOperatorOrAdmin]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        vehicle_id = self.request.query_params.get('vehicle')
+        part_id = self.request.query_params.get('part')
+        movement_type = self.request.query_params.get('movement_type')
+        date_from = self.request.query_params.get('date_from')
+        date_to = self.request.query_params.get('date_to')
+        search = self.request.query_params.get('search')
+
+        if vehicle_id:
+            qs = qs.filter(vehicle_id=vehicle_id)
+        if part_id:
+            qs = qs.filter(part_id=part_id)
+        if movement_type:
+            qs = qs.filter(movement_type=movement_type)
+        if date_from:
+            qs = qs.filter(movement_date__gte=date_from)
+        if date_to:
+            qs = qs.filter(movement_date__lte=date_to)
+        if search:
+            from django.db.models import Q
+            qs = qs.filter(
+                Q(part__name__icontains=search) |
+                Q(vehicle__plate_number__icontains=search) |
+                Q(vehicle__internal_fleet_number__icontains=search) |
+                Q(service_provider__icontains=search) |
+                Q(notes__icontains=search)
+            )
+        return qs

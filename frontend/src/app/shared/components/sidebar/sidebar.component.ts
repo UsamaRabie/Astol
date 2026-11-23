@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { UiService } from '../../../core/services/ui.service';
 import { IconComponent } from '../icon/icon.component';
 
 interface NavSection {
@@ -19,19 +20,26 @@ interface NavSection {
   standalone: true,
   imports: [CommonModule, RouterModule, IconComponent],
   template: `
-    <aside class="sidebar no-print" style="width: 260px; height: 100vh; max-height: 100vh; flex-shrink: 0; background: #0f172a; color: #f8fafc; border-left: 1px solid #1e293b; display: flex; flex-direction: column; overflow: hidden;">
+    <aside class="sidebar no-print" [class.mobile-open]="ui.isSidebarOpen()">
       <!-- Brand Header (Fixed Top) -->
-      <div style="height: 68px; flex-shrink: 0; display: flex; align-items: center; gap: 12px; padding: 0 1.25rem; border-bottom: 1px solid #1e293b;">
-        <div style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #ffffff; width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.25rem; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);">
-          أ
+      <div class="sidebar-brand-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #ffffff; width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.25rem; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);">
+            أ
+          </div>
+          <div style="line-height: 1.2;">
+            <span style="font-weight: 800; font-size: 1.15rem; color: #ffffff; letter-spacing: -0.3px;">أسطول</span>
+            <span style="font-size: 0.7rem; color: #94a3b8; display: block; font-weight: 500;">إدارة الأساطيل والصيانة</span>
+          </div>
         </div>
-        <div style="line-height: 1.2;">
-          <span style="font-weight: 800; font-size: 1.15rem; color: #ffffff; letter-spacing: -0.3px;">أسطول</span>
-          <span style="font-size: 0.7rem; color: #94a3b8; display: block; font-weight: 500;">إدارة الأساطيل والصيانة</span>
-        </div>
+
+        <!-- Mobile Drawer Close Button -->
+        <button (click)="ui.closeSidebar()" class="sidebar-close-btn" title="إغلاق القائمة">
+          <app-icon name="x" [size]="20"></app-icon>
+        </button>
       </div>
 
-      <!-- Navigation Sections (Scrollable if viewport is short) -->
+      <!-- Navigation Sections (Scrollable) -->
       <div class="sidebar-scroll" style="flex: 1; overflow-y: auto; overflow-x: hidden; padding: 1rem 0.75rem; display: flex; flex-direction: column; gap: 1.25rem;">
         <div *ngFor="let section of navSections">
           <div style="font-size: 11px; font-weight: 700; color: #64748b; padding: 0 12px; margin-bottom: 6px; letter-spacing: 0.5px;">
@@ -41,6 +49,7 @@ interface NavSection {
             <ng-container *ngFor="let item of section.items">
               <a *ngIf="!item.adminOnly || isAdmin"
                  [routerLink]="item.path"
+                 (click)="ui.closeSidebar()"
                  routerLinkActive="active-nav-item"
                  class="sidebar-nav-link"
                  style="display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 8px; color: #94a3b8; font-weight: 600; font-size: 13.5px; text-decoration: none; transition: all 0.15s ease;">
@@ -53,7 +62,7 @@ interface NavSection {
       </div>
 
       <!-- Footer Info (Fixed Bottom) -->
-      <div style="padding: 1rem; flex-shrink: 0; border-top: 1px solid #1e293b; background: rgba(15, 23, 42, 0.85);">
+      <div class="sidebar-footer" style="padding: 1rem; flex-shrink: 0; border-top: 1px solid #1e293b; background: rgba(15, 23, 42, 0.85);">
         <div style="display: flex; align-items: center; justify-content: space-between; font-size: 11.5px; color: #94a3b8; margin-bottom: 6px;">
           <span style="font-weight: 600; color: #e2e8f0;">أسطول ERP v1.0</span>
           <span style="display: inline-flex; align-items: center; gap: 5px; color: #10b981; font-weight: 600; font-size: 10.5px;">
@@ -68,6 +77,62 @@ interface NavSection {
     </aside>
   `,
   styles: [`
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      max-height: 100vh;
+      flex-shrink: 0;
+      background: #0f172a;
+      color: #f8fafc;
+      border-left: 1px solid #1e293b;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .sidebar-brand-header {
+      height: 68px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.25rem;
+      border-bottom: 1px solid #1e293b;
+    }
+    .sidebar-close-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+    }
+    .sidebar-close-btn:hover {
+      color: #ffffff;
+      background: #1e293b;
+    }
+    @media (max-width: 1024px) {
+      .sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        right: 0 !important;
+        width: 280px !important;
+        max-width: 85vw !important;
+        z-index: 1000 !important;
+        transform: translateX(100%);
+        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: -8px 0 30px rgba(0, 0, 0, 0.5);
+      }
+      .sidebar.mobile-open {
+        transform: translateX(0) !important;
+      }
+      .sidebar-close-btn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+      }
+    }
     .sidebar-nav-link:hover {
       background-color: #1e293b;
       color: #ffffff !important;
@@ -94,6 +159,7 @@ interface NavSection {
   `]
 })
 export class SidebarComponent {
+  ui = inject(UiService);
   private authService = inject(AuthService);
 
   get isAdmin(): boolean {
@@ -102,9 +168,10 @@ export class SidebarComponent {
 
   navSections: NavSection[] = [
     {
-      title: 'الرئيسية',
+      title: 'الرئيسية والذكاء الاصطناعي',
       items: [
-        { path: '/dashboard', title: 'لوحة التحكم', icon: 'layout-dashboard' }
+        { path: '/dashboard', title: 'لوحة التحكم', icon: 'layout-dashboard' },
+        { path: '/ai-assistant', title: 'المساعد الذكي (AI)', icon: 'sparkles' }
       ]
     },
     {

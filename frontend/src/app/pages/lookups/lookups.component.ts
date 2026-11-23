@@ -80,7 +80,7 @@ type LookupTab = 'models' | 'colors' | 'fuel' | 'departments' | 'parts' | 'vehic
       </div>
 
       <!-- Data Card / Table Container -->
-      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+      <div class="table-container" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow-x: auto; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
         <div *ngIf="loading" style="padding: 3rem; text-align: center; color: #64748b;">
           <div style="display: inline-block; width: 32px; height: 32px; border: 3px solid #e2e8f0; border-top-color: #0284c7; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
           <p style="margin-top: 12px; font-size: 13.5px; font-weight: 600;">جاري تحميل البيانات...</p>
@@ -98,7 +98,7 @@ type LookupTab = 'models' | 'colors' | 'fuel' | 'departments' | 'parts' | 'vehic
         </div>
 
         <!-- 1. VEHICLE MODELS TABLE -->
-        <table *ngIf="!loading && activeTab === 'models' && getFilteredList().length > 0" style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13.5px;">
+        <table class="table" *ngIf="!loading && activeTab === 'models' && getFilteredList().length > 0" style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13.5px;">
           <thead>
             <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #475569; font-weight: 700;">
               <th style="padding: 12px 16px;">#</th>
@@ -127,7 +127,7 @@ type LookupTab = 'models' | 'colors' | 'fuel' | 'departments' | 'parts' | 'vehic
         </table>
 
         <!-- 2. VEHICLE COLORS TABLE -->
-        <table *ngIf="!loading && activeTab === 'colors' && getFilteredList().length > 0" style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13.5px;">
+        <table class="table" *ngIf="!loading && activeTab === 'colors' && getFilteredList().length > 0" style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13.5px;">
           <thead>
             <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #475569; font-weight: 700;">
               <th style="padding: 12px 16px;">#</th>
@@ -161,7 +161,7 @@ type LookupTab = 'models' | 'colors' | 'fuel' | 'departments' | 'parts' | 'vehic
         </table>
 
         <!-- 3. FUEL TYPES TABLE (WITH PRICE & CURRENCY) -->
-        <table *ngIf="!loading && activeTab === 'fuel' && getFilteredList().length > 0" style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13.5px;">
+        <table class="table" *ngIf="!loading && activeTab === 'fuel' && getFilteredList().length > 0" style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13.5px;">
           <thead>
             <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #475569; font-weight: 700;">
               <th style="padding: 12px 16px;">#</th>
@@ -196,7 +196,7 @@ type LookupTab = 'models' | 'colors' | 'fuel' | 'departments' | 'parts' | 'vehic
         </table>
 
         <!-- 4. DEPARTMENTS TABLE -->
-        <table *ngIf="!loading && activeTab === 'departments' && getFilteredList().length > 0" style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13.5px;">
+        <table class="table" *ngIf="!loading && activeTab === 'departments' && getFilteredList().length > 0" style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13.5px;">
           <thead>
             <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #475569; font-weight: 700;">
               <th style="padding: 12px 16px;">#</th>
@@ -223,7 +223,7 @@ type LookupTab = 'models' | 'colors' | 'fuel' | 'departments' | 'parts' | 'vehic
         </table>
 
         <!-- 5. SPARE PARTS CATALOG TABLE -->
-        <table *ngIf="!loading && activeTab === 'parts' && getFilteredList().length > 0" style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13.5px;">
+        <table class="table" *ngIf="!loading && activeTab === 'parts' && getFilteredList().length > 0" style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13.5px;">
           <thead>
             <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #475569; font-weight: 700;">
               <th style="padding: 12px 16px;">#</th>
@@ -260,7 +260,7 @@ type LookupTab = 'models' | 'colors' | 'fuel' | 'departments' | 'parts' | 'vehic
         </table>
 
         <!-- 6. VEHICLE TYPES TABLE -->
-        <table *ngIf="!loading && activeTab === 'vehicleTypes' && getFilteredList().length > 0" style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13.5px;">
+        <table class="table" *ngIf="!loading && activeTab === 'vehicleTypes' && getFilteredList().length > 0" style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13.5px;">
           <thead>
             <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #475569; font-weight: 700;">
               <th style="padding: 12px 16px;">#</th>
@@ -289,7 +289,7 @@ type LookupTab = 'models' | 'colors' | 'fuel' | 'departments' | 'parts' | 'vehic
         </table>
 
         <!-- 7. MAINTENANCE TYPES TABLE -->
-        <table *ngIf="!loading && activeTab === 'maintTypes' && getFilteredList().length > 0" style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13.5px;">
+        <table class="table" *ngIf="!loading && activeTab === 'maintTypes' && getFilteredList().length > 0" style="width: 100%; border-collapse: collapse; text-align: right; font-size: 13.5px;">
           <thead>
             <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #475569; font-weight: 700;">
               <th style="padding: 12px 16px;">#</th>
@@ -329,9 +329,9 @@ type LookupTab = 'models' | 'colors' | 'fuel' | 'departments' | 'parts' | 'vehic
       </div>
 
       <!-- MODAL: ADD / EDIT DIALOG -->
-      <div *ngIf="showModal" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1rem;">
-        <div style="background: #ffffff; border-radius: 16px; max-width: 560px; width: 100%; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); overflow: hidden; animation: popIn 0.2s ease;">
-          <div style="background: #0f172a; color: #fff; padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between;">
+      <div *ngIf="showModal" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 0.75rem;">
+        <div style="background: #ffffff; border-radius: 16px; max-width: 560px; width: 100%; max-height: 92vh; display: flex; flex-direction: column; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); overflow: hidden; animation: popIn 0.2s ease;">
+          <div style="background: #0f172a; color: #fff; padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;">
             <div style="display: flex; align-items: center; gap: 10px;">
               <app-icon name="edit" [size]="20" style="color: #38bdf8;"></app-icon>
               <h3 style="margin: 0; font-size: 1.1rem; font-weight: 800;">
@@ -343,7 +343,7 @@ type LookupTab = 'models' | 'colors' | 'fuel' | 'departments' | 'parts' | 'vehic
             </button>
           </div>
 
-          <form (ngSubmit)="saveItem()" style="padding: 1.5rem;">
+          <form (ngSubmit)="saveItem()" style="padding: 1.5rem; overflow-y: auto; flex: 1 1 auto; min-height: 0; -webkit-overflow-scrolling: touch;">
             <!-- COMMON NAME FIELD -->
             <div style="margin-bottom: 1.1rem;">
               <label style="display: block; font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 6px;">

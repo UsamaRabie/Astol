@@ -1,10 +1,13 @@
 from rest_framework import serializers
+from core.serializers import CleanNullFieldsMixin
+from vehicles.models import Vehicle, OdometerReading
 from .models import MaintenanceType, MaintenanceRecord
 from parts.models import VehiclePart
 
 
-class MaintenanceTypeSerializer(serializers.ModelSerializer):
+class MaintenanceTypeSerializer(CleanNullFieldsMixin, serializers.ModelSerializer):
     record_count = serializers.IntegerField(source='records.count', read_only=True)
+    description = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
 
     class Meta:
         model = MaintenanceType
@@ -36,7 +39,12 @@ class MaintenanceRecordSerializer(serializers.ModelSerializer):
         return [{'id': p.id, 'name': p.part.name} for p in obj.parts_replaced.all()]
 
 
-class MaintenanceRecordCreateUpdateSerializer(serializers.ModelSerializer):
+class MaintenanceRecordCreateUpdateSerializer(CleanNullFieldsMixin, serializers.ModelSerializer):
+    description = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+    service_provider = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+    technician = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+    notes = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+    cost = serializers.DecimalField(max_digits=10, decimal_places=2, required=False, default=0.00)
     reset_parts_intervals = serializers.BooleanField(default=True, write_only=True, required=False)
 
     class Meta:
@@ -59,22 +67,35 @@ class MaintenanceRecordCreateUpdateSerializer(serializers.ModelSerializer):
 
         # If reset_parts is true, reset each replaced part's interval
         if reset_parts and parts:
+            from parts.models import PartMovement
             for vp in parts:
                 vp.record_replacement(
                     new_odometer=record.odometer,
                     replacement_date=record.maintenance_date,
-                    notes=f"صيانة: {record.maintenance_type.name}"
+                    notes=f"صيانة: {record.maintenance_type.name} - {record.description or ''}".strip(),
+                    user=user,
+                    cost=record.cost,
+                    service_provider=record.service_provider,
+                    maintenance_record=record,
+                    movement_type=PartMovement.MovementType.MAINTENANCE
                 )
 
-        # If odometer at maintenance is greater than vehicle odometer, update it
+        # If odometer at maintenance is greater than vehicle odometer, update it safely
         if record.odometer > record.vehicle.current_odometer:
-            from vehicles.models import OdometerReading
             record.vehicle.update_odometer(
                 new_reading=record.odometer,
                 source=OdometerReading.Source.MAINTENANCE,
                 user=user,
                 notes=f"صيانة {record.maintenance_type.name} - الورشة: {record.service_provider}"
             )
+
+        # Update vehicle operational status based on maintenance completion
+        if record.status == MaintenanceRecord.Status.COMPLETED and record.vehicle.status == Vehicle.Status.IN_MAINTENANCE:
+            record.vehicle.status = Vehicle.Status.ACTIVE
+            record.vehicle.save(update_fields=['status', 'updated_at'])
+        elif record.status == MaintenanceRecord.Status.IN_PROGRESS and record.vehicle.status == Vehicle.Status.ACTIVE:
+            record.vehicle.status = Vehicle.Status.IN_MAINTENANCE
+            record.vehicle.save(update_fields=['status', 'updated_at'])
 
         # Trigger maintenance rule engine
         from maintenance.services import MaintenanceRuleEngine
@@ -98,7 +119,6 @@ class MaintenanceRecordCreateUpdateSerializer(serializers.ModelSerializer):
                     )
 
         if record.odometer > record.vehicle.current_odometer:
-            from vehicles.models import OdometerReading
             user = self.context['request'].user if 'request' in self.context else None
             record.vehicle.update_odometer(
                 new_reading=record.odometer,
@@ -106,6 +126,10 @@ class MaintenanceRecordCreateUpdateSerializer(serializers.ModelSerializer):
                 user=user,
                 notes=f"تعديل صيانة {record.maintenance_type.name} - الورشة: {record.service_provider}"
             )
+
+        if record.status == MaintenanceRecord.Status.COMPLETED and record.vehicle.status == Vehicle.Status.IN_MAINTENANCE:
+            record.vehicle.status = Vehicle.Status.ACTIVE
+            record.vehicle.save(update_fields=['status', 'updated_at'])
 
         from maintenance.services import MaintenanceRuleEngine
         MaintenanceRuleEngine.evaluate_vehicle(record.vehicle)

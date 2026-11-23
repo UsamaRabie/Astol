@@ -41,6 +41,7 @@ class DashboardView(APIView):
 
         # 4. Aggregates
         total_distance = permits_qs.filter(status=WorkPermit.Status.COMPLETED).aggregate(s=Sum('distance_traveled'))['s'] or 0
+        total_maintenance_records = MaintenanceRecord.objects.filter(is_deleted=False).count()
         total_maintenance_cost = MaintenanceRecord.objects.filter(is_deleted=False).aggregate(s=Sum('cost'))['s'] or 0
         total_fuel_cost = FuelRecord.objects.filter(is_deleted=False).aggregate(s=Sum('total_cost'))['s'] or 0
         total_fuel_liters = FuelRecord.objects.filter(is_deleted=False).aggregate(s=Sum('quantity'))['s'] or 0
@@ -72,7 +73,13 @@ class DashboardView(APIView):
                 y -= 1
             month_label = f"{y}-{m:02d}"
 
+            # All active/completed operational permits for the month
             m_trips = permits_qs.filter(
+                departure_date__year=y,
+                departure_date__month=m
+            ).exclude(status=WorkPermit.Status.CANCELLED).count()
+
+            m_completed_trips = permits_qs.filter(
                 departure_date__year=y,
                 departure_date__month=m,
                 status=WorkPermit.Status.COMPLETED
@@ -84,11 +91,13 @@ class DashboardView(APIView):
                 status=WorkPermit.Status.COMPLETED
             ).aggregate(s=Sum('distance_traveled'))['s'] or 0
 
-            m_maint_cost = MaintenanceRecord.objects.filter(
+            m_maint_qs = MaintenanceRecord.objects.filter(
                 is_deleted=False,
                 maintenance_date__year=y,
                 maintenance_date__month=m
-            ).aggregate(s=Sum('cost'))['s'] or 0
+            )
+            m_maint_count = m_maint_qs.count()
+            m_maint_cost = m_maint_qs.aggregate(s=Sum('cost'))['s'] or 0
 
             m_fuel_cost = FuelRecord.objects.filter(
                 is_deleted=False,
@@ -99,7 +108,9 @@ class DashboardView(APIView):
             monthly_trends.append({
                 'month': month_label,
                 'trips': m_trips,
+                'completed_trips': m_completed_trips,
                 'distance': m_dist,
+                'maintenance_count': m_maint_count,
                 'maintenance_cost': float(m_maint_cost),
                 'fuel_cost': float(m_fuel_cost),
             })
@@ -113,6 +124,7 @@ class DashboardView(APIView):
                 'active_trips': active_trips,
                 'completed_trips': completed_trips,
                 'due_maintenance': due_maintenance,
+                'total_maintenance_records': total_maintenance_records,
                 'upcoming_maintenance': upcoming_maintenance,
                 'overdue_maintenance': overdue_maintenance,
                 'total_distance': total_distance,

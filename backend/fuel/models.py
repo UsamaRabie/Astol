@@ -66,6 +66,9 @@ class FuelRecord(SoftDeleteModel):
     def __str__(self):
         return f"{self.vehicle.internal_fleet_number} - {self.quantity} لتر ({self.total_cost} ر.س) في {self.date}"
 
+    def get_fuel_type_display(self):
+        return str(self.fuel_type)
+
     def clean(self):
         super().clean()
         if self.quantity and self.price_per_unit:

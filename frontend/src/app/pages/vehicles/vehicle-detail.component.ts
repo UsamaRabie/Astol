@@ -589,6 +589,8 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
             </div>
           </form>
         </div>
+      </div>
+
       <!-- Modal: Edit Vehicle (Admin) -->
       <div *ngIf="showEditModal" class="modal-overlay">
         <div class="modal-box modal-box-lg">
@@ -972,7 +974,7 @@ export class VehicleDetailComponent implements OnInit {
       plate_number: this.vehicle.plate_number,
       vehicle_type: this.vehicle.vehicle_type,
       color: this.vehicle.color || '',
-      fuel_type: this.vehicle.fuel_type || '',
+      fuel_type: this.vehicle.fuel_type_display || this.vehicle.fuel_type || '',
       department: this.vehicle.department || '',
       assigned_driver: this.vehicle.assigned_driver || null,
       status: this.vehicle.status,

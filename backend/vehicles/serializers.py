@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from core.serializers import CleanNullFieldsMixin
 from .models import (
     Vehicle, VehicleType, OdometerReading, VehicleDocument,
     VehicleModel, VehicleColor, Department
@@ -6,35 +7,44 @@ from .models import (
 from drivers.models import Driver
 
 
-class VehicleModelSerializer(serializers.ModelSerializer):
+class VehicleModelSerializer(CleanNullFieldsMixin, serializers.ModelSerializer):
+    description = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+
     class Meta:
         model = VehicleModel
         fields = ['id', 'name', 'make', 'description', 'created_at']
 
 
-class VehicleColorSerializer(serializers.ModelSerializer):
+class VehicleColorSerializer(CleanNullFieldsMixin, serializers.ModelSerializer):
+    code = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+
     class Meta:
         model = VehicleColor
         fields = ['id', 'name', 'code', 'created_at']
 
 
-class DepartmentSerializer(serializers.ModelSerializer):
+class DepartmentSerializer(CleanNullFieldsMixin, serializers.ModelSerializer):
+    description = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+
     class Meta:
         model = Department
         fields = ['id', 'name', 'description', 'created_at']
 
 
-class VehicleTypeSerializer(serializers.ModelSerializer):
+class VehicleTypeSerializer(CleanNullFieldsMixin, serializers.ModelSerializer):
     vehicle_count = serializers.IntegerField(source='vehicles.count', read_only=True)
+    description = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+    icon = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="truck")
 
     class Meta:
         model = VehicleType
         fields = ['id', 'name', 'description', 'icon', 'vehicle_count', 'created_at']
 
 
-class OdometerReadingSerializer(serializers.ModelSerializer):
+class OdometerReadingSerializer(CleanNullFieldsMixin, serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.full_name', read_only=True, default='النظام')
     source_display = serializers.CharField(source='get_source_display', read_only=True)
+    notes = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
 
     class Meta:
         model = OdometerReading
@@ -45,10 +55,11 @@ class OdometerReadingSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'created_at']
 
 
-class VehicleDocumentSerializer(serializers.ModelSerializer):
+class VehicleDocumentSerializer(CleanNullFieldsMixin, serializers.ModelSerializer):
     doc_type_display = serializers.CharField(source='get_doc_type_display', read_only=True)
     is_expired = serializers.BooleanField(read_only=True)
     days_until_expiry = serializers.IntegerField(read_only=True)
+    notes = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
 
     class Meta:
         model = VehicleDocument
@@ -102,8 +113,18 @@ class VehicleDetailSerializer(serializers.ModelSerializer):
         return OdometerReadingSerializer(readings, many=True).data
 
 
-class VehicleCreateUpdateSerializer(serializers.ModelSerializer):
-    internal_fleet_number = serializers.CharField(required=False, allow_blank=True)
+class VehicleCreateUpdateSerializer(CleanNullFieldsMixin, serializers.ModelSerializer):
+    internal_fleet_number = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    fuel_type = serializers.CharField(required=False, default='ديزل', allow_null=True, allow_blank=True)
+    vin = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+    color = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+    department = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+    engine_number = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+    notes = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+    purchase_date = serializers.DateField(required=False, allow_null=True)
+    registration_expiry_date = serializers.DateField(required=False, allow_null=True)
+    insurance_expiry_date = serializers.DateField(required=False, allow_null=True)
+    periodic_inspection_expiry_date = serializers.DateField(required=False, allow_null=True)
 
     class Meta:
         model = Vehicle
@@ -115,9 +136,23 @@ class VehicleCreateUpdateSerializer(serializers.ModelSerializer):
             'insurance_expiry_date', 'periodic_inspection_expiry_date', 'notes'
         ]
 
+    def validate_fuel_type(self, value):
+        if not value:
+            return 'ديزل'
+        mapping = {
+            'GASOLINE_91': 'بنزين 91',
+            'GASOLINE_95': 'بنزين 95',
+            'DIESEL': 'ديزل',
+            'ELECTRIC': 'كهربائي',
+            'HYBRID': 'هجين',
+        }
+        return mapping.get(value, value)
+
     def create(self, validated_data):
         if not validated_data.get('internal_fleet_number'):
             validated_data.pop('internal_fleet_number', None)
+        if not validated_data.get('vin'):
+            validated_data.pop('vin', None)
         initial_odometer = validated_data.get('current_odometer', 0)
         vehicle = Vehicle.objects.create(**validated_data)
         if initial_odometer > 0:
@@ -125,13 +160,19 @@ class VehicleCreateUpdateSerializer(serializers.ModelSerializer):
                 vehicle=vehicle,
                 reading=initial_odometer,
                 source=OdometerReading.Source.INITIAL,
-                notes="قراءة العداد الافتتاحية عند تسجيل المركبة"
+                user=self.context['request'].user if 'request' in self.context else None,
+                notes="قراءة العداد الافتتاحية للمركبة"
             )
         return vehicle
 
+    def update(self, instance, validated_data):
+        if not validated_data.get('vin'):
+            validated_data.pop('vin', None)
+        if not validated_data.get('internal_fleet_number'):
+            validated_data.pop('internal_fleet_number', None)
+        return super().update(instance, validated_data)
 
-class UpdateOdometerSerializer(serializers.Serializer):
+
+class UpdateOdometerSerializer(CleanNullFieldsMixin, serializers.Serializer):
     new_reading = serializers.IntegerField(min_value=0, required=True)
-    date_time = serializers.DateTimeField(required=False)
-    source = serializers.ChoiceField(choices=OdometerReading.Source.choices, default=OdometerReading.Source.MANUAL)
-    notes = serializers.CharField(required=False, allow_blank=True, default="")
+    notes = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")

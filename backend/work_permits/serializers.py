@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from core.serializers import CleanNullFieldsMixin
 from .models import WorkPermit
 from vehicles.serializers import VehicleListSerializer
 from drivers.serializers import DriverSerializer
@@ -47,8 +48,11 @@ class WorkPermitDetailSerializer(serializers.ModelSerializer):
         ]
 
 
-class WorkPermitCreateUpdateSerializer(serializers.ModelSerializer):
-    permit_number = serializers.CharField(required=False, allow_blank=True)
+class WorkPermitCreateUpdateSerializer(CleanNullFieldsMixin, serializers.ModelSerializer):
+    permit_number = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    description = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+    notes = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+    departure_location = serializers.CharField(required=False, allow_blank=True, default="المقر الرئيسي")
 
     class Meta:
         model = WorkPermit
@@ -64,18 +68,23 @@ class WorkPermitCreateUpdateSerializer(serializers.ModelSerializer):
         validated_data['created_by'] = user
         return super().create(validated_data)
 
+    def update(self, instance, validated_data):
+        if not validated_data.get('permit_number'):
+            validated_data.pop('permit_number', None)
+        return super().update(instance, validated_data)
 
-class StartTripSerializer(serializers.Serializer):
+
+class StartTripSerializer(CleanNullFieldsMixin, serializers.Serializer):
     starting_odometer = serializers.IntegerField(required=False, allow_null=True)
     departure_time = serializers.TimeField(required=False, allow_null=True)
 
 
-class CompleteTripSerializer(serializers.Serializer):
+class CompleteTripSerializer(CleanNullFieldsMixin, serializers.Serializer):
     ending_odometer = serializers.IntegerField(required=True)
     return_time = serializers.TimeField(required=False, allow_null=True)
     return_date = serializers.DateField(required=False, allow_null=True)
-    notes = serializers.CharField(required=False, allow_blank=True, default="")
+    notes = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
 
 
-class CancelPermitSerializer(serializers.Serializer):
-    notes = serializers.CharField(required=False, allow_blank=True, default="")
+class CancelPermitSerializer(CleanNullFieldsMixin, serializers.Serializer):
+    notes = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")

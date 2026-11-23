@@ -1,11 +1,14 @@
 from decimal import Decimal
 from rest_framework import serializers
+from core.serializers import CleanNullFieldsMixin
 from .models import FuelRecord, FuelType
 from vehicles.serializers import VehicleListSerializer
 from drivers.serializers import DriverSerializer
 
 
-class FuelTypeSerializer(serializers.ModelSerializer):
+class FuelTypeSerializer(CleanNullFieldsMixin, serializers.ModelSerializer):
+    description = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+
     class Meta:
         model = FuelType
         fields = ['id', 'name', 'price_per_liter', 'currency', 'description', 'created_at']
@@ -28,7 +31,10 @@ class FuelRecordSerializer(serializers.ModelSerializer):
         ]
 
 
-class FuelRecordCreateUpdateSerializer(serializers.ModelSerializer):
+class FuelRecordCreateUpdateSerializer(CleanNullFieldsMixin, serializers.ModelSerializer):
+    station = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+    notes = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+
     class Meta:
         model = FuelRecord
         fields = [

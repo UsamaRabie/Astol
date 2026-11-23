@@ -241,8 +241,8 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
             </button>
           </div>
 
-          <form (ngSubmit)="saveVehicle()">
-            <div class="modal-body" style="display: flex; flex-direction: column; gap: 1.5rem;">
+          <form (ngSubmit)="saveVehicle()" class="modal-form">
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 1.5rem; overflow-y: auto; flex: 1 1 auto; min-height: 0;">
               <!-- Section 1: Identification -->
               <div>
                 <div style="font-size: 12.5px; font-weight: 700; color: #0284c7; margin-bottom: 0.75rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 4px;">
@@ -391,8 +391,8 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
             </button>
           </div>
 
-          <form (ngSubmit)="saveEditVehicle()">
-            <div class="modal-body" style="display: flex; flex-direction: column; gap: 1.5rem;">
+          <form (ngSubmit)="saveEditVehicle()" class="modal-form">
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 1.5rem; overflow-y: auto; flex: 1 1 auto; min-height: 0;">
               <div>
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
                   <div class="form-group">
@@ -755,7 +755,10 @@ export class VehicleListComponent implements OnInit {
   }
 
   openEditModal(v: Vehicle): void {
-    this.editingVehicle = { ...v };
+    this.editingVehicle = {
+      ...v,
+      fuel_type: v.fuel_type_display || v.fuel_type
+    };
     this.showEditModal = true;
   }
 

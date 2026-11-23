@@ -15,6 +15,7 @@ import { NotificationsComponent } from './pages/notifications/notifications.comp
 import { AuditComponent } from './pages/audit/audit.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { LookupsComponent } from './pages/lookups/lookups.component';
+import { AiAssistantComponent } from './pages/ai-assistant/ai-assistant.component';
 
 export const routes: Routes = [
   {
@@ -28,6 +29,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
+      { path: 'ai-assistant', component: AiAssistantComponent },
       { path: 'vehicles', component: VehicleListComponent },
       { path: 'vehicles/:id', component: VehicleDetailComponent },
       { path: 'work-permits', component: WorkPermitsComponent },

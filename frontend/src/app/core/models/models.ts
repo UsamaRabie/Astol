@@ -222,6 +222,31 @@ export interface VehiclePart {
   notes?: string;
 }
 
+export interface PartMovement {
+  id: number;
+  vehicle: number;
+  vehicle_plate?: string;
+  fleet_number?: string;
+  part: number;
+  part_name?: string;
+  part_category?: string;
+  vehicle_part?: number;
+  movement_type: 'REPLACEMENT' | 'INITIAL' | 'MAINTENANCE' | 'INSPECTION';
+  movement_type_display?: string;
+  movement_date: string;
+  odometer: number;
+  previous_odometer: number;
+  distance_served: number;
+  cost: string | number;
+  part_number?: string;
+  brand?: string;
+  service_provider?: string;
+  maintenance_record?: number | null;
+  performed_by_name?: string;
+  notes?: string;
+  created_at?: string;
+}
+
 export interface MaintenanceType {
   id: number;
   name: string;
@@ -324,6 +349,7 @@ export interface DashboardData {
     upcoming_maintenance: number;
     overdue_maintenance: number;
     total_distance: number;
+    total_maintenance_records?: number;
     total_maintenance_cost: number;
     total_fuel_cost: number;
     total_fuel_liters: number;
@@ -332,7 +358,9 @@ export interface DashboardData {
   monthly_trends: {
     month: string;
     trips: number;
+    completed_trips?: number;
     distance: number;
+    maintenance_count?: number;
     maintenance_cost: number;
     fuel_cost: number;
   }[];

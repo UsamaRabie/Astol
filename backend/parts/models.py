@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
 from core.models import TimeStampedModel, SoftDeleteModel
@@ -113,9 +114,33 @@ class VehiclePart(TimeStampedModel):
             'next_replacement_date': self.next_replacement_date,
         }
 
-    def record_replacement(self, new_odometer, replacement_date=None, notes=""):
-        """Resets the part after replacement"""
+    def record_replacement(self, new_odometer, replacement_date=None, notes="", user=None, cost=0, service_provider="", maintenance_record=None, movement_type=None):
+        """Resets the part after replacement and logs the historical movement"""
         date = replacement_date or timezone.now().date()
+        old_odometer = self.installation_odometer
+        distance_served = max(0, new_odometer - old_odometer)
+
+        m_type = movement_type or PartMovement.MovementType.REPLACEMENT
+
+        # Log historical movement
+        PartMovement.objects.create(
+            vehicle=self.vehicle,
+            part=self.part,
+            vehicle_part=self,
+            movement_type=m_type,
+            movement_date=date,
+            odometer=new_odometer,
+            previous_odometer=old_odometer,
+            distance_served=distance_served,
+            cost=cost,
+            part_number=self.part_number,
+            brand=self.brand,
+            service_provider=service_provider,
+            maintenance_record=maintenance_record,
+            performed_by=user,
+            notes=notes
+        )
+
         self.installation_date = date
         self.installation_odometer = new_odometer
         self.next_replacement_km = new_odometer + self.interval_km
@@ -124,3 +149,73 @@ class VehiclePart(TimeStampedModel):
         if notes:
             self.notes = f"{self.notes}\n[تم الاستبدال في {date} عند العداد {new_odometer} كم]: {notes}".strip()
         self.save()
+
+
+class PartMovement(TimeStampedModel):
+    class MovementType(models.TextChoices):
+        REPLACEMENT = 'REPLACEMENT', 'استبدال دوري'
+        INITIAL = 'INITIAL', 'تركيب أولي'
+        MAINTENANCE = 'MAINTENANCE', 'صيانة وإصلاح'
+        INSPECTION = 'INSPECTION', 'فحص ومعايرة'
+
+    vehicle = models.ForeignKey(
+        'vehicles.Vehicle',
+        on_delete=models.CASCADE,
+        related_name='part_movements',
+        verbose_name="المركبة"
+    )
+    part = models.ForeignKey(
+        PartCatalog,
+        on_delete=models.PROTECT,
+        related_name='movements',
+        verbose_name="قطعة الغيار"
+    )
+    vehicle_part = models.ForeignKey(
+        VehiclePart,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='movements',
+        verbose_name="قطعة المركبة"
+    )
+    movement_type = models.CharField(
+        max_length=30,
+        choices=MovementType.choices,
+        default=MovementType.REPLACEMENT,
+        verbose_name="نوع الحركة"
+    )
+    movement_date = models.DateField(default=timezone.now, verbose_name="تاريخ الحركة")
+    odometer = models.PositiveIntegerField(verbose_name="قراءة العداد عند الحركة (كم)")
+    previous_odometer = models.PositiveIntegerField(default=0, verbose_name="العداد السابق (كم)")
+    distance_served = models.PositiveIntegerField(default=0, verbose_name="المسافة المقطوعة بالقطعة (كم)")
+
+    cost = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name="التكلفة (ر.س)")
+    part_number = models.CharField(max_length=100, blank=True, default="", verbose_name="الرقم التسلسلي للقطعة")
+    brand = models.CharField(max_length=100, blank=True, default="", verbose_name="الماركة / الشركة المصنعة")
+    service_provider = models.CharField(max_length=200, blank=True, default="", verbose_name="الورشة / مزود الخدمة")
+
+    maintenance_record = models.ForeignKey(
+        'maintenance.MaintenanceRecord',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='part_movements',
+        verbose_name="سجل الصيانة المرتبط"
+    )
+    performed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='part_movements',
+        verbose_name="المسؤول المدخل"
+    )
+    notes = models.TextField(blank=True, default="", verbose_name="ملاحظات وتفاصيل الحركة")
+
+    class Meta:
+        verbose_name = "حركة قطعة غيار"
+        verbose_name_plural = "حركات وسجل قطع الغيار"
+        ordering = ['-movement_date', '-odometer', '-created_at']
+
+    def __str__(self):
+        return f"{self.vehicle.internal_fleet_number} - {self.part.name} ({self.get_movement_type_display()} في {self.movement_date})"

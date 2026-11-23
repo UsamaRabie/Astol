@@ -582,7 +582,8 @@ export class FuelComponent implements OnInit {
       this.newRecord.odometer = v.current_odometer;
       this.newRecord.driver = v.assigned_driver;
       // Match vehicle fuel type with our fuelTypes
-      const match = this.fuelTypes.find(f => f.name.toLowerCase() === (v.fuel_type || '').toLowerCase());
+      const vehicleFuel = (v.fuel_type_display || v.fuel_type || '').toLowerCase();
+      const match = this.fuelTypes.find(f => f.name.toLowerCase() === vehicleFuel);
       if (match) {
         this.newRecord.fuel_type = match.name;
         this.newRecord.price_per_unit = Number(match.price_per_liter);

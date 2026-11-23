@@ -76,9 +76,30 @@ class WorkPermit(SoftDeleteModel):
 
     @classmethod
     def generate_permit_number(cls):
+        """
+        Generates a non-colliding sequential permit number WP-YYYY-XXXX.
+        Scans all records of current year and increments highest sequence.
+        """
+        import re
         year = timezone.now().year
-        count = cls.objects.filter(permit_number__startswith=f"WP-{year}").count() + 1
-        return f"WP-{year}-{count:04d}"
+        prefix = f"WP-{year}-"
+        highest_seq = 0
+        for num_str in cls.objects.filter(permit_number__startswith=prefix).values_list('permit_number', flat=True):
+            suffix = str(num_str).replace(prefix, "")
+            matches = re.findall(r'\d+', suffix)
+            if matches:
+                try:
+                    val = int(matches[0])
+                    if val > highest_seq:
+                        highest_seq = val
+                except ValueError:
+                    pass
+        return f"WP-{year}-{(highest_seq + 1):04d}"
+
+    def save(self, *args, **kwargs):
+        if not self.permit_number:
+            self.permit_number = self.generate_permit_number()
+        super().save(*args, **kwargs)
 
     def approve(self, user=None):
         if self.status != self.Status.DRAFT:

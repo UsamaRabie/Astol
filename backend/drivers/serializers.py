@@ -1,13 +1,15 @@
 from rest_framework import serializers
+from core.serializers import CleanNullFieldsMixin
 from .models import Driver, DriverAssignment
 from vehicles.models import Vehicle
 
 
-class DriverAssignmentSerializer(serializers.ModelSerializer):
+class DriverAssignmentSerializer(CleanNullFieldsMixin, serializers.ModelSerializer):
     driver_name = serializers.CharField(source='driver.full_name', read_only=True)
     vehicle_plate = serializers.CharField(source='vehicle.plate_number', read_only=True)
     fleet_number = serializers.CharField(source='vehicle.internal_fleet_number', read_only=True)
     assigned_by_name = serializers.CharField(source='assigned_by.full_name', read_only=True, default='')
+    notes = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
 
     class Meta:
         model = DriverAssignment
@@ -18,11 +20,12 @@ class DriverAssignmentSerializer(serializers.ModelSerializer):
         ]
 
 
-class DriverSerializer(serializers.ModelSerializer):
+class DriverSerializer(CleanNullFieldsMixin, serializers.ModelSerializer):
     status_display = serializers.CharField(source='get_status_display', read_only=True)
     current_vehicle_plate = serializers.SerializerMethodField()
     current_vehicle_fleet = serializers.SerializerMethodField()
     current_vehicle_id = serializers.SerializerMethodField()
+    notes = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
 
     class Meta:
         model = Driver
@@ -46,7 +49,7 @@ class DriverSerializer(serializers.ModelSerializer):
         return v.internal_fleet_number if v else None
 
 
-class AssignDriverSerializer(serializers.Serializer):
+class AssignDriverSerializer(CleanNullFieldsMixin, serializers.Serializer):
     vehicle_id = serializers.IntegerField(required=True)
-    start_date = serializers.DateField(required=False)
-    notes = serializers.CharField(required=False, allow_blank=True, default="")
+    start_date = serializers.DateField(required=False, allow_null=True)
+    notes = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")

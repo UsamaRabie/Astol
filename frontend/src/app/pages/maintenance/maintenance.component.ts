@@ -724,6 +724,10 @@ export class MaintenanceComponent implements OnInit {
   updateRecord(): void {
     const payload = {
       ...this.editingRecord,
+      vehicle: Number(this.editingRecord.vehicle),
+      maintenance_type: Number(this.editingRecord.maintenance_type),
+      odometer: Number(this.editingRecord.odometer) || 0,
+      cost: Number(this.editingRecord.cost) || 0,
       parts_replaced: this.editSelectedPartIds
     };
     this.maintenanceService.updateRecord(this.editingRecord.id, payload).subscribe({
@@ -733,8 +737,7 @@ export class MaintenanceComponent implements OnInit {
         this.loadRecords();
       },
       error: (err) => {
-        const msg = err.error?.detail || err.error?.message || 'فشل تحديث سجل الصيانة';
-        this.toastService.error(msg);
+        this.toastService.error(err, 'فشل تحديث سجل الصيانة');
       }
     });
   }
@@ -754,23 +757,28 @@ export class MaintenanceComponent implements OnInit {
         this.loadRecords();
       },
       error: (err) => {
-        const msg = err.error?.detail || err.error?.message || 'فشل حذف سجل الصيانة';
-        this.toastService.error(msg);
+        this.toastService.error(err, 'فشل حذف سجل الصيانة');
       }
     });
   }
 
   saveRecord(): void {
-    this.newRecord.parts_replaced = this.selectedPartIds;
-    this.maintenanceService.createRecord(this.newRecord).subscribe({
+    const payload = {
+      ...this.newRecord,
+      vehicle: Number(this.newRecord.vehicle),
+      maintenance_type: Number(this.newRecord.maintenance_type),
+      odometer: Number(this.newRecord.odometer) || 0,
+      cost: Number(this.newRecord.cost) || 0,
+      parts_replaced: this.selectedPartIds
+    };
+    this.maintenanceService.createRecord(payload).subscribe({
       next: () => {
         this.toastService.success('تم تسجيل عملية الصيانة وتحديث السجلات بنجاح');
         this.showCreateModal = false;
         this.loadRecords();
       },
       error: (err) => {
-        const msg = err.error?.detail || err.error?.message || 'فشل حفظ سجل الصيانة';
-        this.toastService.error(msg);
+        this.toastService.error(err, 'فشل حفظ سجل الصيانة');
       }
     });
   }

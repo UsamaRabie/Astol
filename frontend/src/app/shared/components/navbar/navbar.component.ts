@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { AlertService } from '../../../core/services/alert.service';
+import { UiService } from '../../../core/services/ui.service';
 import { VehicleAlert } from '../../../core/models/models';
 import { IconComponent } from '../icon/icon.component';
 
@@ -11,35 +12,52 @@ import { IconComponent } from '../icon/icon.component';
   standalone: true,
   imports: [CommonModule, RouterModule, IconComponent],
   template: `
-    <header class="topbar no-print" style="background: #ffffff; border-bottom: 1px solid #e2e8f0; height: 68px; display: flex; align-items: center; justify-content: space-between; padding: 0 1.75rem; position: sticky; top: 0; z-index: 40; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
-      <!-- Right Side (RTL Start): Context & Organization Indicator -->
-      <div style="display: flex; align-items: center; gap: 1rem;">
-        <div style="display: flex; align-items: center; gap: 8px; color: #475569; font-size: 13.5px; font-weight: 600;">
+    <header class="topbar no-print">
+      <!-- Right Side (RTL Start): Hamburger + Mobile Brand + Desktop Context Indicator -->
+      <div style="display: flex; align-items: center; gap: 0.65rem;">
+        <!-- Mobile Menu Toggle Button -->
+        <button (click)="ui.toggleSidebar()"
+                class="mobile-menu-btn"
+                title="القائمة الرئيسية"
+                aria-label="تبديل القائمة">
+          <app-icon [name]="ui.isSidebarOpen() ? 'x' : 'menu'" [size]="20"></app-icon>
+        </button>
+
+        <!-- Brand Icon / Name on Mobile -->
+        <div class="mobile-brand">
+          <div style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #ffffff; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.05rem;">
+            أ
+          </div>
+          <span style="font-weight: 800; font-size: 1.1rem; color: #0f172a;">أسطول</span>
+        </div>
+
+        <!-- Desktop Context Indicator -->
+        <div class="desktop-breadcrumb" style="display: flex; align-items: center; gap: 8px; color: #475569; font-size: 13.5px; font-weight: 600;">
           <app-icon name="activity" [size]="16" style="color: #0284c7;"></app-icon>
-          <span>بوابة العمليات والتشغيل المركزي</span>
-          <span style="color: #cbd5e1;">/</span>
-          <span style="color: #64748b; font-weight: 500; font-size: 12.5px;">المقر الرئيسي</span>
+          <span>بوابة العمليات والتشغيل</span>
+          <span class="desktop-only" style="color: #cbd5e1;">/</span>
+          <span class="desktop-only" style="color: #64748b; font-weight: 500; font-size: 12.5px;">المقر الرئيسي</span>
         </div>
       </div>
 
       <!-- Left Side (RTL End): Notifications, User Profile, Logout -->
-      <div style="display: flex; align-items: center; gap: 1rem;">
+      <div style="display: flex; align-items: center; gap: 0.65rem;">
         <!-- Notification Bell Dropdown -->
         <div style="position: relative;">
           <button (click)="toggleAlerts()"
                   class="btn-icon"
-                  style="width: 40px; height: 40px; border-radius: 8px; border: 1px solid #e2e8f0; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #475569; cursor: pointer; position: relative; transition: all 0.15s ease;"
+                  style="width: 38px; height: 38px; border-radius: 8px; border: 1px solid #e2e8f0; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #475569; cursor: pointer; position: relative; transition: all 0.15s ease;"
                   title="التنبيهات">
             <app-icon name="bell" [size]="18"></app-icon>
             <span *ngIf="unreadCount > 0"
-                  style="position: absolute; top: 4px; left: 4px; width: 18px; height: 18px; border-radius: 9999px; background: #ef4444; color: #ffffff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid #ffffff;">
+                  style="position: absolute; top: 3px; left: 3px; width: 17px; height: 17px; border-radius: 9999px; background: #ef4444; color: #ffffff; font-size: 9.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid #ffffff;">
               {{ unreadCount > 9 ? '9+' : unreadCount }}
             </span>
           </button>
 
           <!-- Dropdown Menu -->
           <div *ngIf="showAlertsDropdown"
-               class="card"
+               class="card alerts-dropdown"
                style="position: absolute; left: 0; top: 125%; width: 340px; z-index: 50; padding: 1rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);">
             <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 0.75rem; border-bottom: 1px solid #f1f5f9; margin-bottom: 0.75rem;">
               <div style="display: flex; align-items: center; gap: 6px;">
@@ -78,18 +96,18 @@ import { IconComponent } from '../icon/icon.component';
         </div>
 
         <!-- User Information & Role -->
-        <div style="display: flex; align-items: center; gap: 12px; padding-right: 12px; border-right: 1px solid #e2e8f0;">
-          <div style="width: 38px; height: 38px; border-radius: 50%; background: #0f172a; color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; letter-spacing: 0.5px;">
+        <div class="user-profile-widget" style="display: flex; align-items: center; gap: 10px; padding-right: 10px; border-right: 1px solid #e2e8f0;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #0f172a; color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12.5px; letter-spacing: 0.5px; flex-shrink: 0;">
             {{ getUserInitials() }}
           </div>
-          <div style="text-align: right; line-height: 1.2;">
-            <div style="font-weight: 700; font-size: 13.5px; color: #0f172a;">{{ currentUser?.full_name }}</div>
-            <div style="display: flex; align-items: center; gap: 6px; margin-top: 3px;">
+          <div class="user-text desktop-only" style="text-align: right; line-height: 1.2;">
+            <div style="font-weight: 700; font-size: 13px; color: #0f172a;">{{ currentUser?.full_name }}</div>
+            <div style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
               <span class="badge" [ngClass]="{
                 'badge-danger': currentUser?.role === 'ADMIN',
                 'badge-info': currentUser?.role === 'OPERATOR',
                 'badge-secondary': currentUser?.role === 'REPORTER'
-              }" style="font-size: 10px; padding: 1px 7px;">
+              }" style="font-size: 9.5px; padding: 1px 6px;">
                 {{ getRoleArabic(currentUser?.role) }}
               </span>
             </div>
@@ -98,53 +116,111 @@ import { IconComponent } from '../icon/icon.component';
 
         <!-- Logout Action -->
         <button (click)="logout()"
-                class="btn btn-outline btn-sm"
+                class="btn btn-outline btn-sm logout-btn"
                 title="تسجيل الخروج من الحساب"
-                style="display: flex; align-items: center; gap: 6px; border-radius: 8px; color: #ef4444; border-color: #fecaca; background: #fff5f5; font-size: 12.5px; padding: 6px 12px; cursor: pointer;">
-          <app-icon name="log-out" [size]="15"></app-icon>
-          <span>خروج</span>
+                style="display: flex; align-items: center; gap: 4px; border-radius: 8px; color: #ef4444; border-color: #fecaca; background: #fff5f5; font-size: 12px; padding: 5px 10px; cursor: pointer;">
+          <app-icon name="log-out" [size]="14"></app-icon>
+          <span class="desktop-only">خروج</span>
         </button>
       </div>
     </header>
   `,
   styles: [`
-    .btn-icon:hover {
-      background: #f8fafc !important;
-      border-color: #cbd5e1 !important;
-      color: #0f172a !important;
+    .topbar {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.75rem;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .mobile-menu-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      color: #0f172a;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .mobile-brand {
+      display: none;
+    }
+    @media (max-width: 1024px) {
+      .topbar {
+        height: 60px;
+        padding: 0 1rem;
+      }
+      .mobile-menu-btn {
+        display: flex;
+      }
+      .mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .desktop-breadcrumb {
+        display: none !important;
+      }
+    }
+    @media (max-width: 640px) {
+      .desktop-only {
+        display: none !important;
+      }
+      .alerts-dropdown {
+        position: fixed !important;
+        top: 64px !important;
+        left: 12px !important;
+        right: 12px !important;
+        width: auto !important;
+        max-width: none !important;
+        z-index: 1050 !important;
+      }
     }
   `]
 })
 export class NavbarComponent implements OnInit {
+  ui = inject(UiService);
   private authService = inject(AuthService);
   private alertService = inject(AlertService);
-  private cdr = inject(ChangeDetectorRef);
+  private cd = inject(ChangeDetectorRef);
 
   currentUser = this.authService.getCurrentUser();
-  unreadCount = 0;
   recentAlerts: VehicleAlert[] = [];
-  showAlertsDropdown = false;
+  unreadCount: number = 0;
+  showAlertsDropdown: boolean = false;
 
   ngOnInit(): void {
-    this.authService.currentUser$.subscribe(u => {
-      this.currentUser = u;
-      this.cdr.markForCheck();
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+      this.cd.markForCheck();
     });
-    this.loadAlertsCount();
-  }
 
-  loadAlertsCount(): void {
     this.alertService.getUnreadCount().subscribe({
       next: (res) => {
-        this.unreadCount = res.unread_count;
-        this.cdr.markForCheck();
+        this.unreadCount = res?.unread_count || 0;
+        this.cd.markForCheck();
       },
       error: () => {}
     });
+
+    this.loadAlerts();
+  }
+
+  loadAlerts(): void {
     this.alertService.getAlerts({ is_read: false }).subscribe({
       next: (res) => {
-        this.recentAlerts = res.results.slice(0, 4);
-        this.cdr.markForCheck();
+        this.recentAlerts = (res.results || []).slice(0, 5);
+        this.cd.markForCheck();
       },
       error: () => {}
     });
@@ -153,25 +229,29 @@ export class NavbarComponent implements OnInit {
   toggleAlerts(): void {
     this.showAlertsDropdown = !this.showAlertsDropdown;
     if (this.showAlertsDropdown) {
-      this.loadAlertsCount();
+      this.loadAlerts();
+    }
+  }
+
+  getUserInitials(): string {
+    if (!this.currentUser || !this.currentUser.full_name) return 'م';
+    const parts = this.currentUser.full_name.trim().split(' ');
+    if (parts.length >= 2) {
+      return parts[0][0] + parts[1][0];
+    }
+    return parts[0][0];
+  }
+
+  getRoleArabic(role?: string): string {
+    switch (role) {
+      case 'ADMIN': return 'مدير النظام';
+      case 'OPERATOR': return 'مسؤول تشغيل';
+      case 'REPORTER': return 'مراقب تقارير';
+      default: return 'مستخدم';
     }
   }
 
   logout(): void {
     this.authService.logout();
-  }
-
-  getUserInitials(): string {
-    if (!this.currentUser?.full_name) return 'م';
-    const parts = this.currentUser.full_name.trim().split(/\s+/);
-    if (parts.length === 1) return parts[0].substring(0, 2);
-    return `${parts[0].charAt(0)}.${parts[1].charAt(0)}`;
-  }
-
-  getRoleArabic(role?: string): string {
-    if (role === 'ADMIN') return 'مدير النظام';
-    if (role === 'OPERATOR') return 'مسؤول التشغيل';
-    if (role === 'REPORTER') return 'مراقب التقارير';
-    return role || '';
   }
 }

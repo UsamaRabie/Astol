@@ -540,6 +540,8 @@ a:hover {
   justify-content: center;
   z-index: 999;
   padding: 1.25rem;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
 }
 
 .modal-box {
@@ -549,15 +551,31 @@ a:hover {
   width: 100%;
   max-width: 580px;
   max-height: 90vh;
+  max-height: min(90vh, calc(100dvh - 2.5rem));
   display: flex;
   flex-direction: column;
   overflow: hidden;
   animation: modalIn 0.18s ease-out;
   border: 1px solid var(--border-subtle);
+  margin: auto;
+  position: relative;
 }
 
 .modal-box-lg { max-width: 820px; }
 .modal-box-xl { max-width: 1040px; }
+
+/* Critical: Ensure forms inside modals flex properly so modal-body can scroll */
+.modal-box > form,
+.modal-box form,
+.modal-form {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+}
 
 .modal-header {
   display: flex;
@@ -566,6 +584,7 @@ a:hover {
   padding: 1.15rem 1.5rem;
   border-bottom: 1px solid var(--border-subtle);
   background: #ffffff;
+  flex-shrink: 0 !important;
 }
 
 .modal-title {
@@ -576,8 +595,19 @@ a:hover {
 
 .modal-body {
   padding: 1.5rem;
-  overflow-y: auto;
-  flex: 1;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+/* Ensure direct children in flex modal bodies do not shrink */
+.modal-body > * {
+  flex-shrink: 0;
 }
 
 .modal-footer {
@@ -587,6 +617,35 @@ a:hover {
   display: flex;
   justify-content: flex-end;
   gap: 0.625rem;
+  flex-shrink: 0 !important;
+}
+
+/* Scrollbar styling for modal-body, overlay, and scrollable forms */
+.modal-body::-webkit-scrollbar,
+.modal-overlay::-webkit-scrollbar,
+.modal-box form::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.modal-body::-webkit-scrollbar-track,
+.modal-overlay::-webkit-scrollbar-track,
+.modal-box form::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 9999px;
+}
+
+.modal-body::-webkit-scrollbar-thumb,
+.modal-overlay::-webkit-scrollbar-thumb,
+.modal-box form::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover,
+.modal-overlay::-webkit-scrollbar-thumb:hover,
+.modal-box form::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 @keyframes modalIn {
@@ -694,6 +753,348 @@ a:hover {
 }
 .main-content::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+/* ==========================================================================
+   MOBILE & TABLET RESPONSIVE SYSTEM (ASTOL ERP RTL)
+   ========================================================================== */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Base Responsive Layout Classes */
+.app-layout-root {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  max-width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+.main-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1.75rem;
+  background: var(--bg-app);
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Desktop Defaults */
+.mobile-menu-btn,
+.sidebar-close-btn,
+.sidebar-backdrop {
+  display: none;
+}
+
+/* ==========================================================================
+   TABLET BREAKPOINT (max-width: 1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .app-layout-root {
+    overflow-x: hidden;
+  }
+
+  /* Off-Canvas Mobile Drawer Sidebar */
+  .sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    width: 280px !important;
+    max-width: 85vw !important;
+    height: 100vh !important;
+    z-index: 1000 !important;
+    transform: translateX(100%);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -8px 0 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0) !important;
+  }
+
+  .sidebar-backdrop {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+  }
+
+  .mobile-menu-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
+    background: #ffffff;
+    cursor: pointer;
+    color: var(--text-main);
+  }
+
+  .sidebar-close-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .main-column {
+    width: 100% !important;
+  }
+
+  .topbar {
+    height: 60px !important;
+    padding: 0 1.25rem !important;
+  }
+
+  .main-content {
+    padding: 1.25rem 1rem !important;
+  }
+
+  /* 4-column grids adapt to 2 columns */
+  div[style*="repeat(4, 1fr)"],
+  div[style*="repeat(auto-fit, minmax(240px, 1fr))"],
+  div[style*="repeat(auto-fit, minmax(220px, 1fr))"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.85rem !important;
+  }
+
+  /* Complex 3-column & 380px dashboard grids adapt to 1 column */
+  div[style*="minmax(380px, 1fr)"],
+  div[style*="minmax(320px, 1fr)"] {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+}
+
+/* ==========================================================================
+   MOBILE PHONES BREAKPOINT (max-width: 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  body {
+    font-size: 13px;
+  }
+
+  .topbar {
+    height: 56px !important;
+    padding: 0 0.85rem !important;
+  }
+
+  .main-content {
+    padding: 0.85rem 0.65rem !important;
+  }
+
+  .desktop-breadcrumb,
+  .desktop-only {
+    display: none !important;
+  }
+
+  /* Page Header Adjustments */
+  .page-title, h1 {
+    font-size: 1.2rem !important;
+  }
+
+  .page-subtitle, p {
+    font-size: 0.8rem !important;
+  }
+
+  /* Universal Flex Header Wrap */
+  div[style*="justify-content: space-between"] {
+    flex-wrap: wrap !important;
+    gap: 0.75rem !important;
+  }
+
+  /* Buttons on Mobile */
+  .btn {
+    padding: 0.5rem 0.85rem;
+    font-size: 12.5px;
+  }
+
+  /* Universal Form & Card Grids -> 1 Column */
+  div[style*="repeat(3, 1fr)"],
+  div[style*="repeat(2, 1fr)"],
+  div[style*="repeat(4, 1fr)"],
+  div[style*="repeat(auto-fit, minmax(240px, 1fr))"],
+  div[style*="repeat(auto-fit, minmax(220px, 1fr))"],
+  div[style*="repeat(auto-fit, minmax(210px, 1fr))"],
+  div[style*="minmax(380px, 1fr)"],
+  div[style*="minmax(320px, 1fr)"],
+  div[style*="grid-template-columns: 1fr 1fr"],
+  div[style*="grid-template-columns: 1fr 1fr 1fr"],
+  div[style*="grid-template-columns: 1fr 2fr"],
+  div[style*="grid-template-columns: 2fr 1fr"],
+  div[style*="grid-template-columns: 1fr 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  /* Stat / KPI Cards */
+  .stat-card {
+    padding: 0.85rem !important;
+  }
+
+  .stat-value {
+    font-size: 1.35rem !important;
+  }
+
+  /* Responsive Horizontal Scroll Tables */
+  .table-container {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: var(--radius-sm) !important;
+    margin: 0 !important;
+  }
+
+  .table {
+    min-width: 650px !important;
+  }
+
+  .table th, .table td {
+    padding: 0.55rem 0.65rem !important;
+    font-size: 12px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Action Buttons in Table Rows */
+  .table td div[style*="justify-content: center"] {
+    flex-wrap: wrap !important;
+    gap: 3px !important;
+  }
+
+  /* Modals on Mobile */
+  .modal-overlay {
+    padding: 0.5rem !important;
+    align-items: flex-end !important;
+    overflow-y: auto !important;
+  }
+
+  .modal-box,
+  .modal-box-lg,
+  .modal-box-xl {
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: 94vh !important;
+    border-radius: 14px 14px 0 0 !important;
+    margin: 0 !important;
+  }
+
+  .modal-box > form,
+  .modal-box form,
+  .modal-form {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .modal-header {
+    padding: 0.85rem 1rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  .modal-body {
+    padding: 1rem 0.85rem !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .modal-footer {
+    padding: 0.75rem 1rem !important;
+    flex-direction: column-reverse !important;
+    gap: 0.5rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  .modal-footer .btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* Notification Alerts Dropdown */
+  .alerts-dropdown {
+    position: fixed !important;
+    top: 60px !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
+    max-width: none !important;
+    z-index: 1050 !important;
+  }
+
+  /* Tabs Navigation Scroll */
+  div[style*="overflow-x: auto"],
+  .tabs-container {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  div[style*="overflow-x: auto"]::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Search & Filter Bars */
+  .card div[style*="align-items: flex-end"] {
+    align-items: stretch !important;
+  }
+
+  /* Lookups Page Container */
+  div[style*="padding: 1.5rem; max-width: 1400px"] {
+    padding: 0 !important;
+  }
+}
+
+/* ==========================================================================
+   EXTRA SMALL SCREENS (max-width: 480px)
+   ========================================================================== */
+@media (max-width: 480px) {
+  .topbar {
+    padding: 0 0.65rem !important;
+  }
+
+  .main-content {
+    padding: 0.65rem 0.45rem !important;
+  }
+
+  .card {
+    padding: 0.85rem !important;
+    border-radius: 8px !important;
+  }
+
+  .btn-sm {
+    padding: 3px 6px !important;
+    font-size: 11px !important;
+  }
+
+  .page-title, h1 {
+    font-size: 1.15rem !important;
+  }
+
+  .stat-value {
+    font-size: 1.25rem !important;
+  }
 }
 
 /* Print Layout */

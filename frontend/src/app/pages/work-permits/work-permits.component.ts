@@ -770,15 +770,19 @@ export class WorkPermitsComponent implements OnInit {
   }
 
   savePermit(): void {
-    this.permitService.createPermit(this.newPermit).subscribe({
+    const payload = {
+      ...this.newPermit,
+      vehicle: Number(this.newPermit.vehicle),
+      driver: Number(this.newPermit.driver)
+    };
+    this.permitService.createPermit(payload).subscribe({
       next: () => {
         this.toastService.success('تم إصدار إذن التشغيل بنجاح');
         this.showCreateModal = false;
         this.loadPermits();
       },
       error: (err) => {
-        const msg = err.error?.detail || err.error?.message || 'فشل حفظ إذن التشغيل';
-        this.toastService.error(msg);
+        this.toastService.error(err, 'فشل حفظ إذن التشغيل');
       }
     });
   }
@@ -790,14 +794,26 @@ export class WorkPermitsComponent implements OnInit {
 
   saveEditPermit(): void {
     if (!this.editingPermit.id) return;
-    this.permitService.updatePermit(this.editingPermit.id, this.editingPermit).subscribe({
+    const payload = {
+      vehicle: Number(this.editingPermit.vehicle),
+      driver: Number(this.editingPermit.driver),
+      requesting_department: this.editingPermit.requesting_department,
+      departure_location: this.editingPermit.departure_location,
+      destination: this.editingPermit.destination,
+      purpose: this.editingPermit.purpose,
+      description: this.editingPermit.description || '',
+      departure_date: this.editingPermit.departure_date,
+      status: this.editingPermit.status,
+      notes: this.editingPermit.notes || ''
+    };
+    this.permitService.updatePermit(this.editingPermit.id, payload).subscribe({
       next: () => {
         this.toastService.success('تم تحديث إذن التشغيل بنجاح');
         this.showEditModal = false;
         this.loadPermits();
       },
       error: (err) => {
-        this.toastService.error(err.error?.detail || 'فشل تعديل إذن التشغيل');
+        this.toastService.error(err, 'فشل تعديل إذن التشغيل');
       }
     });
   }
@@ -817,7 +833,7 @@ export class WorkPermitsComponent implements OnInit {
         this.loadPermits();
       },
       error: (err) => {
-        this.toastService.error(err.error?.detail || 'فشل حذف إذن التشغيل');
+        this.toastService.error(err, 'فشل حذف إذن التشغيل');
       }
     });
   }
@@ -829,7 +845,7 @@ export class WorkPermitsComponent implements OnInit {
         this.loadPermits();
       },
       error: (err) => {
-        this.toastService.error(err.error?.detail || 'فشل اعتماد الإذن');
+        this.toastService.error(err, 'فشل اعتماد الإذن');
       }
     });
   }
@@ -844,9 +860,13 @@ export class WorkPermitsComponent implements OnInit {
 
   submitStartTrip(): void {
     if (!this.selectedPermit) return;
+    const timeVal = this.tripDepartureTime && this.tripDepartureTime.trim()
+      ? (this.tripDepartureTime.length === 5 ? this.tripDepartureTime + ':00' : this.tripDepartureTime)
+      : undefined;
+
     this.permitService.startTrip(this.selectedPermit.id, {
-      starting_odometer: this.tripStartingOdometer,
-      departure_time: this.tripDepartureTime + ':00'
+      starting_odometer: Number(this.tripStartingOdometer) || 0,
+      departure_time: timeVal
     }).subscribe({
       next: (res) => {
         this.toastService.success(res.message || 'تم تسجيل انطلاق الرحلة بنجاح');
@@ -854,7 +874,7 @@ export class WorkPermitsComponent implements OnInit {
         this.loadPermits();
       },
       error: (err) => {
-        this.toastService.error(err.error?.detail || 'فشل بدء الرحلة');
+        this.toastService.error(err, 'فشل بدء الرحلة');
       }
     });
   }
@@ -873,16 +893,20 @@ export class WorkPermitsComponent implements OnInit {
   submitCompleteTrip(): void {
     if (!this.selectedPermit) return;
     const startKm = this.selectedPermit.starting_odometer || 0;
-    if (this.tripEndingOdometer < startKm) {
+    if (Number(this.tripEndingOdometer) < startKm) {
       this.toastService.error(`قراءة عداد العودة (${this.tripEndingOdometer} كم) لا يمكن أن تكون أقل من عداد البداية (${startKm} كم)`);
       return;
     }
 
+    const timeVal = this.tripReturnTime && this.tripReturnTime.trim()
+      ? (this.tripReturnTime.length === 5 ? this.tripReturnTime + ':00' : this.tripReturnTime)
+      : undefined;
+
     this.permitService.completeTrip(this.selectedPermit.id, {
-      ending_odometer: this.tripEndingOdometer,
-      return_time: this.tripReturnTime + ':00',
-      return_date: this.tripReturnDate,
-      notes: this.tripCompleteNotes
+      ending_odometer: Number(this.tripEndingOdometer),
+      return_time: timeVal,
+      return_date: this.tripReturnDate || undefined,
+      notes: this.tripCompleteNotes || ''
     }).subscribe({
       next: (res) => {
         this.toastService.success(res.message || 'تم إنهاء الرحلة وتحديث عداد المركبة في النظام بالكامل');
@@ -890,7 +914,7 @@ export class WorkPermitsComponent implements OnInit {
         this.loadPermits();
       },
       error: (err) => {
-        this.toastService.error(err.error?.detail || 'فشل إتمام الرحلة');
+        this.toastService.error(err, 'فشل إتمام الرحلة');
       }
     });
   }
@@ -903,14 +927,14 @@ export class WorkPermitsComponent implements OnInit {
 
   submitCancelPermit(): void {
     if (!this.selectedPermit) return;
-    this.permitService.cancelPermit(this.selectedPermit.id, { notes: this.cancelNotes }).subscribe({
+    this.permitService.cancelPermit(this.selectedPermit.id, { notes: this.cancelNotes || '' }).subscribe({
       next: () => {
         this.toastService.success('تم إلغاء إذن التشغيل');
         this.showCancelModal = false;
         this.loadPermits();
       },
       error: (err) => {
-        this.toastService.error(err.error?.detail || 'فشل إلغاء الإذن');
+        this.toastService.error(err, 'فشل إلغاء الإذن');
       }
     });
   }

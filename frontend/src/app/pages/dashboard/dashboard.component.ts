@@ -109,7 +109,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
               <span style="color: #475569; font-weight: 600;">
                 {{ data.kpis.completed_trips }} رحلة مكتملة
               </span>
-              <span style="color: #64748b;">ميدانياً</span>
+              <span style="color: #0284c7; font-weight: 600;">{{ data.kpis.active_trips }} جارية حالياً</span>
             </div>
           </div>
 
@@ -151,7 +151,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
             </div>
             <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; font-size: 12px;">
               <span style="color: #0284c7; font-weight: 600;">
-                صيانة: {{ data.kpis.total_maintenance_cost | number:'1.0-0' }} ر.س
+                صيانة: {{ data.kpis.total_maintenance_cost | number:'1.0-0' }} ر.س ({{ data.kpis.total_maintenance_records || 0 }} عملية)
               </span>
               <span style="color: #ea580c; font-weight: 600;">
                 وقود: {{ data.kpis.total_fuel_cost | number:'1.0-0' }} ر.س
@@ -273,7 +273,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
                 </div>
                 <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #64748b;">
                   <span style="display: inline-flex; align-items: center; gap: 4px; color: #0284c7;">
-                    <app-icon name="wrench" [size]="12"></app-icon> صيانة: {{ m.maintenance_cost | number:'1.0-0' }} ر.س
+                    <app-icon name="wrench" [size]="12"></app-icon> صيانة: {{ m.maintenance_cost | number:'1.0-0' }} ر.س ({{ m.maintenance_count || 0 }} عملية)
                   </span>
                   <span style="display: inline-flex; align-items: center; gap: 4px; color: #ea580c;">
                     <app-icon name="fuel" [size]="12"></app-icon> وقود: {{ m.fuel_cost | number:'1.0-0' }} ر.س

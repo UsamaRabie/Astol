@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from core.serializers import CleanNullFieldsMixin
 from .models import User
 
 
@@ -47,8 +48,10 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'date_joined', 'updated_at', 'is_admin', 'is_operator', 'is_reporter']
 
 
-class UserCreateUpdateSerializer(serializers.ModelSerializer):
+class UserCreateUpdateSerializer(CleanNullFieldsMixin, serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False, allow_blank=True, min_length=6)
+    phone = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
+    department = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")
 
     class Meta:
         model = User

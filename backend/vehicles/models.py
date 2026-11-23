@@ -49,7 +49,7 @@ class Vehicle(SoftDeleteModel):
     engine_number = models.CharField(max_length=100, blank=True, default="", verbose_name="رقم المحرك")
     
     current_odometer = models.PositiveIntegerField(default=0, verbose_name="قراءة العداد الحالية (كم)")
-    fuel_type = models.CharField(max_length=30, choices=FuelType.choices, default=FuelType.DIESEL, verbose_name="نوع الوقود")
+    fuel_type = models.CharField(max_length=100, default='ديزل', verbose_name="نوع الوقود")
     status = models.CharField(max_length=30, choices=Status.choices, default=Status.ACTIVE, verbose_name="حالة المركبة")
     
     assigned_driver = models.ForeignKey(
@@ -76,6 +76,16 @@ class Vehicle(SoftDeleteModel):
     def __str__(self):
         return f"[{self.internal_fleet_number}] {self.make} {self.model} ({self.plate_number})"
 
+    def get_fuel_type_display(self):
+        mapping = {
+            'GASOLINE_91': 'بنزين 91',
+            'GASOLINE_95': 'بنزين 95',
+            'DIESEL': 'ديزل',
+            'ELECTRIC': 'كهربائي',
+            'HYBRID': 'هجين',
+        }
+        return mapping.get(self.fuel_type, self.fuel_type)
+
     @classmethod
     def generate_next_fleet_number(cls):
         """
@@ -98,6 +108,9 @@ class Vehicle(SoftDeleteModel):
     def save(self, *args, **kwargs):
         if not self.internal_fleet_number:
             self.internal_fleet_number = self.generate_next_fleet_number()
+        if not self.vin:
+            import uuid
+            self.vin = f"VIN-{uuid.uuid4().hex[:12].upper()}"
         super().save(*args, **kwargs)
 
     def clean(self):

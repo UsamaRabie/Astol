@@ -27,6 +27,42 @@ import { CommonModule } from '@angular/common';
         <rect width="7" height="5" x="3" y="16" rx="1"/>
       </ng-container>
 
+      <!-- Sparkles / AI -->
+      <ng-container *ngIf="name === 'sparkles' || name === 'ai'">
+        <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+        <path d="M5 3v4"/>
+        <path d="M19 17v4"/>
+        <path d="M3 5h4"/>
+        <path d="M17 19h4"/>
+      </ng-container>
+
+      <!-- Bot -->
+      <ng-container *ngIf="name === 'bot'">
+        <path d="M12 8V4H8"/>
+        <rect width="16" height="12" x="4" y="8" rx="2"/>
+        <path d="M2 14h2"/>
+        <path d="M20 14h2"/>
+        <path d="M15 13v2"/>
+        <path d="M9 13v2"/>
+      </ng-container>
+
+      <!-- Send -->
+      <ng-container *ngIf="name === 'send'">
+        <line x1="22" x2="11" y1="2" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </ng-container>
+
+      <!-- Copy -->
+      <ng-container *ngIf="name === 'copy'">
+        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+      </ng-container>
+
+      <!-- Message Square -->
+      <ng-container *ngIf="name === 'message-square' || name === 'chat'">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </ng-container>
+
       <!-- Truck / Vehicles -->
       <ng-container *ngIf="name === 'truck' || name === 'vehicle'">
         <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
@@ -305,6 +341,19 @@ import { CommonModule } from '@angular/common';
       <!-- Key -->
       <ng-container *ngIf="name === 'key'">
         <path d="m21 2-2 2m-1.5 1.5L14 9l2 2m-2-2-4 4-2-2-5 5a2 2 0 0 0 0 3l1 1a2 2 0 0 0 3 0l5-5-2-2 4-4 2 2Z"/>
+      </ng-container>
+
+      <!-- Menu / Hamburger -->
+      <ng-container *ngIf="name === 'menu'">
+        <line x1="4" x2="20" y1="12" y2="12"/>
+        <line x1="4" x2="20" y1="6" y2="6"/>
+        <line x1="4" x2="20" y1="18" y2="18"/>
+      </ng-container>
+
+      <!-- X / Close -->
+      <ng-container *ngIf="name === 'x'">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
       </ng-container>
     </svg>
   `
