@@ -227,6 +227,23 @@ if (-not $cloudflaredPath) {
     Write-Err "لم نتمكن من تشغيل نفق كلاودفلير. سيعمل النظام محلياً فقط على http://127.0.0.1:8000"
 }
 
+function Test-PortOpen {
+    param([string]$HostName = "127.0.0.1", [int]$Port = 8000)
+    try {
+        $tcpClient = New-Object System.Net.Sockets.TcpClient
+        $iar = $tcpClient.BeginConnect($HostName, $Port, $null, $null)
+        $success = $iar.AsyncWaitHandle.WaitOne(400, $false)
+        if ($success -and $tcpClient.Connected) {
+            $tcpClient.EndConnect($iar)
+            $tcpClient.Close()
+            return $true
+        }
+        $tcpClient.Close()
+        return $false
+    } catch {
+        return $false
+    }
+}
 # ------------------------------------------------------------------------------
 # 7. تشغيل خادم Django الخلفي
 # ------------------------------------------------------------------------------
@@ -234,13 +251,7 @@ Write-Step "التحقق من تشغيل الخادم الخلفي (Django Serve
 $backendStartedByUs = $false
 $djangoProc = $null
 
-$portInUse = $false
-try {
-    $tcp = Test-NetConnection -ComputerName 127.0.0.1 -Port 8000 -WarningAction SilentlyContinue
-    $portInUse = $tcp.TcpTestSucceeded
-} catch {
-    $portInUse = $false
-}
+$portInUse = Test-PortOpen -HostName "127.0.0.1" -Port 8000
 
 if (-not $portInUse) {
     Write-Step "جاري إطلاق خادم النظام (Django Backend)..."
@@ -254,14 +265,11 @@ if (-not $portInUse) {
     $djangoProc = [System.Diagnostics.Process]::Start($psiDjango)
     $backendStartedByUs = $true
 
-    # Wait for server to listen
+    # Wait for server to listen with fast socket checks
     $attempts = 0
-    while ($attempts -lt 20) {
-        Start-Sleep -Milliseconds 500
-        try {
-            $tcp = Test-NetConnection -ComputerName 127.0.0.1 -Port 8000 -WarningAction SilentlyContinue
-            if ($tcp.TcpTestSucceeded) { break }
-        } catch {}
+    while ($attempts -lt 30) {
+        Start-Sleep -Milliseconds 300
+        if (Test-PortOpen -HostName "127.0.0.1" -Port 8000) { break }
         $attempts++
     }
     Write-Success "خادم النظام يعمل الآن بنجاح على المنفذ 8000."
